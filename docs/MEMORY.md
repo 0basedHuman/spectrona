@@ -5,6 +5,14 @@ Do NOT store transcripts, code dumps, or logs.
 
 ---
 
+## 2026-09-07 — Session 076: Repository remote and push checkpoint
+Prompt Summary: Add GitHub remote, push current Spectrona workspace, then continue R8 boundary.
+Decision: D011 records initial repo hygiene: cache/local agent settings ignored; fixture `.env` remains tracked.
+Decision: Remote `origin` set to `https://github.com/0basedHuman/spectrona.git`; initial commit pushed to `main`.
+Files Changed: root `.gitignore`, docs checkpoint updates, Git metadata initialized locally.
+Validation: `bash validation/validate_all.sh` PASS after checkpoint docs.
+Next: Continue R8 only with GITHUB_TOKEN: harvest, queue, label, promote full corpus, enforce 95% precision gate.
+
 ## 2026-09-07 — Session 075: R8 harvester query breadth
 Prompt Summary: Continue R8 while full public harvest remains unavailable in this shell.
 Decision: D010 unchanged; expanded harvesting still emits redacted unlabeled candidates only.

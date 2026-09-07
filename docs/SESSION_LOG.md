@@ -2,6 +2,66 @@
 
 ---
 
+## Session 076 — 2026-09-07
+
+**User intent:** Add the GitHub remote, push the repository, and continue without leaving the remediation process.
+
+**Implementation steps:**
+1. Confirmed the workspace had no `.git` directory.
+2. Added a root `.gitignore`.
+   - Ignored local/generated artifacts: `.claude/settings.local.json`, `.pytest_cache/`, `__pycache__/`, bytecode, logs, build outputs, and package caches.
+   - Preserved the intentional unsafe scanner fixture at `mcp-inspector/examples/unsafe-repos/basic/.env`.
+3. Initialized Git locally.
+   - Created `main`.
+   - Configured repo-local identity as `0basedHuman <0basedHuman@users.noreply.github.com>`.
+   - Added `origin` as `https://github.com/0basedHuman/spectrona.git`.
+4. Staged and committed the workspace.
+   - Commit: `1aa8180 Initial Spectrona remediation work`.
+   - Initial commit included 194 source/docs/test/validation files.
+5. Pushed to GitHub.
+   - `git push -u origin main` succeeded.
+   - `main` now tracks `origin/main`.
+6. Recorded D011 for initial repository hygiene.
+
+**Files changed:**
+- `.gitignore`
+- `docs/MEMORY.md`
+- `docs/SESSION_LOG.md`
+- `docs/current_refactor_status.md`
+- `docs/VALIDATION.md`
+- `docs/PHASES.md`
+- `docs/DECISIONS.md`
+
+**Validation results:**
+- `bash validation/validate_all.sh` -> PASS.
+
+Master gate output excerpt:
+```text
+=== Pytest Result: 2 passed, 0 failed ===
+=== Corpus Benchmark Result: 12 passed, 0 failed ===
+=== Phase 1 Result: 107 passed, 0 failed ===
+=== Policy Engine Result: 14 passed, 0 failed ===
+=== Phase 2 Result: 96 passed, 0 failed ===
+=== Dashboard Browser Result: 6 passed, 0 failed, 0 skipped ===
+=== Phase 2C Result: 127 passed, 0 failed ===
+=== Packaging Result: 40 passed, 0 failed ===
+=== Phase 3 Memory Routes Result: 62 passed, 0 failed ===
+=== Phase 2 Result: 17 passed, 0 failed ===
+=== Phase 3 Result: SKIPPED ===
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  OVERALL RESULT: PASS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+**Notes:**
+- R8 remains open: the public corpus still requires `GITHUB_TOKEN`, network access, and manual labeling.
+- The initial source commit was pushed before this checkpoint entry; this validated checkpoint will be committed and pushed next.
+
+**Next recommended step:**
+Continue R8 only with `GITHUB_TOKEN`: run the expanded harvester, generate the labeling queue, manually label and promote roughly 1,000 reviewed records, and enforce the full corpus benchmark before R9.
+
+---
+
 ## Session 075 — 2026-09-07
 
 **User intent:** Continue R8 while the full-corpus harvest is still unavailable.

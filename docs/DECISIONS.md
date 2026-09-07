@@ -142,3 +142,19 @@
 **Impact:** `validation/corpus_benchmark.py` gates measured rules at 95% precision. The committed seed corpus proves the format and benchmark contract; the full R8 completion requires running the harvester with GitHub access, generating a `validation/corpus_label_queue.py` review queue, and promoting manually labeled redacted cases through `validation/corpus_promote_labeled.py`. Scanner predictions in the queue are reviewer triage metadata, not labels, and promotion strips them from benchmark inputs.
 
 **Revisit:** After the full corpus reaches roughly 1,000 labeled public configurations.
+
+---
+
+## D011 — Initial Git repository excludes local and generated artifacts
+
+**Decision:** The first Git commit tracks source, docs, fixtures, validation scripts, and the intentional unsafe `.env` scanner fixture. It excludes local agent settings, pytest caches, bytecode, logs, build outputs, package caches, and ordinary developer `.env` files.
+
+**Why:** The workspace was not a Git repository when the GitHub remote was requested. The initial push needed a clean repository boundary that preserves validation fixtures without publishing local machine permissions or generated files.
+
+**Alternatives rejected:**
+- Commit every file in the workspace — would publish `.claude/settings.local.json`, caches, bytecode, and other local state.
+- Ignore every `.env` file — would drop `mcp-inspector/examples/unsafe-repos/basic/.env`, which is an intentional scanner regression fixture.
+
+**Impact:** `origin` points at `https://github.com/0basedHuman/spectrona.git`, and `main` now tracks `origin/main`. Future fixture `.env` files must be explicitly whitelisted if they are required for validation.
+
+**Revisit:** If repository layout changes or additional fixture secret-shape files are added.

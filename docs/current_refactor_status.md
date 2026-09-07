@@ -12,6 +12,7 @@
 - Session 073 continued R8 and added the redacted candidate labeling queue workflow.
 - Session 074 continued R8 and added the labeled corpus promotion guard.
 - Session 075 continued R8 and expanded harvester query fan-out/dedup readiness.
+- Session 076 initialized Git, added the GitHub remote, and pushed the current workspace to `origin/main`.
 - `MCP_NO_AUDIT_LOG` is deleted from scanner code, rules, fixtures, validation, packaging checks, and current docs.
 - Package detection skips `${...}` references and aggregates unpinned package evidence by server path.
 - Gateway non-health routes now require a local bearer token, validate Host/Origin, and reject all-interface CLI binding.
@@ -25,6 +26,7 @@
 - `validation/harvest_mcp_corpus.py` can collect redacted GitHub candidates with multi-query fan-out and deduplication.
 - `validation/corpus_label_queue.py` stratifies redacted candidates and attaches scanner predictions for human review.
 - `validation/corpus_promote_labeled.py` rejects unlabeled queue records and strips prediction metadata before benchmark promotion.
+- Git `origin` points at `https://github.com/0basedHuman/spectrona.git`; `main` tracks `origin/main`.
 - Permanent F1-F7 reproductions live under `tests/regression/`.
 
 ## Files Changed
@@ -104,6 +106,7 @@
 - `docs/ROADMAP.md`
 - `docs/TODO.md`
 - `docs/current_refactor_status.md`
+- `.gitignore`
 
 ## Remaining Work
 - R8 remains open for full ~1,000 public GitHub config harvest, labeling queue review, and manual promotion into the benchmark corpus.
