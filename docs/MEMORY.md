@@ -5,6 +5,14 @@ Do NOT store transcripts, code dumps, or logs.
 
 ---
 
+## 2026-09-07 — Session 077: R8 token availability check
+Prompt Summary: Continue R8 after maintainer handled the exposed GitHub token.
+Decision: Do not reuse or log pasted credentials; only consume `GITHUB_TOKEN` from the local process environment.
+Decision: R8 remains blocked here because `GITHUB_TOKEN` is absent from this Codex shell.
+Files Changed: checkpoint docs only.
+Validation: R8 blocker reproduced; `bash validation/validate_all.sh` PASS; no code or corpus changes made.
+Next: Export a fresh `GITHUB_TOKEN` in the environment visible to Codex, then rerun R8 harvest/queue/label/promote.
+
 ## 2026-09-07 — Session 076: Repository remote and push checkpoint
 Prompt Summary: Add GitHub remote, push current Spectrona workspace, then continue R8 boundary.
 Decision: D011 records initial repo hygiene: cache/local agent settings ignored; fixture `.env` remains tracked.

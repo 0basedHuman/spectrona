@@ -2,6 +2,57 @@
 
 ---
 
+## Session 077 — 2026-09-07
+
+**User intent:** Continue R8 after handling the exposed GitHub token.
+
+**Implementation steps:**
+1. Re-read the required remediation harness context.
+2. Confirmed active work remains R8 only.
+3. Checked token availability without printing any credential value.
+   - `GITHUB_TOKEN=absent` in this Codex process environment.
+4. Reproduced the remaining R8 completion gap.
+   - `python3 validation/corpus_benchmark.py --min-size 1000` still fails with `corpus has 12 cases; need at least 1000`.
+5. Did not run the GitHub harvester because no local environment token is available and the token pasted in chat must not be reused.
+
+**Files changed:**
+- `docs/MEMORY.md`
+- `docs/SESSION_LOG.md`
+- `docs/current_refactor_status.md`
+
+**Validation results:**
+- R8 completion gap reproduced: `python3 validation/corpus_benchmark.py --min-size 1000` -> `corpus has 12 cases; need at least 1000`.
+- Token availability check: `GITHUB_TOKEN=absent`.
+- `bash validation/validate_all.sh` -> PASS.
+
+Master gate output excerpt:
+```text
+=== Pytest Result: 2 passed, 0 failed ===
+=== Corpus Benchmark Result: 12 passed, 0 failed ===
+=== Phase 1 Result: 107 passed, 0 failed ===
+=== Policy Engine Result: 14 passed, 0 failed ===
+=== Phase 2 Result: 96 passed, 0 failed ===
+=== Dashboard Browser Result: 6 passed, 0 failed, 0 skipped ===
+=== Phase 2C Result: 127 passed, 0 failed ===
+=== Packaging Result: 40 passed, 0 failed ===
+=== Phase 3 Memory Routes Result: 62 passed, 0 failed ===
+=== Phase 2 Result: 17 passed, 0 failed ===
+=== Phase 3 Result: SKIPPED ===
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  OVERALL RESULT: PASS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+**Notes:**
+- R8 remains open and externally blocked in this shell.
+- A fresh GitHub token must be exported as `GITHUB_TOKEN` in the environment visible to Codex, not pasted into chat.
+- No raw credentials were written to files, logs, reports, or corpus data.
+
+**Next recommended step:**
+Export a fresh `GITHUB_TOKEN` in the Codex-visible shell, then continue R8 only: harvest redacted candidates, build the labeling queue, manually label and promote roughly 1,000 reviewed records, and enforce the full corpus benchmark.
+
+---
+
 ## Session 076 — 2026-09-07
 
 **User intent:** Add the GitHub remote, push the repository, and continue without leaving the remediation process.

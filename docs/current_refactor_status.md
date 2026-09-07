@@ -13,6 +13,7 @@
 - Session 074 continued R8 and added the labeled corpus promotion guard.
 - Session 075 continued R8 and expanded harvester query fan-out/dedup readiness.
 - Session 076 initialized Git, added the GitHub remote, and pushed the current workspace to `origin/main`.
+- Session 077 continued R8, refused to reuse the pasted token, and confirmed `GITHUB_TOKEN` is absent from this Codex shell.
 - `MCP_NO_AUDIT_LOG` is deleted from scanner code, rules, fixtures, validation, packaging checks, and current docs.
 - Package detection skips `${...}` references and aggregates unpinned package evidence by server path.
 - Gateway non-health routes now require a local bearer token, validate Host/Origin, and reject all-interface CLI binding.
@@ -110,8 +111,9 @@
 
 ## Remaining Work
 - R8 remains open for full ~1,000 public GitHub config harvest, labeling queue review, and manual promotion into the benchmark corpus.
+- R8 harvest is blocked until a fresh `GITHUB_TOKEN` is exported into the environment visible to Codex.
 - R9 through R10 remain open.
 - MCP proxy notification desync remains open; R10 owns transport rewrite.
 
 ## Exact Next Step
-Continue R8 only: run the expanded GitHub harvester with `GITHUB_TOKEN`, generate the labeling queue, manually label redacted candidates, promote the reviewed corpus, and enforce the benchmark on the full corpus before moving to R9.
+Continue R8 only: export a fresh `GITHUB_TOKEN` into the Codex-visible environment, run the expanded GitHub harvester, generate the labeling queue, manually label redacted candidates, promote the reviewed corpus, and enforce the benchmark on the full corpus before moving to R9.

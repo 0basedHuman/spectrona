@@ -12,7 +12,7 @@ bash validation/validate_all.sh
 
 **Script:** `validation/pytest_validate.sh`
 
-**Last run:** 2026-09-07 (Session 076 — repository push checkpoint)
+**Last run:** 2026-09-07 (Session 077 — R8 token availability checkpoint)
 **Result:** PASS
 
 **Checks:**
@@ -40,7 +40,7 @@ bash validation/validate_all.sh
 
 **Script:** `validation/corpus_validate.sh`
 
-**Last run:** 2026-09-07 (Session 076 — repository push checkpoint)
+**Last run:** 2026-09-07 (Session 077 — R8 token availability checkpoint)
 **Result:** PASS
 
 **Checks:**
@@ -63,7 +63,7 @@ bash validation/validate_all.sh
 
 **Script:** `mcp-inspector/validation/phase1_validate.sh`
 
-**Last run:** 2026-09-07 (Session 076 — repository push checkpoint)
+**Last run:** 2026-09-07 (Session 077 — R8 token availability checkpoint)
 **Result:** PASS — master gate passed.
 
 **Checks:**
@@ -154,7 +154,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `spectrona-gateway/validation/phase2_gateway_validate.sh`
 
-**Last run:** 2026-09-07 (Session 076 — repository push checkpoint)
+**Last run:** 2026-09-07 (Session 077 — R8 token availability checkpoint)
 **Result:** PASS — master gate passed.
 
 **Checks:**
@@ -257,7 +257,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `spectrona-gateway/validation/dashboard_browser_validate.sh`
 
-**Last run:** 2026-09-07 (Session 076 — repository push checkpoint)
+**Last run:** 2026-09-07 (Session 077 — R8 token availability checkpoint)
 **Result:** PASS
 
 **Checks:**
@@ -279,7 +279,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `policy-engine/validation/policy_validate.sh`
 
-**Last run:** 2026-09-07 (Session 076 — repository push checkpoint)
+**Last run:** 2026-09-07 (Session 077 — R8 token availability checkpoint)
 **Result:** PASS — F6 reproduced before fix and absent after; master gate passed.
 
 **Checks:**
@@ -305,7 +305,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `spectrona-cli/validation/phase2_cli_validate.sh`
 
-**Last run:** 2026-09-07 (Session 076 — repository push checkpoint)
+**Last run:** 2026-09-07 (Session 077 — R8 token availability checkpoint)
 **Result:** PASS
 
 **Checks:**
@@ -406,7 +406,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `spectrona-gateway/validation/phase3_memory_routes_validate.sh`
 
-**Last run:** 2026-09-07 (Session 076 — repository push checkpoint)
+**Last run:** 2026-09-07 (Session 077 — R8 token availability checkpoint)
 **Result:** PASS
 
 **Checks:**
@@ -477,7 +477,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `packaging/validate_packaging.sh`
 
-**Last run:** 2026-09-07 (Session 076 — repository push checkpoint)
+**Last run:** 2026-09-07 (Session 077 — R8 token availability checkpoint)
 **Result:** PASS
 
 **Checks:**
@@ -524,7 +524,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `runtime-guard/validation/phase2_validate.sh`
 
-**Last run:** 2026-09-07 (Session 076 — repository push checkpoint)
+**Last run:** 2026-09-07 (Session 077 — R8 token availability checkpoint)
 **Result:** PASS
 
 **Checks:**
@@ -591,7 +591,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 ## Full suite
 
-**Last run:** 2026-09-07 (Session 076 — repository push checkpoint)
+**Last run:** 2026-09-07 (Session 077 — R8 token availability checkpoint)
 **Result:** PASS
 
 **Command:**
