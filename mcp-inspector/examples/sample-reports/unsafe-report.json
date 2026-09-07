@@ -1,0 +1,55 @@
+{
+  "_note": "Representative output when scanning basic-unrestricted-filesystem.json. Values are redacted and metadata-only where needed.",
+  "scan_target": "mcp-inspector/examples/unsafe-mcp-configs/basic-unrestricted-filesystem.json",
+  "summary": {
+    "critical": 1,
+    "high": 3,
+    "medium": 2,
+    "low": 0,
+    "total": 6
+  },
+  "findings": [
+    {
+      "id": "SECRET_KNOWN_PREFIX",
+      "severity": "critical",
+      "category": "secrets",
+      "source": "mcpServers.shell-runner.env.OPENAI_API_KEY",
+      "evidence": "env OPENAI_API_KEY matched known secret prefix"
+    },
+    {
+      "id": "MCP_FS_OUTSIDE_REPO",
+      "severity": "high",
+      "category": "mcp-permissions",
+      "source": "mcpServers.filesystem.args",
+      "evidence": "allowed paths outside repo root"
+    },
+    {
+      "id": "MCP_SHELL_UNRESTRICTED",
+      "severity": "high",
+      "category": "mcp-permissions",
+      "source": "mcpServers.shell-runner",
+      "evidence": "shell-capable server name"
+    },
+    {
+      "id": "MCP_POSTINSTALL_SCRIPT",
+      "severity": "high",
+      "category": "supply-chain",
+      "source": "mcpServers.shell-runner",
+      "evidence": "postinstall matched remote downloader and pipe-to-shell patterns"
+    },
+    {
+      "id": "MCP_UNPINNED_PACKAGE",
+      "severity": "medium",
+      "category": "supply-chain",
+      "source": "mcpServers.*.args",
+      "evidence": "unpinned MCP packages by server path"
+    },
+    {
+      "id": "MCP_TOOL_PROMPT_INJECTION_RISK",
+      "severity": "medium",
+      "category": "prompt-injection",
+      "source": "mcpServers.shell-runner",
+      "evidence": "tool description matched risky directive pattern"
+    }
+  ]
+}

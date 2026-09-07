@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "spectrona-detection"
+version = "0.1.0"
+description = "Shared local-first detection primitives for Spectrona"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+keywords = ["spectrona", "security", "dlp", "secrets"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

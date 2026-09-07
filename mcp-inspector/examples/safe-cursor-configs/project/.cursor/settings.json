@@ -1,0 +1,11 @@
+{
+  "agent": {
+    "autoRunTerminal": false,
+    "terminalConfirmation": true
+  },
+  "cursor": {
+    "agent": {
+      "autoRunCommands": "never"
+    }
+  }
+}

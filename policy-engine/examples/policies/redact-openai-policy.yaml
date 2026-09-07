@@ -1,0 +1,13 @@
+version: 1
+default_action: allow
+
+rules:
+  - id: redact-openai-secret
+    action: redact
+    enabled: true
+    reason: Test policy redacts secret-bearing OpenAI requests.
+    match:
+      provider_type: openai
+      route: /openai/v1/*
+      model: gpt-*
+      dlp_findings_min: 1

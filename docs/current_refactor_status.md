@@ -1,0 +1,114 @@
+# Current Refactor Status
+
+## Completed Work
+- Session 065 completed remediation queue item R1 for F1.
+- Session 066 completed remediation queue item R2 for F7.
+- Session 067 completed remediation queue item R3 for F3.
+- Session 068 completed remediation queue item R4 for F6.
+- Session 069 completed remediation queue item R5 for F2 containment.
+- Session 070 completed remediation queue item R6 for F9.
+- Session 071 completed remediation queue item R7 for unified detection, F2 shell-risk rewrite, and F5 DLP coverage.
+- Session 072 started R8 and landed the redacted corpus benchmark foundation.
+- Session 073 continued R8 and added the redacted candidate labeling queue workflow.
+- Session 074 continued R8 and added the labeled corpus promotion guard.
+- Session 075 continued R8 and expanded harvester query fan-out/dedup readiness.
+- `MCP_NO_AUDIT_LOG` is deleted from scanner code, rules, fixtures, validation, packaging checks, and current docs.
+- Package detection skips `${...}` references and aggregates unpinned package evidence by server path.
+- Gateway non-health routes now require a local bearer token, validate Host/Origin, and reject all-interface CLI binding.
+- `spectrona init` generates a gateway token in `config.yaml`, writes `0600`, and `status` does not echo it.
+- Policy loading rejects empty/missing matches, unknown match keys, unknown fields, and bad value types before evaluation.
+- MCP proxy defaults to advisory dry-run; enforcement requires `--enforce` or `SPECTRONA_MCP_ENFORCE=true`.
+- Pytest is wired into the master gate and covers fixed regressions plus the strict xfail reproduction for open F4.
+- Shared `spectrona_detection` package now powers scanner secret matching, gateway DLP, runtime redaction, and repo secret prefix findings.
+- Runtime shell risk now uses exact tool/schema signals instead of free-text substring matching; filesystem risk uses path-like argument keys.
+- `validation/corpus_benchmark.py` gates measured MCP scanner rules at 95% precision over redacted labeled corpus entries.
+- `validation/harvest_mcp_corpus.py` can collect redacted GitHub candidates with multi-query fan-out and deduplication.
+- `validation/corpus_label_queue.py` stratifies redacted candidates and attaches scanner predictions for human review.
+- `validation/corpus_promote_labeled.py` rejects unlabeled queue records and strips prediction metadata before benchmark promotion.
+- Permanent F1-F7 reproductions live under `tests/regression/`.
+
+## Files Changed
+- `mcp-inspector/src/mcp_inspector/detectors/secrets_detector.py`
+- `mcp-inspector/src/mcp_inspector/detectors/repo_detector.py`
+- `mcp-inspector/src/mcp_inspector/detectors/package_detector.py`
+- `mcp-inspector/src/mcp_inspector/detectors/audit_detector.py` deleted
+- `mcp-inspector/src/mcp_inspector/scanner.py`
+- `mcp-inspector/rules/mcp-risk-rules.yaml`
+- `mcp-inspector/examples/safe-mcp-configs/repo-only-filesystem.json`
+- `mcp-inspector/examples/safe-mcp-configs/scoped-filesystem.json`
+- `mcp-inspector/examples/sample-reports/unsafe-report.json`
+- `mcp-inspector/validation/phase1_validate.sh`
+- `spectrona-cli/validation/phase2_cli_validate.sh`
+- `spectrona-cli/src/spectrona_cli/commands/config_file.py`
+- `spectrona-cli/src/spectrona_cli/commands/init.py`
+- `spectrona-cli/src/spectrona_cli/commands/gateway.py`
+- `spectrona-cli/validation/gateway_lifecycle_validate.py`
+- `spectrona-gateway/src/spectrona_gateway/auth.py`
+- `spectrona-gateway/src/spectrona_gateway/config.py`
+- `spectrona-gateway/src/spectrona_gateway/app.py`
+- `spectrona-gateway/src/spectrona_gateway/routes/ui.py`
+- `spectrona-gateway/src/spectrona_gateway/ui/index.html`
+- `spectrona-gateway/validation/phase2_gateway_validate.sh`
+- `spectrona-gateway/validation/dashboard_browser_validate.sh`
+- `spectrona-gateway/validation/phase3_memory_routes_validate.sh`
+- `spectrona-gateway/validation/policy_gateway_validate.py`
+- `spectrona-gateway/validation/policy_dry_run_validate.py`
+- `spectrona-gateway/validation/passthrough_fake_upstream.py`
+- `spectrona-gateway/validation/local_fallback_validate.py`
+- `spectrona-gateway/validation/memory_runtime_validate.py`
+- `spectrona-gateway/src/spectrona_gateway/dlp.py`
+- `policy-engine/src/policy_engine/loader.py`
+- `policy-engine/validation/policy_validate.sh`
+- `runtime-guard/src/runtime_guard/mcp_proxy.py`
+- `runtime-guard/src/runtime_guard/redaction.py`
+- `runtime-guard/validation/mcp_proxy_validate.py`
+- `runtime-guard/validation/mcp_config_wrap_validate.py`
+- `runtime-guard/validation/mcp_apps_protect_validate.py`
+- `runtime-guard/validation/phase2_validate.sh`
+- `runtime-guard/README.md`
+- `spectrona-cli/src/spectrona_cli/cli.py`
+- `spectrona-cli/src/spectrona_cli/commands/mcp.py`
+- `packaging/validate_packaging.sh`
+- `packaging/build_release.py`
+- `packaging/homebrew/spectrona.rb`
+- `spectrona-detection/`
+- `pytest.ini`
+- `requirements-dev.txt`
+- `validation/pytest_validate.sh`
+- `validation/corpus_validate.sh`
+- `validation/corpus_benchmark.py`
+- `validation/harvest_mcp_corpus.py`
+- `validation/corpus_label_queue.py`
+- `validation/corpus_promote_labeled.py`
+- `validation/corpus/`
+- `validation/validate_all.sh`
+- `tests/__init__.py`
+- `tests/conftest.py`
+- `tests/test_scanner_detectors.py`
+- `tests/test_corpus_benchmark.py`
+- `tests/test_harvest_mcp_corpus.py`
+- `tests/test_corpus_label_queue.py`
+- `tests/test_corpus_promote_labeled.py`
+- `tests/regression/f1_args_secret_repro.py`
+- `tests/regression/f2_proxy_dry_run_repro.py`
+- `tests/regression/f3_gateway_auth_repro.py`
+- `tests/regression/test_remediation_reproductions.py`
+- `tests/regression/f6_policy_schema_repro.py`
+- `tests/regression/f7_noise_repro.py`
+- `mcp-inspector/README.md`
+- `docs/MEMORY.md`
+- `docs/SESSION_LOG.md`
+- `docs/VALIDATION.md`
+- `docs/PHASES.md`
+- `docs/DECISIONS.md`
+- `docs/ROADMAP.md`
+- `docs/TODO.md`
+- `docs/current_refactor_status.md`
+
+## Remaining Work
+- R8 remains open for full ~1,000 public GitHub config harvest, labeling queue review, and manual promotion into the benchmark corpus.
+- R9 through R10 remain open.
+- MCP proxy notification desync remains open; R10 owns transport rewrite.
+
+## Exact Next Step
+Continue R8 only: run the expanded GitHub harvester with `GITHUB_TOKEN`, generate the labeling queue, manually label redacted candidates, promote the reviewed corpus, and enforce the benchmark on the full corpus before moving to R9.

@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "runtime-guard"
+version = "0.1.0"
+description = "Spectrona runtime policy guard for MCP and local tool calls"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+dependencies = []
+
+[project.scripts]
+spectrona-mcp-proxy = "runtime_guard.mcp_proxy:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

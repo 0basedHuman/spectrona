@@ -1,0 +1,10 @@
+version: 1
+default_action: allow
+
+rules:
+  - id: require-shell-approval
+    action: require_approval
+    enabled: true
+    reason: Test policy requires approval for shell risk.
+    match:
+      shell_risk: true

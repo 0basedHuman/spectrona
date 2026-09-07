@@ -1,0 +1,14 @@
+{
+  "_comment": "SAFE FIXTURE — filesystem server scoped to repo root. Should produce no findings.",
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem@1.2.3",
+        "."
+      ],
+      "env": {}
+    }
+  }
+}

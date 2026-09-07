@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+SCRIPT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+PYTHONPATH="$SCRIPT_DIR/src:$SCRIPT_DIR/../spectrona-detection/src:$SCRIPT_DIR/../spectrona-gateway/src:$SCRIPT_DIR/../policy-engine/src:$SCRIPT_DIR/../mcp-inspector/src:$SCRIPT_DIR/../runtime-guard/src" exec "${SPECTRONA_PYTHON:-python3}" -m spectrona_cli "$@"

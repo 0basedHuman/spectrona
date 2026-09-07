@@ -1,0 +1,55 @@
+# Claude Config Risk Rules — mcp-inspector Phase 1
+
+rules:
+
+  - id: CLAUDE_HUGE_CONTEXT
+    title: CLAUDE.md is excessively large (context pollution risk)
+    severity: medium
+    category: context-pollution
+    description: >
+      CLAUDE.md exceeds a safe size threshold. This bloats every session's context
+      window, increases token cost, and may crowd out relevant task context.
+    detection_hint: >
+      Check byte size of CLAUDE.md. Flag if over 50KB.
+    evidence_field: file_size_bytes
+    recommended_fix: Split into focused files imported via @path references.
+    confidence: high
+
+  - id: CLAUDE_DANGEROUS_PERMISSION
+    title: Claude settings grant dangerous auto-approved permission
+    severity: high
+    category: permissions
+    description: >
+      Claude's settings.json or settings.local.json contains an allow rule
+      that pre-approves dangerous operations (rm, shell execution, git push --force).
+    detection_hint: >
+      Scan allowedTools or permissions for broad shell/file-system grants.
+    evidence_field: permission_entry
+    recommended_fix: Restrict to minimum required permissions per task.
+    confidence: high
+
+  - id: CLAUDE_NO_DENY_LIST
+    title: Claude settings have no deny list configured
+    severity: low
+    category: permissions
+    description: >
+      No denyTools or deny list is configured. All tools are implicitly available
+      without restriction.
+    detection_hint: >
+      Check for absence of denyTools key in settings.json.
+    evidence_field: settings_file
+    recommended_fix: Add a denyTools list for high-risk operations.
+    confidence: low
+
+  - id: CLAUDE_HOOK_SHELL_INJECTION
+    title: Claude hook command contains shell injection risk
+    severity: high
+    category: hooks
+    description: >
+      A Claude hook definition passes unsanitized variables into a shell command.
+      This may allow prompt-injected tool output to execute arbitrary commands.
+    detection_hint: >
+      Scan hooks[].command for unquoted variable interpolation or pipe usage.
+    evidence_field: hook_command
+    recommended_fix: Quote all variables and avoid piping untrusted input to shell commands.
+    confidence: medium

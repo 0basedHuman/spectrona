@@ -1,0 +1,43 @@
+# Cursor Config Risk Rules — mcp-inspector Phase 1
+
+rules:
+
+  - id: CURSOR_AGENT_AUTO_RUN
+    title: Cursor agent mode auto-runs terminal commands without confirmation
+    severity: high
+    category: permissions
+    description: >
+      Cursor is configured to allow the AI agent to run terminal commands
+      automatically without user confirmation. Any prompt injection can execute
+      commands silently.
+    detection_hint: >
+      Check .cursor/settings.json for agent.autoRunTerminal or similar auto-approval flags.
+    evidence_field: setting_key
+    recommended_fix: Require explicit user confirmation for all terminal commands.
+    confidence: high
+
+  - id: CURSOR_RULES_PROMPT_INJECTION
+    title: Cursor rules file contains prompt-injection-prone directives
+    severity: medium
+    category: prompt-injection
+    description: >
+      .cursorrules or .cursor/rules contains instructions that override safety
+      behavior or redirect the AI in unusual ways.
+    detection_hint: >
+      Scan .cursorrules for imperative phrases directed at the AI model.
+    evidence_field: rules_excerpt
+    recommended_fix: Rewrite rules as factual project context, not AI directives.
+    confidence: medium
+
+  - id: CURSOR_MCP_ENABLED_GLOBALLY
+    title: Cursor MCP servers enabled globally without scope restriction
+    severity: medium
+    category: mcp-permissions
+    description: >
+      Cursor has MCP servers configured at global scope rather than per-project,
+      meaning all projects share the same (potentially overprivileged) servers.
+    detection_hint: >
+      Check ~/.cursor/mcp.json for mcpServers entries intended for specific projects.
+    evidence_field: server_name
+    recommended_fix: Move project-specific MCP servers to project-level config.
+    confidence: medium

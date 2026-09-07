@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Shell shim — runs mcp-inspector without pip install.
+# Sets PYTHONPATH to the local src/ directory.
+SCRIPT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+PYTHONPATH="$SCRIPT_DIR/src" exec python3 -m mcp_inspector "$@"

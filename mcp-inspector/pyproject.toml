@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "mcp-inspector"
+version = "0.1.0"
+description = "Local-first MCP security scanner"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+keywords = ["mcp", "security", "claude", "cursor", "ai-safety"]
+
+[project.scripts]
+mcp-inspector = "mcp_inspector.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

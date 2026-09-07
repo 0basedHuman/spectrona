@@ -1,0 +1,10 @@
+version: 1
+default_action: allow
+
+rules:
+  - id: deny-blocked-client
+    action: deny
+    enabled: true
+    reason: Test policy denies a specific client.
+    match:
+      client: blocked-client

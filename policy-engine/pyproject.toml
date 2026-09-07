@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "spectrona-policy-engine"
+version = "0.1.0"
+description = "Spectrona local runtime policy evaluator"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["src"]

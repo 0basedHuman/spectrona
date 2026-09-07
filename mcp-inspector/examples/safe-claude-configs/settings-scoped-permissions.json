@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status:*)",
+      "Read(./docs/**)"
+    ],
+    "deny": [
+      "Bash(rm -rf:*)",
+      "Write(~/.ssh/**)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 scripts/summarize_change.py"
+          }
+        ]
+      }
+    ]
+  }
+}

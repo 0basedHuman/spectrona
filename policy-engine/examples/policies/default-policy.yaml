@@ -1,0 +1,25 @@
+# Mirrors the built-in default policy used when ~/.spectrona/policy.yaml is absent.
+version: 1
+default_action: allow
+
+rules:
+  - id: redact-known-secrets
+    action: redact
+    enabled: true
+    reason: Redact known secret values before provider forwarding.
+    match:
+      dlp_findings_min: 1
+
+  - id: deny-shell-risk
+    action: deny
+    enabled: true
+    reason: Block shell-risk actions until explicit MCP approvals exist.
+    match:
+      shell_risk: true
+
+  - id: deny-filesystem-risk
+    action: deny
+    enabled: true
+    reason: Block filesystem-risk actions until project allowlists exist.
+    match:
+      filesystem_risk: true

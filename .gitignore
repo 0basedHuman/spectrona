@@ -1,0 +1,16 @@
+.DS_Store
+.claude/settings.local.json
+.pytest_cache/
+__pycache__/
+*.py[cod]
+
+.env
+.env.*
+!.env.example
+!mcp-inspector/examples/unsafe-repos/basic/.env
+
+*.log
+dist/
+build/
+*.egg-info/
+node_modules/

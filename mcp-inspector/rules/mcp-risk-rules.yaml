@@ -1,0 +1,88 @@
+# MCP Risk Rules — mcp-inspector Phase 1
+# Format: id, title, severity, category, description, detection_hint
+
+rules:
+
+  - id: MCP_FS_OUTSIDE_REPO
+    title: Filesystem MCP allows paths outside project root
+    severity: high
+    category: mcp-permissions
+    description: >
+      MCP filesystem server is configured with allowed paths that extend beyond
+      the current project root. This grants Claude read/write access to SSH keys,
+      cloud credentials, shell configs, and other sensitive files.
+    detection_hint: >
+      Check mcpServers entries with server name containing "filesystem".
+      Flag any allowedDirectory or args path that is not scoped to the project root.
+    evidence_field: allowed_paths
+    recommended_fix: Restrict allowed paths to project root only (e.g. ".")
+    confidence: high
+
+  - id: MCP_SHELL_UNRESTRICTED
+    title: MCP server exposes unrestricted shell execution
+    severity: critical
+    category: mcp-permissions
+    description: >
+      An MCP server provides a tool that executes arbitrary shell commands
+      without restriction. Any prompt-injected instruction can run system commands.
+    detection_hint: >
+      Look for MCP server names or tool descriptions containing "shell", "exec",
+      "run_command", "bash", or "terminal" without an allowlist of permitted commands.
+    evidence_field: server_name
+    recommended_fix: Use a sandboxed command runner with explicit command allowlist.
+    confidence: high
+
+  - id: MCP_SECRET_IN_ENV
+    title: Secret or credential found in MCP env config
+    severity: critical
+    category: secrets
+    description: >
+      An MCP server configuration contains what appears to be a secret, API key,
+      or credential directly in the env block. This is committed as plaintext.
+    detection_hint: >
+      Scan env values for patterns matching API keys, tokens, passwords, or
+      secret-looking strings (high entropy, known prefixes like sk-, ghp_, etc.).
+    evidence_field: env_key
+    recommended_fix: Use environment variable references or a secrets manager.
+    confidence: medium
+
+  - id: MCP_TOOL_PROMPT_INJECTION_RISK
+    title: MCP tool description contains prompt-injection-prone text
+    severity: medium
+    category: prompt-injection
+    description: >
+      An MCP tool description contains instructions, directives, or meta-prompts
+      that could be used to manipulate the LLM into unsafe behavior.
+    detection_hint: >
+      Scan tool description fields for imperative language directed at the AI:
+      "always", "never", "ignore", "override", "system:", "as an AI", etc.
+    evidence_field: tool_description
+    recommended_fix: Rewrite tool descriptions as neutral, factual capability statements.
+    confidence: medium
+
+  - id: MCP_UNPINNED_PACKAGE
+    title: MCP server installed from unpinned or unverified source
+    severity: medium
+    category: supply-chain
+    description: >
+      An MCP server is referenced without a pinned version or uses a remote
+      URL/script without integrity verification. Supply-chain compromise risk.
+    detection_hint: >
+      Check command/args for npm, npx, or pip installs without version pins.
+      Flag any URL-based MCP server without a checksum.
+    evidence_field: server_command
+    recommended_fix: Pin versions and verify integrity with checksums.
+    confidence: medium
+
+  - id: MCP_POSTINSTALL_SCRIPT
+    title: MCP package contains suspicious postinstall script
+    severity: high
+    category: supply-chain
+    description: >
+      The MCP server package has a postinstall script which can execute arbitrary
+      code at install time without user awareness.
+    detection_hint: >
+      Check package.json scripts.postinstall for MCP server packages.
+    evidence_field: package_name
+    recommended_fix: Review postinstall scripts before installing. Use --ignore-scripts if safe to do so.
+    confidence: medium

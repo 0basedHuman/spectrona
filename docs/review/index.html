@@ -1,0 +1,615 @@
+<title>Spectrona Audit</title>
+<style>
+:root{
+  --paper:#F5F7F9;
+  --surface:#FFFFFF;
+  --surface-2:#EDF1F4;
+  --ink:#161B23;
+  --ink-2:#3A4453;
+  --muted:#66707F;
+  --line:#DDE3E9;
+  --line-2:#C8D1DA;
+  --accent:#1B5A70;
+  --accent-soft:#E2EEF2;
+  --crit:#9E2B24;
+  --crit-soft:#F7E5E3;
+  --high:#8A5310;
+  --high-soft:#F9EEDD;
+  --med:#3F5378;
+  --med-soft:#E7ECF4;
+  --ok:#26634A;
+  --ok-soft:#E2F0E9;
+  --term-bg:#151A22;
+  --term-ink:#D6DEE8;
+  --term-dim:#7C8899;
+
+  --serif:ui-serif,"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0F131A;
+    --surface:#161C25;
+    --surface-2:#1D242F;
+    --ink:#E5EAF1;
+    --ink-2:#BAC4D1;
+    --muted:#8B96A6;
+    --line:#28313D;
+    --line-2:#39434F;
+    --accent:#74B4C8;
+    --accent-soft:#17303A;
+    --crit:#E38079;
+    --crit-soft:#331917;
+    --high:#D9A557;
+    --high-soft:#302516;
+    --med:#93A8CC;
+    --med-soft:#1C2432;
+    --ok:#78C09E;
+    --ok-soft:#152B22;
+    --term-bg:#0A0E14;
+    --term-ink:#CBD5E1;
+    --term-dim:#6B7787;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0F131A;
+  --surface:#161C25;
+  --surface-2:#1D242F;
+  --ink:#E5EAF1;
+  --ink-2:#BAC4D1;
+  --muted:#8B96A6;
+  --line:#28313D;
+  --line-2:#39434F;
+  --accent:#74B4C8;
+  --accent-soft:#17303A;
+  --crit:#E38079;
+  --crit-soft:#331917;
+  --high:#D9A557;
+  --high-soft:#302516;
+  --med:#93A8CC;
+  --med-soft:#1C2432;
+  --ok:#78C09E;
+  --ok-soft:#152B22;
+  --term-bg:#0A0E14;
+  --term-ink:#CBD5E1;
+  --term-dim:#6B7787;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px 96px}
+.col{max-width:68ch}
+
+/* ---------- masthead ---------- */
+.mast{
+  border-bottom:2px solid var(--ink);
+  padding:56px 0 22px;
+  margin-bottom:40px;
+}
+.eyebrow{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin:0 0 18px;
+}
+h1{
+  font-family:var(--serif);
+  font-weight:600;
+  font-size:clamp(2.4rem,5.4vw,3.9rem);
+  line-height:1.04;
+  letter-spacing:-.018em;
+  margin:0 0 20px;
+  text-wrap:balance;
+}
+.standfirst{
+  font-family:var(--serif);
+  font-size:clamp(1.08rem,2.1vw,1.32rem);
+  line-height:1.5;
+  color:var(--ink-2);
+  max-width:60ch;
+  margin:0 0 26px;
+}
+.mast-meta{
+  display:flex;flex-wrap:wrap;gap:10px 26px;
+  font-family:var(--mono);font-size:11.5px;
+  letter-spacing:.05em;color:var(--muted);
+  text-transform:uppercase;
+}
+
+/* ---------- metric board ---------- */
+.board{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(168px,1fr));
+  gap:1px;
+  background:var(--line);
+  border:1px solid var(--line);
+  margin:0 0 52px;
+}
+.stat{background:var(--surface);padding:20px 18px}
+.stat .n{
+  font-family:var(--mono);
+  font-size:1.9rem;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-.03em;
+  line-height:1;
+  display:block;
+  margin-bottom:9px;
+}
+.stat .l{font-size:12.5px;line-height:1.4;color:var(--muted)}
+.n.bad{color:var(--crit)}
+.n.warn{color:var(--high)}
+.n.neutral{color:var(--accent)}
+
+/* ---------- sections ---------- */
+section{margin:0 0 64px}
+.rule{
+  display:flex;align-items:baseline;gap:14px;
+  border-top:1px solid var(--ink);
+  padding-top:12px;margin-bottom:26px;
+}
+.rule .num{
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  color:var(--accent);text-transform:uppercase;white-space:nowrap;
+}
+h2{
+  font-family:var(--serif);font-weight:600;
+  font-size:clamp(1.5rem,3vw,2rem);
+  letter-spacing:-.012em;line-height:1.15;margin:0;
+  text-wrap:balance;
+}
+h3{
+  font-family:var(--sans);font-weight:650;
+  font-size:1.02rem;letter-spacing:-.005em;
+  margin:0 0 8px;line-height:1.35;
+}
+p{margin:0 0 16px}
+.col p:last-child{margin-bottom:0}
+strong{font-weight:650;color:var(--ink)}
+code{
+  font-family:var(--mono);font-size:.855em;
+  background:var(--surface-2);
+  padding:1.5px 5px;border-radius:3px;
+  border:1px solid var(--line);
+}
+a{color:var(--accent)}
+
+/* ---------- findings ---------- */
+.finding{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-left:4px solid var(--line-2);
+  margin:0 0 22px;
+}
+.finding.crit{border-left-color:var(--crit)}
+.finding.high{border-left-color:var(--high)}
+.finding.med{border-left-color:var(--med)}
+.f-head{
+  display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  padding:15px 20px 0;
+}
+.chip{
+  font-family:var(--mono);font-size:10px;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;
+  padding:3.5px 8px;border-radius:2px;white-space:nowrap;
+}
+.chip.crit{background:var(--crit-soft);color:var(--crit)}
+.chip.high{background:var(--high-soft);color:var(--high)}
+.chip.med{background:var(--med-soft);color:var(--med)}
+.chip.ok{background:var(--ok-soft);color:var(--ok)}
+.fid{
+  font-family:var(--mono);font-size:11.5px;
+  color:var(--muted);letter-spacing:.06em;
+}
+.f-body{padding:11px 20px 19px}
+.f-body h3{margin-bottom:9px}
+.f-body p{margin-bottom:13px;font-size:15.2px}
+.f-body p:last-child{margin-bottom:0}
+.loc{
+  font-family:var(--mono);font-size:11.5px;color:var(--muted);
+  margin-bottom:13px;word-break:break-all;
+}
+
+/* ---------- terminal evidence ---------- */
+.term{
+  background:var(--term-bg);
+  color:var(--term-ink);
+  font-family:var(--mono);
+  font-size:12.4px;
+  line-height:1.72;
+  padding:15px 17px;
+  overflow-x:auto;
+  margin:0 0 13px;
+  border-radius:3px;
+}
+.term pre{margin:0;white-space:pre}
+.term .c{color:var(--term-dim)}
+.term .r{color:#E8827A}
+.term .g{color:#7FC8A0}
+.term .y{color:#DFB264}
+.term .cy{color:#79B8CC}
+.cap{
+  font-size:12.5px;color:var(--muted);
+  margin:0 0 13px;font-style:italic;
+}
+
+/* ---------- fix callout ---------- */
+.fix{
+  background:var(--accent-soft);
+  border:1px solid var(--line);
+  padding:13px 16px;
+  font-size:14.6px;
+  line-height:1.55;
+}
+.fix b{
+  font-family:var(--mono);font-size:10px;font-weight:600;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--accent);
+  display:block;margin-bottom:5px;
+}
+
+/* ---------- lists ---------- */
+ul.clean{list-style:none;padding:0;margin:0 0 18px;display:flex;flex-direction:column;gap:11px}
+ul.clean li{
+  padding-left:20px;position:relative;font-size:15.2px;line-height:1.55;
+}
+ul.clean li::before{
+  content:"";position:absolute;left:2px;top:.62em;
+  width:6px;height:6px;background:var(--accent);border-radius:50%;
+}
+ol.steps{
+  list-style:none;padding:0;margin:0;counter-reset:s;
+  display:flex;flex-direction:column;gap:0;
+}
+ol.steps li{
+  counter-increment:s;
+  display:grid;grid-template-columns:auto 1fr;gap:18px;
+  padding:19px 0;border-top:1px solid var(--line);
+}
+ol.steps li:last-child{border-bottom:1px solid var(--line)}
+ol.steps li::before{
+  content:counter(s,decimal-leading-zero);
+  font-family:var(--mono);font-size:12px;font-weight:600;
+  color:var(--accent);letter-spacing:.06em;
+  padding-top:3px;
+}
+.step-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:9px;margin-bottom:5px}
+.step-h h3{margin:0}
+.tag{
+  font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);
+  border:1px solid var(--line-2);padding:2px 6px;border-radius:2px;
+}
+.steps p{font-size:14.8px;margin:0;color:var(--ink-2)}
+
+/* ---------- table ---------- */
+.tw{overflow-x:auto;border:1px solid var(--line);margin:0 0 18px}
+table{border-collapse:collapse;width:100%;min-width:520px;background:var(--surface)}
+th,td{text-align:left;padding:11px 15px;border-bottom:1px solid var(--line);font-size:14.4px;vertical-align:top}
+th{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--muted);font-weight:600;
+  background:var(--surface-2);
+}
+tr:last-child td{border-bottom:none}
+td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* ---------- pull ---------- */
+.pull{
+  border-left:3px solid var(--accent);
+  padding:4px 0 4px 22px;
+  margin:26px 0;
+  font-family:var(--serif);
+  font-size:1.24rem;line-height:1.45;
+  color:var(--ink);max-width:56ch;
+}
+.closing{
+  border-top:2px solid var(--ink);
+  padding-top:26px;margin-top:56px;
+}
+@media (max-width:640px){
+  .wrap{padding:0 18px 64px}
+  ol.steps li{grid-template-columns:1fr;gap:6px}
+  .term{font-size:11.4px}
+}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <p class="eyebrow">Code &amp; architecture review — 2026-08-11</p>
+  <h1>Spectrona Audit</h1>
+  <p class="standfirst">The product thesis is sound and the wedge is correctly chosen. The execution has drifted: 85% of the code serves a runtime layer with no users, while the scanner that was supposed to earn those users misses live credentials sitting in plain sight.</p>
+  <div class="mast-meta">
+    <span>15,370 LOC</span>
+    <span>6 components</span>
+    <span>64 sessions</span>
+    <span>9 findings · all reproduced</span>
+  </div>
+</header>
+
+<div class="board">
+  <div class="stat"><span class="n neutral">15%</span><span class="l">of the codebase is Phase 1, the only phase declared active</span></div>
+  <div class="stat"><span class="n bad">0 / 2</span><span class="l">flagship secret rules that inspect <code>args</code></span></div>
+  <div class="stat"><span class="n bad">10 / 12</span><span class="l">real credential formats the gateway DLP does not detect</span></div>
+  <div class="stat"><span class="n bad">6 / 6</span><span class="l">benign English strings the MCP proxy blocks</span></div>
+  <div class="stat"><span class="n warn">6</span><span class="l">findings raised against a correctly configured setup</span></div>
+  <div class="stat"><span class="n warn">0</span><span class="l">unit tests, against 174 grep-on-stdout checks</span></div>
+</div>
+
+<section>
+  <div class="rule"><span class="num">Part 1</span><h2>The strategic problem</h2></div>
+  <div class="col">
+    <p>D001 committed to one thing: ship a local scanner, because it is the fastest path to adoption. Sixty-four sessions later the scanner is 2,285 lines and has never been published to PyPI, npm, or a Homebrew tap. The other 13,000 lines are a man-in-the-middle proxy for all AI traffic, a memory subsystem with replay and compaction, LaunchAgent plists, VS Code routing, and local-LLM fallback — every one of them built for zero users.</p>
+    <p>The mechanism that caused this is visible in the session log. Each session ends with a passing check count, and that count only ever grows: 91, 96, 101, 107, 112. Adding code raises the number. Shipping does not. The validation gate, which was meant to enforce rigor, has become a treadmill that reliably feels like progress while adoption stays at zero.</p>
+    <div class="pull">A security tool nobody has installed has the same real-world impact as no security tool. The scanner is the product; everything else is deferred until it has users.</div>
+    <p>This matters more than any single bug below, because it explains them. Detection quality is the entire value of a scanner, and detection quality received a fraction of the engineering that went into the dashboard.</p>
+  </div>
+</section>
+
+<section>
+  <div class="rule"><span class="num">Part 2</span><h2>Defects, in severity order</h2></div>
+  <div class="col"><p>Every finding here was reproduced against the code in this repo. The terminal blocks are real output, not illustrations.</p></div>
+
+  <!-- F1 -->
+  <div class="finding crit">
+    <div class="f-head"><span class="chip crit">Critical</span><span class="fid">F1 · detection</span></div>
+    <div class="f-body">
+      <h3>The scanner's flagship rule inspects the wrong field</h3>
+      <p class="loc">mcp-inspector/src/mcp_inspector/detectors/secrets_detector.py</p>
+      <p><code>SECRET_KNOWN_PREFIX</code> is the only CRITICAL rule in the product, and it reads <code>config.get("env")</code> and nothing else. Secrets passed as command-line arguments are invisible to it.</p>
+      <div class="term"><pre><span class="c"># two live-format credentials in args</span>
+{"mcpServers":{"svc":{"command":"npx","args":[
+   "-y","some-server",
+   "--api-key","sk-proj-REALSECRETVALUE123456",
+   "--token","ghp_ABCDEFGHIJKLMNOP1234"]}}}
+
+$ mcp_inspector scan mcp --file args_secret.json --json
+  findings: <span class="y">['MCP_UNPINNED_PACKAGE', 'MCP_NO_AUDIT_LOG']</span>
+  SECRET_KNOWN_PREFIX detected? <span class="r">False</span>
+  summary: {'critical': <span class="r">0</span>, 'high': <span class="r">0</span>, 'medium': 1, 'low': 1}</pre></div>
+      <p>The rule's own <code>why_it_matters</code> text cites credentials being "visible in process lists." Arguments are exactly what <code>ps aux</code> exposes; environment blocks are the harder-to-read half. The rule states the right threat and then checks the wrong surface.</p>
+      <div class="fix"><b>Fix</b>Walk the entire server object — <code>args</code>, <code>env</code>, <code>command</code>, and any nested keys — through one shared detector, rather than reading a single field.</div>
+    </div>
+  </div>
+
+  <!-- F2 -->
+  <div class="finding crit">
+    <div class="f-head"><span class="chip crit">Critical</span><span class="fid">F2 · runtime</span></div>
+    <div class="f-body">
+      <h3>The MCP proxy blocks ordinary English</h3>
+      <p class="loc">runtime-guard/src/runtime_guard/mcp_proxy.py · <code>_contains_shell_token</code></p>
+      <p>Shell risk is decided by substring search for <code>shell</code>, <code>exec</code>, <code>terminal</code>, <code>bash</code>, and <code>run_command</code> across every string in the arguments, at any depth. The shipped default policy denies on shell risk. Together these block normal work.</p>
+      <div class="term"><pre>shell_risk=<span class="r">True</span>  write_file('In a nutshell, the <span class="y">exec</span>utive team approved it.')
+shell_risk=<span class="r">True</span>  create_note('...the <span class="y">exec</span> summary for the <span class="y">terminal</span> illness study')
+shell_risk=<span class="r">True</span>  write_file('We shall <span class="y">exec</span>ute the plan.')
+shell_risk=<span class="r">True</span>  write_file('Sea<span class="y">shell</span>s by the seashore')
+shell_risk=<span class="r">True</span>  save({'<span class="y">command</span>': 'anything at all'})   <span class="c"># key name alone</span>
+
+<span class="c"># end to end, default policy, benign note:</span>
+{"error":{"code":-32041,
+  "message":"<span class="r">Spectrona policy blocked this MCP tool call.</span>",
+  "data":{"policy_rule_id":"deny-shell-risk","shell_risk":true}}}</pre></div>
+      <p class="cap">Six of six benign strings blocked. A user who wires this in front of their MCP servers loses the ability to write a document containing the word "executive."</p>
+      <p>Compounding it, <code>require_approval</code> has no approval path — PHASES.md still lists "Approval prompt UX" as unchecked — so it resolves to a hard JSON-RPC error with no way for a user to proceed.</p>
+      <div class="fix"><b>Fix</b>Match on structure, not prose: the tool's declared schema and the argument keys that actually reach a shell, never free-text content. Until the false-positive rate is measured on real traffic, ship dry-run as the only mode.</div>
+    </div>
+  </div>
+
+  <!-- F3 -->
+  <div class="finding crit">
+    <div class="f-head"><span class="chip crit">Critical</span><span class="fid">F3 · gateway security</span></div>
+    <div class="f-body">
+      <h3>Mutating endpoints have no authentication</h3>
+      <p class="loc">spectrona-gateway/src/spectrona_gateway/app.py</p>
+      <p><code>create_app()</code> registers ten routers and installs no middleware, no dependency, and no token check. The endpoints that rewrite the user's Claude, Codex, and VS Code configuration and replace the active security policy are reachable by any local process, and by any web page the user visits.</p>
+      <div class="term"><pre><span class="c"># any page in the user's browser can execute this.</span>
+<span class="c"># Content-Type: text/plain is a CORS "simple request" — no</span>
+<span class="c"># preflight. CORS hides the *response*, not the side effect.</span>
+
+fetch('http://127.0.0.1:8787/policy/presets/relaxed/apply', {
+  method:'POST', mode:'no-cors',
+  headers:{'Content-Type':'text/plain'},
+  body:'{"confirm":true}'
+})
+<span class="c">// -> the user's security policy is now "relaxed"</span></pre></div>
+      <p>The <code>confirm: true</code> body field is a guard against accidents, not against an attacker; it is trivially supplied. Binding to localhost is not an authentication boundary — this is the standard DNS-rebinding and CSRF surface that local agents get exploited through. In a security product, it is disqualifying.</p>
+      <div class="fix"><b>Fix</b>Generate a bearer token into <code>~/.spectrona/config.yaml</code> at init and require it on every non-health route; validate <code>Origin</code> and <code>Host</code> to close rebinding; never bind <code>0.0.0.0</code>.</div>
+    </div>
+  </div>
+
+  <!-- F4 -->
+  <div class="finding high">
+    <div class="f-head"><span class="chip high">High</span><span class="fid">F4 · protocol</span></div>
+    <div class="f-body">
+      <h3>The proxy desynchronizes on spec-legal notifications</h3>
+      <p class="loc">runtime-guard/src/runtime_guard/mcp_proxy.py · <code>_forward_to_upstream</code></p>
+      <p>The forwarder writes one line and reads exactly one line back, assuming strict request/response alternation. MCP is bidirectional: servers legitimately emit log and progress notifications, and may initiate sampling requests. The first notification is consumed as if it were the reply.</p>
+      <div class="term"><pre>Client asked: tools/list  (id=7)
+Client GOT  : {"jsonrpc":"2.0","<span class="r">method</span>":"notifications/message",
+               "params":{"level":"info","data":"listing tools"}}
+
+<span class="c">-> a notification, not the result. No id. Tool list lost.</span>
+<span class="c">-> the real reply stays buffered, shifting every later call by one.</span></pre></div>
+      <p>Nothing pumps the upstream's stdout except this one synchronous read, so server-initiated messages have no route to the client at all. <code>stderr</code> is sent to <code>DEVNULL</code>, so when the wrapped server crashes the user sees silence.</p>
+      <div class="fix"><b>Fix</b>Two pumps and a pending-request map keyed by JSON-RPC id: correlate replies, pass notifications through in both directions, surface upstream stderr to the Spectrona log.</div>
+    </div>
+  </div>
+
+  <!-- F5 -->
+  <div class="finding high">
+    <div class="f-head"><span class="chip high">High</span><span class="fid">F5 · detection</span></div>
+    <div class="f-body">
+      <h3>The DLP engine misses most real credential formats</h3>
+      <p class="loc">spectrona-gateway/src/spectrona_gateway/dlp.py — 40 lines, 10 prefixes</p>
+      <p>This module is the sole protection between the user's traffic and their provider, and it is one regex over a ten-entry prefix list.</p>
+      <div class="term"><pre><span class="g">ok  </span>  Anthropic          sk-ant-api03-...
+<span class="r">MISS</span>  Stripe live        sk_live_51H8xYz...     <span class="c"># underscore, not dash</span>
+<span class="r">MISS</span>  Google API         AIzaSyD-1234...
+<span class="r">MISS</span>  SendGrid           SG.AbCdEfGh1234...
+<span class="r">MISS</span>  HuggingFace        hf_AbCdEfGhIjKl...
+<span class="r">MISS</span>  Slack webhook      hooks.slack.com/services/T00/B00/...
+<span class="r">MISS</span>  RSA private key    -----BEGIN RSA PRIVATE KEY-----
+<span class="r">MISS</span>  Postgres URL       postgres://admin:SuperSecret123@db...
+<span class="r">MISS</span>  JWT                eyJhbGciOiJIUzI1NiJ9...
+<span class="r">MISS</span>  AWS secret key     wJalrXUtnFEMI/K7MDENG/bPxRfiCY...
+<span class="r">MISS</span>  GitLab PAT         glpat-AbCdEfGhIjKl...
+
+  -> <span class="r">10 / 12</span> real formats undetected</pre></div>
+      <p>The repo scanner's entropy rule is a partial backstop, but on a three-line <code>.env</code> it caught only the Stripe key and missed both the Postgres password and the AWS secret. Separately, <code>dlp.py</code> and <code>secrets_detector.py</code> maintain duplicate prefix lists that must be hand-synchronized and have already diverged in behavior.</p>
+      <div class="fix"><b>Fix</b>One shared detection library used by scanner, gateway, and proxy. Layer it: prefix match, then entropy, then structural validation — Stripe, AWS, and GitHub tokens all carry verifiable checksums, which is how you buy precision instead of trading it away.</div>
+    </div>
+  </div>
+
+  <!-- F6 -->
+  <div class="finding high">
+    <div class="f-head"><span class="chip high">High</span><span class="fid">F6 · policy engine</span></div>
+    <div class="f-body">
+      <h3>Policy parsing fails open, and an empty rule matches everything</h3>
+      <p class="loc">policy-engine/src/policy_engine/{loader,engine}.py</p>
+      <p>Policy is read by a bespoke ~90-line YAML subset parser. Two failure modes follow directly from it, and both are silent.</p>
+      <div class="term"><pre><span class="c">A. a rule with no match block matches every request</span>
+   rules:
+     - id: typo-rule
+       action: deny          <span class="c"># match: block omitted</span>
+   benign request -> <span class="r">deny</span> (rule=typo-rule)
+
+<span class="c">B. a misspelled match key silently disables the rule</span>
+   match:
+     shel_risk: true         <span class="c"># typo</span>
+   shell_risk=True -> <span class="r">allow</span> (rule=default)   <span class="c"># should deny</span></pre></div>
+      <p>Case A is a denial of service against the user's own toolchain from a single omitted line; case B silently removes a control the user believes is protecting them. <code>_match_value</code> returns <code>False</code> for any key it does not recognize, so every future typo inherits case B.</p>
+      <div class="fix"><b>Fix</b>Validate against a schema at load and refuse to start on an unknown key or an empty <code>match</code>. Treat a policy parse error as fatal, never as a permissive default. Depend on a real YAML parser — this is the one file where a bespoke parser is indefensible.</div>
+    </div>
+  </div>
+
+  <!-- F7 -->
+  <div class="finding med">
+    <div class="f-head"><span class="chip med">Medium</span><span class="fid">F7 · signal quality</span></div>
+    <div class="f-body">
+      <h3>Unactionable rules manufacture noise on correct configurations</h3>
+      <p>Scanning a setup built straight from Anthropic's own MCP documentation — environment variables referenced properly, filesystem scoped to the repo — produces six findings.</p>
+      <div class="term"><pre>[MEDIUM] MCP_UNPINNED_PACKAGE  @modelcontextprotocol/server-filesystem
+[MEDIUM] MCP_UNPINNED_PACKAGE  @modelcontextprotocol/server-github
+[MEDIUM] MCP_UNPINNED_PACKAGE  mcp-server-sentry, <span class="r">${SENTRY_TOKEN}</span>
+[LOW   ] MCP_NO_AUDIT_LOG      x3, one per server
+
+summary: {critical: 0, high: 0, medium: 3, low: 3, total: <span class="y">6</span>}</pre></div>
+      <p><code>${SENTRY_TOKEN}</code> is an environment reference being reported as an unpinned package. More seriously, <code>MCP_NO_AUDIT_LOG</code> fires on every server that will ever be scanned: <code>auditLog</code> is not a field in the MCP specification. The safe fixture had that key added to it so validation would pass, which means the rule's clean case was manufactured rather than found.</p>
+      <p>For a scanner this is not cosmetic. A user's first run is their only run; six noise findings teach them the tool is unreliable, and that is precisely the mechanism by which a scanner ends up unused.</p>
+      <div class="fix"><b>Fix</b>Delete <code>MCP_NO_AUDIT_LOG</code> — an unactionable finding is worse than none. Skip <code>${…}</code> references in the package rule. Hold every rule to a published precision target before it ships.</div>
+    </div>
+  </div>
+
+  <!-- F8 -->
+  <div class="finding med">
+    <div class="f-head"><span class="chip med">Medium</span><span class="fid">F8 · architecture</span></div>
+    <div class="f-body">
+      <h3>D002 is documented but not implemented</h3>
+      <p>The decision log states rules live in YAML rather than code so that the community can contribute without touching the scanner. No code path loads those YAML files. Grepping the entire scanner source for a rules-file read returns nothing; the only matches are docstrings that <em>describe</em> the YAML. Detection is hardcoded Python, and the four rule files are documentation that resembles configuration.</p>
+      <p>This is worth correcting because the community-contributed rule set is the most plausible long-term moat in the plan, and right now the barrier to contributing a rule is a Python pull request against a codebase with no unit tests.</p>
+      <div class="fix"><b>Fix</b>Either make the loader real — declarative matchers over parsed config, with the Python detectors reduced to primitives the YAML composes — or amend D002 to say detection is code. Do not leave the log describing a system that does not exist.</div>
+    </div>
+  </div>
+
+  <!-- F9 -->
+  <div class="finding med">
+    <div class="f-head"><span class="chip med">Medium</span><span class="fid">F9 · testing</span></div>
+    <div class="f-body">
+      <h3>There are no unit tests, and the check count is not measuring quality</h3>
+      <p>No <code>test_*.py</code>, no <code>conftest.py</code>, no pytest configuration anywhere in the repo. The 174 Phase 1 "checks" are bash assertions that grep for strings in CLI stdout.</p>
+      <p>That harness verifies a finding's ID appears in output. It cannot express the things that decide whether this product is trustworthy: the false-positive rate across a corpus of real configurations, that redaction never emits a substring of a known secret, that the policy loader rejects malformed input. Every defect above sits in exactly that blind spot — F1 through F7 all pass the current suite.</p>
+      <p>The count also creates the wrong incentive. "112/112" reads as rigor while measuring volume, and the number rises fastest when you add rules, including rules like F7's that should not exist.</p>
+      <div class="fix"><b>Fix</b>pytest per detector with a fixture corpus; property tests for redaction; golden files for reports. Keep bash for end-to-end smoke only. Replace the headline metric with precision and recall against the corpus.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="rule"><span class="num">Part 3</span><h2>What would make it exceptional</h2></div>
+  <div class="col">
+    <p>The opportunity is real. MCP is spreading quickly, the risk is genuine, and no tool owns this category yet. The path to owning it is narrower than the current roadmap and needs less code than already exists.</p>
+  </div>
+
+  <ol class="steps">
+    <li>
+      <div>
+        <div class="step-h"><h3>Build the corpus, and make precision the headline number</h3><span class="tag">the moat</span></div>
+        <p>Harvest a thousand real <code>mcpServers</code> configurations from public GitHub, run the scanner over them, and hand-label the results. This single asset does three jobs at once: it makes the false positives in F1 and F7 measurable instead of arguable, it becomes the regression suite F9 is missing, and it is the launch story — "we scanned 1,000 public MCP configs and 34% leak credentials" is a post that gets read, and the tool that produced it gets installed. Anyone can write regexes; nobody else has the benchmark. Gate every rule on ≥95% precision before it ships.</p>
+      </div>
+    </li>
+    <li>
+      <div>
+        <div class="step-h"><h3>Rebuild detection as one verifier-based library</h3><span class="tag">correctness</span></div>
+        <p>Collapse <code>dlp.py</code> and <code>secrets_detector.py</code> into a single package consumed by scanner, gateway, and proxy, so a format is added once. Layer the checks the way gitleaks and TruffleHog do — prefix, then entropy, then structural validation against each provider's known token format. Scan args, env, command, and nested values. Keep live verification off by default; D004 is the right call and is a genuine differentiator worth protecting.</p>
+      </div>
+    </li>
+    <li>
+      <div>
+        <div class="step-h"><h3>Ship where the users already are</h3><span class="tag">distribution</span></div>
+        <p>A scanner run once by hand is a scanner run once. Three integrations change that, and all three are days of work rather than months. <strong>SARIF output</strong> is the highest leverage item in this document: it lands findings in the GitHub code-scanning tab and the VS Code SARIF viewer for free. A <strong>GitHub Action</strong> puts the scan on every pull request, which is where security scanners actually live. And <strong>npx</strong> — the MCP audience is a Node audience, and <code>npx spectrona</code> will out-install a Homebrew formula that needs a tap, a Python runtime, and a <code>PYTHONPATH</code> shim.</p>
+      </div>
+    </li>
+    <li>
+      <div>
+        <div class="step-h"><h3>Turn the runtime layer into observability, not enforcement</h3><span class="tag">reframe</span></div>
+        <p>No one will place a beta proxy in the blocking path of their tools, and given F2 they would be right not to. But "here is every tool call your agent made, every file it touched, everything it sent outbound" is valuable on day one, safe to adopt, and honest about what the product currently knows. Ship dry-run as the only mode; earn blocking after the corpus proves the false-positive rate. This inverts a deny-by-default design built on an inaccurate detector into something people can actually install — and it reuses most of the code already written.</p>
+      </div>
+    </li>
+    <li>
+      <div>
+        <div class="step-h"><h3>Build approval, or remove the action</h3><span class="tag">honesty</span></div>
+        <p>An approval action with no way to approve is a defect wearing a feature's name. The small honest version: block, notify, expose a pending queue, let <code>spectrona approve</code> allowlist that specific tool-and-argument shape for the session. Until that exists, alias <code>require_approval</code> to deny with a message that says so.</p>
+      </div>
+    </li>
+    <li>
+      <div>
+        <div class="step-h"><h3>Delete what has no user</h3><span class="tag">focus</span></div>
+        <p>Memory replay, compaction, timeline, staleness, context packages, and session extraction total roughly 1,500 lines of Phase 3 written while Phase 1 was still unshipped. Local-LLM fallback routing, VS Code terminal routing, and LaunchAgent plists are in the same category. Branch them and remove them from the trunk. Each line is maintenance and review surface on a product with no adoption, and the review burden is a large part of why detection quality never got the attention it needed.</p>
+      </div>
+    </li>
+  </ol>
+</section>
+
+<section>
+  <div class="rule"><span class="num">Part 4</span><h2>Sequence</h2></div>
+  <div class="col"><p>Ordered by whether it blocks shipping, not by size. The first block is roughly a week and is what stands between the repo and a public release.</p></div>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Order</th><th>Work</th><th>Addresses</th><th>Effort</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>Scan <code>args</code> and nested values for secrets</td><td class="num">F1</td><td class="num">~2h</td></tr>
+        <tr><td class="num">2</td><td>Delete <code>MCP_NO_AUDIT_LOG</code>; skip <code>${…}</code> in package rule</td><td class="num">F7</td><td class="num">~1h</td></tr>
+        <tr><td class="num">3</td><td>Gateway bearer token + Origin/Host validation</td><td class="num">F3</td><td class="num">~3h</td></tr>
+        <tr><td class="num">4</td><td>Schema-validate policy; fail closed on unknown keys</td><td class="num">F6</td><td class="num">~3h</td></tr>
+        <tr><td class="num">5</td><td>Default the MCP proxy to dry-run only</td><td class="num">F2</td><td class="num">~1h</td></tr>
+        <tr><td class="num">6</td><td>pytest harness + first detector tests</td><td class="num">F9</td><td class="num">~1d</td></tr>
+        <tr><td class="num">7</td><td>Unified detection library, structural validators</td><td class="num">F5, F1</td><td class="num">~3d</td></tr>
+        <tr><td class="num">8</td><td>Public config corpus + precision benchmark</td><td class="num">F7, F9</td><td class="num">~1w</td></tr>
+        <tr><td class="num">9</td><td>SARIF output, GitHub Action, npx wrapper</td><td>distribution</td><td class="num">~3d</td></tr>
+        <tr><td class="num">10</td><td>Rewrite proxy transport with id correlation</td><td class="num">F4</td><td class="num">~3d</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col">
+    <p>Items 1 through 5 are small, and together they take the product from "would mislead a user who trusted it" to "safe to publish." That is the whole gap.</p>
+  </div>
+</section>
+
+<section class="closing">
+  <div class="col">
+    <h3>The one-sentence version</h3>
+    <p>The engineering discipline in this repo is real — the audit trail, the redaction habits, the local-first commitment are all better than most projects at this stage — but it has been pointed at breadth instead of at detection quality, and detection quality is the only thing a security scanner is. Spend the next month making the scanner accurate, benchmark it in public, put it in CI, and delete the rest until someone asks for it.</p>
+  </div>
+</section>
+
+</div>

@@ -1,0 +1,1650 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Spectrona Dashboard</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f7f9;
+      --panel: #ffffff;
+      --text: #15191f;
+      --muted: #657080;
+      --line: #dce1e7;
+      --green: #1e6f5c;
+      --green-soft: #e7f4ef;
+      --red: #b42318;
+      --red-soft: #fde8e6;
+      --amber: #b45309;
+      --amber-soft: #fff1d6;
+      --blue: #3451b2;
+      --blue-soft: #e9edff;
+      --gray-soft: #eef1f4;
+      --shadow: 0 1px 2px rgba(16, 24, 40, 0.08);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      letter-spacing: 0;
+    }
+
+    header {
+      background: var(--panel);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    .header-inner {
+      align-items: center;
+      display: flex;
+      gap: 16px;
+      justify-content: space-between;
+      margin: 0 auto;
+      max-width: 1280px;
+      min-height: 64px;
+      padding: 0 24px;
+    }
+
+    .brand {
+      align-items: center;
+      display: flex;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .mark {
+      align-items: center;
+      background: var(--text);
+      border-radius: 6px;
+      color: #ffffff;
+      display: inline-flex;
+      font-size: 14px;
+      font-weight: 700;
+      height: 34px;
+      justify-content: center;
+      width: 34px;
+    }
+
+    h1 {
+      font-size: 18px;
+      line-height: 1.2;
+      margin: 0;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .header-actions {
+      align-items: center;
+      display: flex;
+      gap: 10px;
+    }
+
+    .timestamp {
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    button {
+      align-items: center;
+      background: var(--text);
+      border: 1px solid var(--text);
+      border-radius: 6px;
+      color: #ffffff;
+      cursor: pointer;
+      display: inline-flex;
+      font-size: 13px;
+      font-weight: 600;
+      height: 34px;
+      justify-content: center;
+      min-width: 86px;
+      padding: 0 12px;
+    }
+
+    button.secondary {
+      background: #ffffff;
+      color: var(--text);
+    }
+
+    button.danger {
+      background: var(--red);
+      border-color: var(--red);
+    }
+
+    .row-actions {
+      align-items: center;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .row-actions button {
+      height: 30px;
+      min-width: 68px;
+      padding: 0 10px;
+    }
+
+    .filter-bar {
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      gap: 10px;
+      grid-template-columns: minmax(180px, 1fr) minmax(150px, 0.6fr) auto auto;
+      padding: 12px 14px;
+    }
+
+    input,
+    select {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--text);
+      font: inherit;
+      height: 34px;
+      min-width: 0;
+      padding: 0 10px;
+    }
+
+    .checkline {
+      align-items: center;
+      color: var(--muted);
+      display: inline-flex;
+      font-size: 13px;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .checkline input {
+      height: auto;
+      margin: 0;
+      padding: 0;
+    }
+
+    main {
+      display: grid;
+      gap: 18px;
+      margin: 0 auto;
+      max-width: 1280px;
+      padding: 22px 24px 40px;
+    }
+
+    .summary-grid {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .metric {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      min-height: 112px;
+      padding: 16px;
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .metric-value {
+      font-size: 30px;
+      font-weight: 760;
+      line-height: 1.1;
+      margin-top: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .metric-note {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 8px;
+      overflow-wrap: anywhere;
+    }
+
+    .content-grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+    }
+
+    section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      min-width: 0;
+    }
+
+    .section-header {
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      min-height: 48px;
+      padding: 0 16px;
+    }
+
+    h2 {
+      font-size: 14px;
+      line-height: 1.2;
+      margin: 0;
+    }
+
+    .section-note {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      border-collapse: collapse;
+      min-width: 820px;
+      width: 100%;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid var(--line);
+      font-size: 13px;
+      padding: 12px 14px;
+      text-align: left;
+      vertical-align: top;
+      white-space: nowrap;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 750;
+      text-transform: uppercase;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .truncate {
+      max-width: 220px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .stack {
+      display: grid;
+      gap: 18px;
+    }
+
+    .list {
+      display: grid;
+      gap: 0;
+    }
+
+    .list-row {
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      gap: 10px;
+      grid-template-columns: minmax(0, 1fr) auto;
+      min-height: 54px;
+      padding: 10px 14px;
+    }
+
+    .list-row:last-child {
+      border-bottom: 0;
+    }
+
+    .row-title {
+      font-size: 13px;
+      font-weight: 650;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .row-subtitle {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 3px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .usage-summary {
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      padding: 12px 14px;
+    }
+
+    .usage-stat {
+      min-width: 0;
+    }
+
+    .usage-stat-label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .usage-stat-value {
+      font-size: 18px;
+      font-weight: 760;
+      margin-top: 4px;
+      overflow-wrap: anywhere;
+    }
+
+    .context-preview {
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      gap: 8px;
+      padding: 12px 14px;
+    }
+
+    .context-text {
+      background: var(--gray-soft);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      line-height: 1.45;
+      margin: 0;
+      max-height: 190px;
+      overflow: auto;
+      padding: 10px;
+      white-space: pre-wrap;
+    }
+
+    .usage-groups {
+      display: grid;
+      gap: 0;
+    }
+
+    .usage-group {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .usage-group:last-child {
+      border-bottom: 0;
+    }
+
+    .usage-group-title {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 750;
+      padding: 12px 14px 4px;
+      text-transform: uppercase;
+    }
+
+    .usage-bar {
+      background: var(--gray-soft);
+      border-radius: 999px;
+      height: 6px;
+      margin-top: 7px;
+      overflow: hidden;
+      width: min(220px, 100%);
+    }
+
+    .usage-bar-fill {
+      background: var(--blue);
+      border-radius: inherit;
+      height: 100%;
+      min-width: 4px;
+    }
+
+    .badge {
+      border-radius: 999px;
+      display: inline-flex;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1;
+      padding: 6px 8px;
+      white-space: nowrap;
+    }
+
+    .badge-ok {
+      background: var(--green-soft);
+      color: var(--green);
+    }
+
+    .badge-warn {
+      background: var(--amber-soft);
+      color: var(--amber);
+    }
+
+    .badge-block {
+      background: var(--red-soft);
+      color: var(--red);
+    }
+
+    .badge-info {
+      background: var(--blue-soft);
+      color: var(--blue);
+    }
+
+    .badge-muted {
+      background: var(--gray-soft);
+      color: var(--muted);
+    }
+
+    .empty,
+    .error {
+      color: var(--muted);
+      font-size: 13px;
+      padding: 18px 16px;
+    }
+
+    .error {
+      color: var(--red);
+    }
+
+    @media (max-width: 960px) {
+      .summary-grid,
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .header-inner {
+        align-items: flex-start;
+        flex-direction: column;
+        min-height: 0;
+        padding: 14px 16px;
+      }
+
+      .header-actions {
+        justify-content: space-between;
+        width: 100%;
+      }
+
+      main {
+        padding: 16px;
+      }
+
+      .metric-value {
+        font-size: 26px;
+      }
+
+      .content-grid {
+        gap: 14px;
+      }
+
+      .usage-summary {
+        grid-template-columns: 1fr;
+      }
+
+      .filter-bar {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <div class="mark">S</div>
+        <div>
+          <h1>Spectrona</h1>
+          <div class="subtitle">Local guard dashboard</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="timestamp" id="updated-at">Loading</div>
+        <button id="refresh" type="button" title="Refresh dashboard">Refresh</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="summary-grid" data-testid="summary-grid">
+      <div class="metric">
+        <div class="metric-label">Gateway</div>
+        <div class="metric-value" id="gateway-status">...</div>
+        <div class="metric-note" id="gateway-note">Checking</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Policy</div>
+        <div class="metric-value" id="policy-preset-total">...</div>
+        <div class="metric-note" id="policy-preset-note">Loading</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Calls</div>
+        <div class="metric-value" id="calls-total">0</div>
+        <div class="metric-note" id="calls-note">successful model events</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Tokens</div>
+        <div class="metric-value" id="tokens-total">0</div>
+        <div class="metric-note" id="tokens-note">0 input / 0 output</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Blocks</div>
+        <div class="metric-value" id="blocks-total">0</div>
+        <div class="metric-note">blocked or approval required</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Protected Apps</div>
+        <div class="metric-value" id="apps-protected-total">0</div>
+        <div class="metric-note" id="apps-protected-note">0 detected</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Provider Routes</div>
+        <div class="metric-value" id="routing-protected-total">0</div>
+        <div class="metric-note" id="routing-protected-note">0 actionable</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">DLP Events</div>
+        <div class="metric-value" id="dlp-events-total">0</div>
+        <div class="metric-note" id="dlp-events-note">0 findings</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">MCP Risks</div>
+        <div class="metric-value" id="mcp-risk-total">0</div>
+        <div class="metric-note" id="mcp-risk-note">no scan yet</div>
+      </div>
+    </div>
+
+    <div class="content-grid">
+      <section aria-labelledby="traffic-heading">
+        <div class="section-header">
+          <h2 id="traffic-heading">Live Traffic</h2>
+          <div class="section-note" id="traffic-count">0 events</div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Client</th>
+                <th>Provider</th>
+                <th>Model</th>
+                <th>Action</th>
+                <th>Policy</th>
+                <th>DLP</th>
+                <th>Tokens</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="events-body">
+              <tr><td colspan="9" class="empty">Loading events</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="stack">
+        <section aria-labelledby="policy-heading">
+          <div class="section-header">
+            <h2 id="policy-heading">Policy</h2>
+            <div class="section-note" id="policy-status">Loading</div>
+          </div>
+          <div class="list" id="policy-list">
+            <div class="empty">Loading policy</div>
+          </div>
+        </section>
+
+        <section aria-labelledby="providers-heading">
+          <div class="section-header">
+            <h2 id="providers-heading">Providers</h2>
+            <div class="section-note" id="providers-mode">Config check</div>
+          </div>
+          <div class="list" id="providers-list">
+            <div class="empty">Loading providers</div>
+          </div>
+        </section>
+
+        <section aria-labelledby="routing-heading">
+          <div class="section-header">
+            <h2 id="routing-heading">Provider Routing</h2>
+            <div class="section-note" id="routing-status">0 protected</div>
+          </div>
+          <div class="list" id="routing-list">
+            <div class="empty">Loading routing integrations</div>
+          </div>
+        </section>
+
+        <section aria-labelledby="blocks-heading">
+          <div class="section-header">
+            <h2 id="blocks-heading">Runtime Blocks</h2>
+            <div class="section-note" id="blocks-status">0 events</div>
+          </div>
+          <div class="list" id="blocks-list">
+            <div class="empty">Loading blocks</div>
+          </div>
+        </section>
+
+        <section aria-labelledby="dlp-heading">
+          <div class="section-header">
+            <h2 id="dlp-heading">DLP Activity</h2>
+            <div class="section-note" id="dlp-status">0 events</div>
+          </div>
+          <div class="list" id="dlp-list">
+            <div class="empty">Loading DLP activity</div>
+          </div>
+        </section>
+
+        <section aria-labelledby="apps-heading">
+          <div class="section-header">
+            <h2 id="apps-heading">Protected Apps</h2>
+            <div class="section-note" id="apps-status">0 detected</div>
+          </div>
+          <div class="list" id="apps-list">
+            <div class="empty">Loading app status</div>
+          </div>
+        </section>
+
+        <section aria-labelledby="mcp-heading">
+          <div class="section-header">
+            <h2 id="mcp-heading">MCP Scan</h2>
+            <div class="section-note" id="mcp-status">Not scanned</div>
+          </div>
+          <div class="list" id="mcp-list">
+            <div class="empty">Loading MCP scan</div>
+          </div>
+        </section>
+
+        <section aria-labelledby="usage-heading">
+          <div class="section-header">
+            <h2 id="usage-heading">Token Usage</h2>
+            <div class="section-note" id="usage-status">tokens</div>
+          </div>
+          <div class="usage-summary" id="usage-summary">
+            <div class="empty">Loading usage totals</div>
+          </div>
+          <div class="list" id="usage-list">
+            <div class="empty">Loading usage</div>
+          </div>
+        </section>
+
+        <section aria-labelledby="memory-heading">
+          <div class="section-header">
+            <h2 id="memory-heading">Memory</h2>
+            <div class="section-note" id="memory-count">0 items</div>
+          </div>
+          <form class="filter-bar" id="memory-filter-form">
+            <input id="memory-search" type="search" placeholder="Search memory" aria-label="Search memory">
+            <select id="memory-type-filter" aria-label="Memory type">
+              <option value="">All types</option>
+              <option value="project_decision">Project decision</option>
+              <option value="session_summary">Session summary</option>
+              <option value="command_history">Command history</option>
+              <option value="risk_finding">Risk finding</option>
+              <option value="user_preference">User preference</option>
+            </select>
+            <label class="checkline"><input id="memory-pinned-filter" type="checkbox">Pinned</label>
+            <button class="secondary" type="submit">Search</button>
+          </form>
+          <div class="context-preview" id="memory-context">
+            <div class="empty">Loading context package</div>
+          </div>
+          <div class="list" id="memory-session">
+            <div class="empty">Loading session extraction</div>
+          </div>
+          <div class="list" id="memory-compact">
+            <div class="empty">Loading memory compaction</div>
+          </div>
+          <div class="list" id="memory-replay">
+            <div class="empty">Loading session replay</div>
+          </div>
+          <div class="list" id="memory-timeline">
+            <div class="empty">Loading memory timeline</div>
+          </div>
+          <div class="list" id="memory-list">
+            <div class="empty">Loading memory</div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const state = {
+      health: null,
+      providers: null,
+      policy: null,
+      policyBackups: null,
+      routing: null,
+      usage: null,
+      blocks: null,
+      dlp: null,
+      events: [],
+      memory: [],
+      memoryContext: null,
+      memorySession: null,
+      memoryCompact: null,
+      memoryReplay: null,
+      memoryTimeline: null,
+      mcp: null,
+      mcpApps: null
+    };
+
+    const el = (id) => document.getElementById(id);
+
+    function number(value) {
+      return new Intl.NumberFormat().format(Number(value || 0));
+    }
+
+    function timeAgo(iso) {
+      if (!iso) return "unknown";
+      const date = new Date(iso);
+      if (Number.isNaN(date.getTime())) return "unknown";
+      const seconds = Math.max(0, Math.round((Date.now() - date.getTime()) / 1000));
+      if (seconds < 60) return `${seconds}s`;
+      const minutes = Math.round(seconds / 60);
+      if (minutes < 60) return `${minutes}m`;
+      const hours = Math.round(minutes / 60);
+      if (hours < 24) return `${hours}h`;
+      return `${Math.round(hours / 24)}d`;
+    }
+
+    function badgeClass(value) {
+      if (value === "critical" || value === "high") return "badge-block";
+      if (value === "invalid" || value === "missing_api_key" || value === "unreachable") return "badge-block";
+      if (value === "medium" || value === "low") return "badge-warn";
+      if (value === "unprotected" || value === "partial" || value === "auth_error" || value === "upstream_error") return "badge-warn";
+      if (value === "fallback") return "badge-info";
+      if (value === "encrypted") return "badge-info";
+      if (value === "plaintext" || value === "legacy_plaintext") return "badge-block";
+      if (value === "blocked" || value === "deny" || value === "require_approval" || value === "approval_required") {
+        return "badge-block";
+      }
+      if (String(value || "").startsWith("dry_run_") || String(value || "").startsWith("would_")) return "badge-warn";
+      if (value === "redact" || String(value || "").startsWith("redacted")) return "badge-warn";
+      if (value === "active" || value === "allow" || value === "mock_response" || value === "passthrough" || value === "protected" || value === "ok" || value === "configured" || value === "selected") return "badge-ok";
+      return "badge-muted";
+    }
+
+    function badge(value) {
+      const text = value || "unknown";
+      return `<span class="badge ${badgeClass(text)}">${escapeHtml(text)}</span>`;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    const authToken = __SPECTRONA_AUTH_TOKEN_JSON__;
+
+    function authHeaders(extra = {}) {
+      const headers = { ...extra };
+      if (authToken) headers["authorization"] = `Bearer ${authToken}`;
+      return headers;
+    }
+
+    async function fetchJson(path) {
+      const response = await fetch(path, { headers: authHeaders({ "accept": "application/json" }) });
+      if (!response.ok) throw new Error(`${path} returned ${response.status}`);
+      return await response.json();
+    }
+
+    async function postJson(path, body) {
+      const response = await fetch(path, {
+        method: "POST",
+        headers: authHeaders({
+          "accept": "application/json",
+          "content-type": "application/json"
+        }),
+        body: JSON.stringify(body)
+      });
+      if (!response.ok) {
+        let message = `${path} returned ${response.status}`;
+        try {
+          const data = await response.json();
+          message = data.detail || message;
+        } catch (_) {}
+        throw new Error(message);
+      }
+      return await response.json();
+    }
+
+    async function patchJson(path, body) {
+      const response = await fetch(path, {
+        method: "PATCH",
+        headers: authHeaders({
+          "accept": "application/json",
+          "content-type": "application/json"
+        }),
+        body: JSON.stringify(body)
+      });
+      if (!response.ok) {
+        let message = `${path} returned ${response.status}`;
+        try {
+          const data = await response.json();
+          message = data.detail || message;
+        } catch (_) {}
+        throw new Error(message);
+      }
+      return await response.json();
+    }
+
+    async function deleteJson(path) {
+      const response = await fetch(path, {
+        method: "DELETE",
+        headers: authHeaders({ "accept": "application/json" })
+      });
+      if (!response.ok) {
+        let message = `${path} returned ${response.status}`;
+        try {
+          const data = await response.json();
+          message = data.detail || message;
+        } catch (_) {}
+        throw new Error(message);
+      }
+      return await response.json();
+    }
+
+    function memoryParams(limit) {
+      const params = new URLSearchParams({ limit });
+      const query = el("memory-search")?.value?.trim();
+      const type = el("memory-type-filter")?.value;
+      const pinned = el("memory-pinned-filter")?.checked;
+      if (query) params.set("q", query);
+      if (type) params.set("memory_type", type);
+      if (pinned) params.set("pinned", "true");
+      return params;
+    }
+
+    function memoryQueryPath() {
+      const params = memoryParams("20");
+      return `/memory/items?${params.toString()}`;
+    }
+
+    function memoryContextPath() {
+      const params = memoryParams("8");
+      params.set("max_chars", "1400");
+      return `/memory/context?${params.toString()}`;
+    }
+
+    function memoryTimelinePath() {
+      return "/memory/timeline?limit=8";
+    }
+
+    function memorySessionPath() {
+      return "/memory/extract?limit=100&max_summary_chars=1200";
+    }
+
+    function memoryCompactPath() {
+      return "/memory/compact?limit=100&max_summary_chars=1200";
+    }
+
+    function memoryReplayPath() {
+      return "/memory/replay?limit=100&max_replay_chars=1600";
+    }
+
+    async function refresh() {
+      el("updated-at").textContent = "Refreshing";
+      try {
+        const [health, providers, policy, policyBackups, routing, usage, blocks, dlp, events, memory, memoryContext, memorySession, memoryCompact, memoryReplay, memoryTimeline, mcp, mcpApps] = await Promise.all([
+          fetchJson("/health"),
+          fetchJson("/providers/health"),
+          fetchJson("/policy"),
+          fetchJson("/policy/backups"),
+          fetchJson("/providers/integrations"),
+          fetchJson("/events/token-usage"),
+          fetchJson("/events/blocks?limit=6"),
+          fetchJson("/events/dlp?limit=6"),
+          fetchJson("/events/recent?limit=25"),
+          fetchJson(memoryQueryPath()),
+          fetchJson(memoryContextPath()),
+          fetchJson(memorySessionPath()),
+          fetchJson(memoryCompactPath()),
+          fetchJson(memoryReplayPath()),
+          fetchJson(memoryTimelinePath()),
+          fetchJson("/mcp/scan"),
+          fetchJson("/mcp/apps")
+        ]);
+        state.health = health;
+        state.providers = providers;
+        state.policy = policy;
+        state.policyBackups = policyBackups;
+        state.routing = routing;
+        state.usage = usage;
+        state.blocks = blocks;
+        state.dlp = dlp;
+        state.events = events;
+        state.memory = memory;
+        state.memoryContext = memoryContext;
+        state.memorySession = memorySession;
+        state.memoryCompact = memoryCompact;
+        state.memoryReplay = memoryReplay;
+        state.memoryTimeline = memoryTimeline;
+        state.mcp = mcp;
+        state.mcpApps = mcpApps;
+        render();
+        el("updated-at").textContent = `Updated ${new Date().toLocaleTimeString()}`;
+      } catch (error) {
+        renderError(error);
+      }
+    }
+
+    function render() {
+      renderSummary();
+      renderEvents();
+      renderPolicy();
+      renderProviders();
+      renderRouting();
+      renderBlocks();
+      renderDlp();
+      renderMcpApps();
+      renderMcp();
+      renderUsage();
+      renderMemory();
+    }
+
+    function renderSummary() {
+      const successfulEvents = state.usage?.today?.events ?? state.usage?.events ?? 0;
+      el("gateway-status").textContent = state.health?.status === "ok" ? "Running" : "Unknown";
+      el("gateway-note").textContent = state.health?.status === "ok" ? "http gateway healthy" : "health unavailable";
+      const policy = state.policy || {};
+      el("policy-preset-total").textContent = presetLabel(policy.active_preset_id || "unknown");
+      el("policy-preset-note").textContent = `${number(policy.summary?.enabled_rules || 0)} active rules / dry-run ${policy.dry_run ? "on" : "off"}`;
+      el("calls-total").textContent = number(successfulEvents);
+      el("calls-note").textContent = `${number(state.usage?.events || 0)} all-time successful events`;
+      el("tokens-total").textContent = number(state.usage?.today?.total_tokens ?? state.usage?.total_tokens ?? 0);
+      el("tokens-note").textContent = `${number(state.usage?.total_tokens || 0)} all-time tokens`;
+      el("blocks-total").textContent = number(state.blocks?.events || 0);
+      const appSummary = state.mcpApps?.summary || {};
+      el("apps-protected-total").textContent = `${number(appSummary.protected || 0)}/${number(appSummary.total || 0)}`;
+      el("apps-protected-note").textContent = `${number(appSummary.drifted || 0)} drifted / ${number(appSummary.actionable || 0)} actionable`;
+      const routingSummary = state.routing?.summary || {};
+      el("routing-protected-total").textContent = `${number(routingSummary.protected || 0)}/${number(routingSummary.total || 0)}`;
+      el("routing-protected-note").textContent = `${number(routingSummary.drifted || 0)} drifted / ${number(routingSummary.actionable || 0)} actionable`;
+      el("dlp-events-total").textContent = number(state.dlp?.events || 0);
+      el("dlp-events-note").textContent = `${number(state.dlp?.findings || 0)} findings`;
+      const mcpSummary = state.mcp?.summary || {};
+      const highRisk = Number(mcpSummary.critical || 0) + Number(mcpSummary.high || 0);
+      el("mcp-risk-total").textContent = number(highRisk);
+      el("mcp-risk-note").textContent = state.mcp?.status === "scanned"
+        ? `${number(mcpSummary.total || 0)} total findings`
+        : String(state.mcp?.status || "not scanned").replaceAll("_", " ");
+    }
+
+    function renderEvents() {
+      el("traffic-count").textContent = `${state.events.length} events`;
+      if (!state.events.length) {
+        el("events-body").innerHTML = '<tr><td colspan="9" class="empty">No model events recorded</td></tr>';
+        return;
+      }
+      el("events-body").innerHTML = state.events.map((event) => `
+        <tr>
+          <td>${escapeHtml(timeAgo(event.timestamp))}</td>
+          <td class="truncate">${escapeHtml(event.client || "unknown")}</td>
+          <td>${badge(event.provider_type)}</td>
+          <td class="truncate">${escapeHtml(event.model || "unknown")}</td>
+          <td>${badge(event.action)}</td>
+          <td>${badge(event.policy_action)}</td>
+          <td>${number(event.dlp_findings_count)}</td>
+          <td>${number(event.total_tokens)}</td>
+          <td>${number(event.status_code)}</td>
+        </tr>
+      `).join("");
+    }
+
+    function renderProviders() {
+      const providers = state.providers?.providers || {};
+      const runtimes = state.providers?.local_runtimes?.runtimes || [];
+      const entries = Object.entries(providers);
+      const mode = state.providers?.live_checked ? "Live check" : "Config check";
+      const fallbackCount = state.providers?.local_runtimes?.summary?.fallback || 0;
+      el("providers-mode").textContent = `${mode} · ${number(runtimes.length)} local runtimes · ${number(fallbackCount)} fallback`;
+      if (!entries.length && !runtimes.length) {
+        el("providers-list").innerHTML = '<div class="empty">No providers configured</div>';
+        return;
+      }
+      const providerRows = entries.map(([name, provider]) => `
+        <div class="list-row">
+          <div>
+            <div class="row-title">${escapeHtml(name)}</div>
+            <div class="row-subtitle">${escapeHtml(provider.base_url || "")}</div>
+          </div>
+          ${badge(provider.status)}
+        </div>
+      `);
+      const runtimeRows = runtimes.map((runtime) => {
+        const selected_config = runtime.selected_config ? "selected" : runtime.fallback_config ? "fallback" : "candidate";
+        const live = runtime.live_checked ? "live checked" : "not checked";
+        const subtitle = `Local runtimes · ${runtime.adapter || "openai-compatible"} · ${selected_config} · ${live} · ${runtime.base_url || ""}`;
+        return `
+          <div class="list-row">
+            <div>
+              <div class="row-title">${escapeHtml(runtime.label || runtime.runtime_id || "local runtime")}</div>
+              <div class="row-subtitle">${escapeHtml(subtitle)}</div>
+            </div>
+            <div class="row-actions">
+              ${badge(runtime.status)}
+              ${runtime.selected_config ? badge("selected") : ""}
+              ${runtime.fallback_config ? badge("fallback") : ""}
+              ${!runtime.selected_config ? `<button type="button" class="secondary" data-runtime-action="select" data-runtime-id="${escapeHtml(runtime.runtime_id)}">Select</button>` : ""}
+            </div>
+          </div>
+        `;
+      });
+      el("providers-list").innerHTML = providerRows.concat(runtimeRows).join("");
+    }
+
+    function presetLabel(value) {
+      return String(value || "unknown")
+        .split(/[_-]/)
+        .filter(Boolean)
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+        .join(" ") || "Unknown";
+    }
+
+    function renderPolicy() {
+      const result = state.policy || {};
+      const presets = result.presets || [];
+      const backups = state.policyBackups?.backups || [];
+      el("policy-status").textContent = result.status === "ok"
+        ? `${presetLabel(result.active_preset_id)} · ${number(result.summary?.enabled_rules || 0)} active`
+        : String(result.status || "unknown").replaceAll("_", " ");
+      if (result.status === "error") {
+        el("policy-list").innerHTML = `<div class="error">${escapeHtml(result.error || "Policy load failed")}</div>`;
+        return;
+      }
+      if (!presets.length) {
+        el("policy-list").innerHTML = '<div class="empty">No policy presets available</div>';
+        return;
+      }
+      const presetRows = presets.map((preset) => {
+        const isActive = preset.preset_id === result.active_preset_id;
+        return `
+          <div class="list-row">
+            <div>
+              <div class="row-title">${escapeHtml(preset.label || preset.preset_id)}</div>
+              <div class="row-subtitle">${number(preset.enabled_rules)} active / ${number(preset.rules)} rules · ${escapeHtml(preset.description || "")}</div>
+            </div>
+            <div class="row-actions">
+              ${badge(isActive ? "active" : preset.default_action)}
+              ${!isActive ? `<button type="button" class="secondary" data-policy-preset="${escapeHtml(preset.preset_id)}">Apply</button>` : ""}
+            </div>
+          </div>
+        `;
+      });
+      const backupRows = backups.slice(0, 3).map((backup) => `
+        <div class="list-row">
+          <div>
+            <div class="row-title">Backup · ${escapeHtml(presetLabel(backup.active_preset_id || "custom"))}</div>
+            <div class="row-subtitle">${escapeHtml(timeAgo(backup.modified_at))} · ${number(backup.size_bytes)} bytes · ${escapeHtml(backup.backup_id || "")}</div>
+          </div>
+          <div class="row-actions">
+            ${badge(backup.status)}
+            ${backup.status === "ok" ? `<button type="button" class="danger" data-policy-backup="${escapeHtml(backup.backup_id)}">Restore</button>` : ""}
+          </div>
+        </div>
+      `);
+      el("policy-list").innerHTML = presetRows.concat(backupRows).join("");
+    }
+
+    function renderRouting() {
+      const result = state.routing || {};
+      const integrations = result.integrations || [];
+      const summary = result.summary || {};
+      el("routing-status").textContent = result.status === "ok"
+        ? `${number(summary.protected || 0)}/${number(summary.total || 0)} protected`
+        : String(result.status || "unknown").replaceAll("_", " ");
+      if (result.status === "error") {
+        el("routing-list").innerHTML = `<div class="error">${escapeHtml(result.error || "Provider routing status failed")}</div>`;
+        return;
+      }
+      if (!integrations.length) {
+        el("routing-list").innerHTML = '<div class="empty">No provider routing integrations detected</div>';
+        return;
+      }
+      el("routing-list").innerHTML = integrations.map((item) => {
+        const action = item.recommended_action || "none";
+        const drift = item.drift_detected ? ` · drift ${item.drift_reason || "detected"}` : "";
+        const suffix = `${item.exists ? "configured" : "not configured"} · backup ${item.backup_exists ? "yes" : "no"} · action ${action}${drift}`;
+        const canProtect = item.repair_available && (action === "setup" || action === "repair");
+        const canRemove = item.managed_block_present;
+        const protectLabel = action === "repair" ? "Repair" : "Set Up";
+        return `
+          <div class="list-row">
+            <div>
+              <div class="row-title">${escapeHtml(item.label || item.integration_id)} · ${escapeHtml(item.provider || "provider")}</div>
+              <div class="row-subtitle">${escapeHtml(suffix)} · ${escapeHtml(item.path || "")}</div>
+            </div>
+            <div class="row-actions">
+              ${badge(item.status)}
+              ${item.drift_detected ? badge("drift") : ""}
+              ${canProtect ? `<button type="button" class="secondary" data-routing-action="protect" data-routing-id="${escapeHtml(item.integration_id)}">${protectLabel}</button>` : ""}
+              ${canRemove ? `<button type="button" class="danger" data-routing-action="unprotect" data-routing-id="${escapeHtml(item.integration_id)}">Remove</button>` : ""}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderBlocks() {
+      const blocks = state.blocks || {};
+      const recent = blocks.recent || [];
+      const wouldCount = Number(blocks.would_blocked || 0) + Number(blocks.would_approval_required || 0);
+      el("blocks-status").textContent = `${number(blocks.events || 0)} events · ${number(wouldCount)} would`;
+      if (!recent.length) {
+        el("blocks-list").innerHTML = '<div class="empty">No blocked or approval-required events</div>';
+        return;
+      }
+      el("blocks-list").innerHTML = recent.map((event) => `
+        <div class="list-row">
+          <div>
+            <div class="row-title">${escapeHtml(event.client || "unknown")} · ${escapeHtml(event.policy_rule_id || "policy")}</div>
+            <div class="row-subtitle">${escapeHtml(event.route || "")} · ${escapeHtml(timeAgo(event.timestamp))}</div>
+          </div>
+          ${badge(event.policy_action || event.action)}
+        </div>
+      `).join("");
+    }
+
+    function renderDlp() {
+      const dlp = state.dlp || {};
+      const recent = dlp.recent || [];
+      el("dlp-status").textContent = `${number(dlp.findings || 0)} findings · ${number(dlp.would_redact_events || 0)} would`;
+      if (!recent.length) {
+        el("dlp-list").innerHTML = '<div class="empty">No DLP activity recorded</div>';
+        return;
+      }
+      el("dlp-list").innerHTML = recent.map((event) => `
+        <div class="list-row">
+          <div>
+            <div class="row-title">${escapeHtml(event.client || "unknown")} · ${escapeHtml(event.provider_type || "provider")}</div>
+            <div class="row-subtitle">${escapeHtml(event.route || "")} · ${number(event.dlp_findings_count)} findings</div>
+          </div>
+          ${badge(event.policy_action || event.action)}
+        </div>
+      `).join("");
+    }
+
+    function renderUsage() {
+      const usage = state.usage || {};
+      const today = usage.today || {};
+      const groups = [
+        ["Daily Totals", usage.by_day || []],
+        ["Providers", usage.by_provider || []],
+        ["Apps", usage.by_client || []],
+        ["Models", usage.by_model || []],
+        ["Routes", usage.by_route || []]
+      ];
+      el("usage-status").textContent = `${number(usage.events || 0)} successful events`;
+      el("usage-summary").innerHTML = `
+        <div class="usage-stat">
+          <div class="usage-stat-label">Today</div>
+          <div class="usage-stat-value">${number(today.total_tokens || 0)}</div>
+        </div>
+        <div class="usage-stat">
+          <div class="usage-stat-label">Input</div>
+          <div class="usage-stat-value">${number(today.request_tokens || 0)}</div>
+        </div>
+        <div class="usage-stat">
+          <div class="usage-stat-label">Output</div>
+          <div class="usage-stat-value">${number(today.response_tokens || 0)}</div>
+        </div>
+      `;
+      if (!usage.events) {
+        el("usage-list").innerHTML = '<div class="empty">No token usage recorded</div>';
+        return;
+      }
+      el("usage-list").innerHTML = groups.map(([title, rows]) => usageGroup(title, rows)).join("");
+    }
+
+    function usageGroup(title, rows) {
+      const items = (rows || []).slice(0, 5);
+      if (!items.length) {
+        return `
+          <div class="usage-group">
+            <div class="usage-group-title">${escapeHtml(title)}</div>
+            <div class="empty">No ${escapeHtml(title.toLowerCase())} usage</div>
+          </div>
+        `;
+      }
+      const maxTokens = Math.max(...items.map((row) => Number(row.total_tokens || 0)), 1);
+      return `
+        <div class="usage-group">
+          <div class="usage-group-title">${escapeHtml(title)}</div>
+          ${items.map((row) => usageRow(row, maxTokens)).join("")}
+        </div>
+      `;
+    }
+
+    function usageRow(row, maxTokens) {
+      const total = Number(row.total_tokens || 0);
+      const pct = Math.max(2, Math.round((total / maxTokens) * 100));
+      return `
+        <div class="list-row">
+          <div>
+            <div class="row-title">${escapeHtml(row.key)}</div>
+            <div class="row-subtitle">${number(row.events)} calls · ${number(row.request_tokens)} input / ${number(row.response_tokens)} output</div>
+            <div class="usage-bar"><div class="usage-bar-fill" style="width:${pct}%"></div></div>
+          </div>
+          ${badge(number(row.total_tokens))}
+        </div>
+      `;
+    }
+
+    function renderMcpApps() {
+      const result = state.mcpApps || {};
+      const apps = result.apps || [];
+      const summary = result.summary || {};
+      el("apps-status").textContent = result.status === "ok"
+        ? `${number(summary.protected || 0)}/${number(summary.total || 0)} protected`
+        : String(result.status || "unknown").replaceAll("_", " ");
+      if (result.status === "error") {
+        el("apps-list").innerHTML = `<div class="error">${escapeHtml(result.error || "MCP app status failed")}</div>`;
+        return;
+      }
+      if (!apps.length) {
+        el("apps-list").innerHTML = '<div class="empty">No app MCP locations detected</div>';
+        return;
+      }
+      el("apps-list").innerHTML = apps.map((app) => {
+        const counts = `${number(app.wrapped_servers)} wrapped / ${number(app.unwrapped_servers)} open`;
+        const action = app.recommended_action || "none";
+        const drift = app.drift_detected ? ` · drift ${app.drift_reason || "detected"}` : "";
+        const suffix = app.exists
+          ? `${counts} · backup ${app.backup_exists ? "yes" : "no"} · action ${action}${drift}`
+          : `not configured · action ${action}${drift}`;
+        const canProtect = app.exists && app.repair_available && (action === "protect" || action === "repair");
+        const canRestore = app.backup_exists;
+        const protectLabel = action === "repair" ? "Repair" : "Protect";
+        return `
+          <div class="list-row">
+            <div>
+              <div class="row-title">${escapeHtml(app.label || app.app_id)} · ${escapeHtml(app.scope || "scope")}</div>
+              <div class="row-subtitle">${escapeHtml(suffix)} · ${escapeHtml(app.path || "")}</div>
+            </div>
+            <div class="row-actions">
+              ${badge(app.status)}
+              ${app.drift_detected ? badge("drift") : ""}
+              ${canProtect ? `<button type="button" class="secondary" data-app-action="protect" data-app-id="${escapeHtml(app.app_id)}">${protectLabel}</button>` : ""}
+              ${canRestore ? `<button type="button" class="danger" data-app-action="unprotect" data-app-id="${escapeHtml(app.app_id)}">Restore</button>` : ""}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderMcp() {
+      const scan = state.mcp || {};
+      const findings = scan.findings || [];
+      el("mcp-status").textContent = scan.status === "scanned"
+        ? `${number(scan.summary?.total || 0)} findings`
+        : String(scan.status || "not scanned").replaceAll("_", " ");
+      if (scan.status === "not_found") {
+        el("mcp-list").innerHTML = '<div class="empty">No MCP config found</div>';
+        return;
+      }
+      if (scan.status === "error") {
+        el("mcp-list").innerHTML = `<div class="error">${escapeHtml(scan.error || "MCP scan failed")}</div>`;
+        return;
+      }
+      if (!findings.length) {
+        el("mcp-list").innerHTML = '<div class="empty">No MCP findings</div>';
+        return;
+      }
+      el("mcp-list").innerHTML = findings.slice(0, 8).map((finding) => `
+        <div class="list-row">
+          <div>
+            <div class="row-title">${escapeHtml(finding.server_name || "unknown")} · ${escapeHtml(finding.id || "finding")}</div>
+            <div class="row-subtitle">${escapeHtml(finding.recommended_fix || finding.title || "")}</div>
+          </div>
+          ${badge(finding.severity)}
+        </div>
+      `).join("");
+    }
+
+    function renderMemory() {
+      renderMemoryContext();
+      renderMemorySession();
+      renderMemoryCompact();
+      renderMemoryReplay();
+      renderMemoryTimeline();
+      el("memory-count").textContent = `${state.memory.length} items`;
+      if (!state.memory.length) {
+        el("memory-list").innerHTML = '<div class="empty">No memory items recorded</div>';
+        return;
+      }
+      el("memory-list").innerHTML = state.memory.map((item) => `
+        <div class="list-row">
+          <div>
+            <div class="row-title">${escapeHtml(item.memory_type || "memory")} · ${escapeHtml(item.source_tool || "manual")} · ${escapeHtml(timeAgo(item.updated_at))}</div>
+            <div class="row-subtitle">${escapeHtml(item.content || "")}${memoryTags(item.tags)}${memoryFreshness(item)}</div>
+          </div>
+          <div class="row-actions">
+            ${item.pinned ? badge("pinned") : ""}
+            ${item.redacted ? badge("redacted") : ""}
+            ${rawStorageBadge(item)}
+            ${item.stale ? badge("stale") : ""}
+            ${badge(String(item.importance_score ?? "0.5"))}
+            <button type="button" class="secondary" data-memory-action="pin" data-memory-id="${escapeHtml(item.id)}" data-memory-pinned="${item.pinned ? "true" : "false"}">${item.pinned ? "Unpin" : "Pin"}</button>
+            <button type="button" class="danger" data-memory-action="delete" data-memory-id="${escapeHtml(item.id)}">Delete</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderMemoryContext() {
+      const context = state.memoryContext || {};
+      if (!context.package_text) {
+        el("memory-context").innerHTML = '<div class="empty">No fresh context package available</div>';
+        return;
+      }
+      el("memory-context").innerHTML = `
+        <div class="list-row">
+          <div>
+            <div class="row-title">Fresh Context Package</div>
+            <div class="row-subtitle">${number(context.item_count)} items · ${number(context.stale_excluded_count)} stale excluded · ${context.truncated ? "truncated" : "complete"}</div>
+          </div>
+          <div class="row-actions">
+            ${badge("fresh")}
+            ${context.stale_excluded_count ? badge("stale skipped") : ""}
+          </div>
+        </div>
+        <pre class="context-text">${escapeHtml(context.package_text)}</pre>
+      `;
+    }
+
+    function renderMemoryTimeline() {
+      const timeline = state.memoryTimeline || {};
+      const events = timeline.events || [];
+      if (!events.length) {
+        el("memory-timeline").innerHTML = '<div class="empty">No memory timeline events</div>';
+        return;
+      }
+      el("memory-timeline").innerHTML = events.slice(0, 8).map((event) => `
+        <div class="list-row">
+          <div>
+            <div class="row-title">${escapeHtml(event.summary || event.event_type || "memory event")}</div>
+            <div class="row-subtitle">${escapeHtml(timeAgo(event.timestamp))} · ${escapeHtml(event.project_path || "memory")}</div>
+          </div>
+          <div class="row-actions">
+            ${badge(event.event_type)}
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderMemorySession() {
+      const session = state.memorySession || {};
+      if (!session.event_count) {
+        el("memory-session").innerHTML = '<div class="empty">No runtime session events available</div>';
+        return;
+      }
+      el("memory-session").innerHTML = `
+        <div class="list-row">
+          <div>
+            <div class="row-title">Session Extraction</div>
+            <div class="row-subtitle">${number(session.event_count)} events · ${number(session.total_tokens)} tokens · ${number(session.runtime_dlp_findings_count)} DLP findings</div>
+          </div>
+          <div class="row-actions">
+            ${badge(session.status || "planned")}
+            ${session.summary_truncated ? badge("truncated") : ""}
+            <button type="button" class="secondary" data-memory-extract="apply">Extract</button>
+          </div>
+        </div>
+        <pre class="context-text">${escapeHtml(session.summary_text || "")}</pre>
+      `;
+    }
+
+    function renderMemoryReplay() {
+      const replay = state.memoryReplay || {};
+      if (!replay.step_count) {
+        el("memory-replay").innerHTML = '<div class="empty">No session replay available</div>';
+        return;
+      }
+      el("memory-replay").innerHTML = `
+        <div class="list-row">
+          <div>
+            <div class="row-title">Session Replay</div>
+            <div class="row-subtitle">${number(replay.step_count)} steps · ${number(replay.event_count)} events · ${number(replay.memory_summary_count)} memory summaries</div>
+          </div>
+          <div class="row-actions">
+            ${badge(replay.status || "planned")}
+            ${replay.replay_truncated ? badge("truncated") : ""}
+            <button type="button" class="secondary" data-memory-replay="apply">Replay</button>
+          </div>
+        </div>
+        <pre class="context-text">${escapeHtml(replay.replay_text || "")}</pre>
+      `;
+    }
+
+    function renderMemoryCompact() {
+      const compact = state.memoryCompact || {};
+      if (!compact.scanned_item_count) {
+        el("memory-compact").innerHTML = '<div class="empty">No memory compaction candidates</div>';
+        return;
+      }
+      const candidateCount = Number(compact.duplicate_group_count || 0) + Number(compact.stale_candidate_count || 0);
+      el("memory-compact").innerHTML = `
+        <div class="list-row">
+          <div>
+            <div class="row-title">Memory Compaction</div>
+            <div class="row-subtitle">${number(compact.scanned_item_count)} scanned · ${number(compact.duplicate_group_count)} duplicate groups · ${number(compact.stale_candidate_count)} stale candidates</div>
+          </div>
+          <div class="row-actions">
+            ${badge(compact.status || "planned")}
+            ${compact.summary_truncated ? badge("truncated") : ""}
+            <button type="button" class="secondary" data-memory-compact="apply" ${candidateCount ? "" : "disabled"}>Compact</button>
+          </div>
+        </div>
+        <pre class="context-text">${escapeHtml(compact.summary_text || "")}</pre>
+      `;
+    }
+
+    function memoryTags(tags) {
+      const items = (tags || []).slice(0, 4).map((tag) => `#${tag}`);
+      return items.length ? ` · ${items.map((tag) => escapeHtml(tag)).join(" ")}` : "";
+    }
+
+    function memoryFreshness(item) {
+      if (item.stale) {
+        return ` · stale ${escapeHtml(String(item.stale_reason || ""))}`;
+      }
+      if (item.last_attached_at) {
+        return ` · used ${escapeHtml(timeAgo(item.last_attached_at))}`;
+      }
+      return "";
+    }
+
+    function rawStorageBadge(item) {
+      const mode = item.raw_storage_mode || "redacted";
+      if (mode === "redacted" && !item.raw_content_stored && !item.encrypted_content_stored) {
+        return "";
+      }
+      return badge(mode);
+    }
+
+    function renderError(error) {
+      el("updated-at").textContent = "Refresh failed";
+      el("events-body").innerHTML = `<tr><td colspan="9" class="error">${escapeHtml(error.message)}</td></tr>`;
+      el("policy-list").innerHTML = `<div class="error">${escapeHtml(error.message)}</div>`;
+      el("providers-list").innerHTML = `<div class="error">${escapeHtml(error.message)}</div>`;
+      el("routing-list").innerHTML = `<div class="error">${escapeHtml(error.message)}</div>`;
+      el("blocks-list").innerHTML = `<div class="error">${escapeHtml(error.message)}</div>`;
+      el("dlp-list").innerHTML = `<div class="error">${escapeHtml(error.message)}</div>`;
+      el("apps-list").innerHTML = `<div class="error">${escapeHtml(error.message)}</div>`;
+      el("mcp-list").innerHTML = `<div class="error">${escapeHtml(error.message)}</div>`;
+      el("usage-summary").innerHTML = `<div class="error">${escapeHtml(error.message)}</div>`;
+      el("usage-list").innerHTML = `<div class="error">${escapeHtml(error.message)}</div>`;
+      el("memory-context").innerHTML = `<div class="error">${escapeHtml(error.message)}</div>`;
+      el("memory-session").innerHTML = `<div class="error">${escapeHtml(error.message)}</div>`;
+      el("memory-compact").innerHTML = `<div class="error">${escapeHtml(error.message)}</div>`;
+      el("memory-replay").innerHTML = `<div class="error">${escapeHtml(error.message)}</div>`;
+      el("memory-timeline").innerHTML = `<div class="error">${escapeHtml(error.message)}</div>`;
+      el("memory-list").innerHTML = `<div class="error">${escapeHtml(error.message)}</div>`;
+    }
+
+    el("refresh").addEventListener("click", refresh);
+    document.addEventListener("click", async (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLButtonElement)) return;
+      const action = target.dataset.appAction;
+      const appId = target.dataset.appId;
+      const routingAction = target.dataset.routingAction;
+      const routingId = target.dataset.routingId;
+      const runtimeAction = target.dataset.runtimeAction;
+      const runtimeId = target.dataset.runtimeId;
+      const memoryAction = target.dataset.memoryAction;
+      const memoryId = target.dataset.memoryId;
+      const memoryExtract = target.dataset.memoryExtract;
+      const memoryCompact = target.dataset.memoryCompact;
+      const memoryReplay = target.dataset.memoryReplay;
+      const policyPreset = target.dataset.policyPreset;
+      const policyBackup = target.dataset.policyBackup;
+      if (memoryExtract === "apply") {
+        if (!window.confirm("extract runtime session summary into memory?")) return;
+        target.disabled = true;
+        try {
+          await postJson("/memory/extract", { confirm: true, limit: 100, max_summary_chars: 1200 });
+          await refresh();
+        } catch (error) {
+          target.disabled = false;
+          renderError(error);
+        }
+        return;
+      }
+      if (memoryReplay === "apply") {
+        if (!window.confirm("save metadata-only session replay into memory?")) return;
+        target.disabled = true;
+        try {
+          await postJson("/memory/replay", { confirm: true, limit: 100, max_replay_chars: 1600 });
+          await refresh();
+        } catch (error) {
+          target.disabled = false;
+          renderError(error);
+        }
+        return;
+      }
+      if (memoryCompact === "apply") {
+        if (!window.confirm("apply memory compaction?")) return;
+        target.disabled = true;
+        try {
+          await postJson("/memory/compact", { confirm: true, limit: 100, max_summary_chars: 1200 });
+          await refresh();
+        } catch (error) {
+          target.disabled = false;
+          renderError(error);
+        }
+        return;
+      }
+      if (memoryAction && memoryId) {
+        target.disabled = true;
+        try {
+          if (memoryAction === "pin") {
+            await patchJson(`/memory/items/${encodeURIComponent(memoryId)}`, {
+              pinned: target.dataset.memoryPinned !== "true"
+            });
+          } else if (memoryAction === "delete") {
+            if (!window.confirm(`delete memory item ${memoryId}?`)) {
+              target.disabled = false;
+              return;
+            }
+            await deleteJson(`/memory/items/${encodeURIComponent(memoryId)}?confirm=true`);
+          }
+          await refresh();
+        } catch (error) {
+          target.disabled = false;
+          renderError(error);
+        }
+        return;
+      }
+      if (policyBackup) {
+        if (!window.confirm(`restore policy backup ${policyBackup}?`)) return;
+        target.disabled = true;
+        try {
+          await postJson(`/policy/backups/${encodeURIComponent(policyBackup)}/restore`, { confirm: true });
+          await refresh();
+        } catch (error) {
+          target.disabled = false;
+          renderError(error);
+        }
+        return;
+      }
+      if (policyPreset) {
+        if (!window.confirm(`apply ${policyPreset} policy?`)) return;
+        target.disabled = true;
+        try {
+          await postJson(`/policy/presets/${encodeURIComponent(policyPreset)}/apply`, { confirm: true });
+          await refresh();
+        } catch (error) {
+          target.disabled = false;
+          renderError(error);
+        }
+        return;
+      }
+      if (routingAction && routingId) {
+        const verb = routingAction === "protect" ? "update routing for" : "remove routing for";
+        if (!window.confirm(`${verb} ${routingId}?`)) return;
+        target.disabled = true;
+        try {
+          await postJson(`/providers/integrations/${encodeURIComponent(routingId)}/${routingAction}`, { confirm: true });
+          await refresh();
+        } catch (error) {
+          target.disabled = false;
+          renderError(error);
+        }
+        return;
+      }
+      if (runtimeAction === "select" && runtimeId) {
+        if (!window.confirm(`select local runtime ${runtimeId}?`)) return;
+        target.disabled = true;
+        try {
+          await postJson(`/providers/local-runtimes/${encodeURIComponent(runtimeId)}/select`, { confirm: true });
+          await refresh();
+        } catch (error) {
+          target.disabled = false;
+          renderError(error);
+        }
+        return;
+      }
+      if (!action || !appId) return;
+      const verb = action === "protect" ? "protect" : "restore";
+      if (!window.confirm(`${verb} ${appId}?`)) return;
+      target.disabled = true;
+      try {
+        await postJson(`/mcp/apps/${encodeURIComponent(appId)}/${action}`, { confirm: true });
+        await refresh();
+      } catch (error) {
+        target.disabled = false;
+        renderError(error);
+      }
+    });
+    el("memory-filter-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      await refresh();
+    });
+    refresh();
+    window.setInterval(refresh, 15000);
+  </script>
+</body>
+</html>
