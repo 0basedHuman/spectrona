@@ -5,6 +5,14 @@ Do NOT store transcripts, code dumps, or logs.
 
 ---
 
+## 2026-09-10 — Session 078: R8 harvest still token-blocked
+Prompt Summary: Continue R8 public corpus work.
+Decision: Do not reuse pasted credentials; no `GITHUB_TOKEN` or `gh` auth path is visible to this Codex shell.
+Decision: R8 cannot harvest public GitHub candidates in this environment yet.
+Files Changed: checkpoint docs only.
+Validation: R8 blocker reproduced; `bash validation/validate_all.sh` PASS; no code or corpus changes made.
+Next: Restart/launch Codex with a fresh `GITHUB_TOKEN` in its environment, then rerun R8 harvest/queue/label/promote.
+
 ## 2026-09-07 — Session 077: R8 token availability check
 Prompt Summary: Continue R8 after maintainer handled the exposed GitHub token.
 Decision: Do not reuse or log pasted credentials; only consume `GITHUB_TOKEN` from the local process environment.

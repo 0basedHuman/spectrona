@@ -2,6 +2,58 @@
 
 ---
 
+## Session 078 — 2026-09-10
+
+**User intent:** Continue R8 public MCP config corpus work.
+
+**Implementation steps:**
+1. Re-read the required remediation harness context.
+2. Confirmed active work remains R8 only.
+3. Reproduced the remaining R8 completion gap.
+   - `python3 validation/corpus_benchmark.py --min-size 1000` still fails with `corpus has 12 cases; need at least 1000`.
+4. Checked safe harvest authentication paths without printing secrets.
+   - `GITHUB_TOKEN=absent` in this Codex process environment.
+   - `gh` is not installed, so there is no authenticated GitHub CLI fallback.
+5. Did not run the GitHub harvester because it would fail before useful redacted candidate collection.
+
+**Files changed:**
+- `docs/MEMORY.md`
+- `docs/SESSION_LOG.md`
+- `docs/current_refactor_status.md`
+
+**Validation results:**
+- R8 completion gap reproduced: `python3 validation/corpus_benchmark.py --min-size 1000` -> `corpus has 12 cases; need at least 1000`.
+- Token availability check: `GITHUB_TOKEN=absent`; `gh` CLI not installed.
+- `bash validation/validate_all.sh` -> PASS.
+
+Master gate output excerpt:
+```text
+=== Pytest Result: 2 passed, 0 failed ===
+=== Corpus Benchmark Result: 12 passed, 0 failed ===
+=== Phase 1 Result: 107 passed, 0 failed ===
+=== Policy Engine Result: 14 passed, 0 failed ===
+=== Phase 2 Result: 96 passed, 0 failed ===
+=== Dashboard Browser Result: 6 passed, 0 failed, 0 skipped ===
+=== Phase 2C Result: 127 passed, 0 failed ===
+=== Packaging Result: 40 passed, 0 failed ===
+=== Phase 3 Memory Routes Result: 62 passed, 0 failed ===
+=== Phase 2 Result: 17 passed, 0 failed ===
+=== Phase 3 Result: SKIPPED ===
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  OVERALL RESULT: PASS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+**Notes:**
+- R8 remains open and blocked at GitHub candidate harvest.
+- The credential pasted in chat was not reused, written, logged, or committed.
+- No corpus data changed.
+
+**Next recommended step:**
+Restart or launch Codex with a fresh `GITHUB_TOKEN` already exported in its environment, then continue R8 only: harvest redacted candidates, build the labeling queue, manually label and promote roughly 1,000 reviewed records, and enforce the full corpus benchmark.
+
+---
+
 ## Session 077 — 2026-09-07
 
 **User intent:** Continue R8 after handling the exposed GitHub token.
