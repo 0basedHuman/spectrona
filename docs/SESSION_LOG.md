@@ -2,6 +2,77 @@
 
 ---
 
+## Session 079 — 2026-09-13
+
+**User intent:** Continue R8 using the local GitHub token file without exposing the token.
+
+**Implementation steps:**
+1. Re-read the required remediation harness context.
+2. Confirmed active work remains R8 only.
+3. Verified `~/Documents/github_token.txt` exists and that sourcing it makes `GITHUB_TOKEN` present, without printing the token value.
+4. Reproduced the remaining R8 completion gap.
+   - `python3 validation/corpus_benchmark.py --min-size 1000` still fails with `corpus has 12 cases; need at least 1000`.
+5. Ran the GitHub harvester to `/tmp` first.
+   - Initial sandboxed run failed on DNS, then network-approved harvest reached GitHub.
+   - First network run exposed an unencoded GitHub content URL path with spaces.
+   - Second run exposed transient connection resets aborting the whole harvest.
+6. Hardened `validation/harvest_mcp_corpus.py`.
+   - GitHub API URLs are percent-encoded before `urllib` fetches them.
+   - Unreadable candidate fetches are skipped with metadata-only stderr instead of aborting the batch.
+7. Added harvester regression coverage for URL encoding and token-safe fetch-failure logging.
+8. Harvested 196 redacted candidate records and generated local review artifact `validation/corpus/labeling_queue_20260913.jsonl`.
+9. Checked the queue for raw secret-shaped values by count only before keeping it locally.
+10. Kept generated labeling queues ignored from Git until explicitly reviewed/approved for publication.
+
+**Files changed:**
+- `validation/harvest_mcp_corpus.py`
+- `tests/test_harvest_mcp_corpus.py`
+- `.gitignore`
+- `docs/MEMORY.md`
+- `docs/SESSION_LOG.md`
+- `docs/current_refactor_status.md`
+- `docs/VALIDATION.md`
+- `docs/PHASES.md`
+
+**Validation results:**
+- R8 completion gap reproduced: `python3 validation/corpus_benchmark.py --min-size 1000` -> `corpus has 12 cases; need at least 1000`.
+- Token file check: token file present; sourced environment reports `GITHUB_TOKEN=present`.
+- Focused harvester tests: `python3 -m pytest -q tests/test_harvest_mcp_corpus.py` -> PASS.
+- Focused R8 tests: `python3 -m pytest -q tests/test_harvest_mcp_corpus.py tests/test_corpus_label_queue.py tests/test_corpus_promote_labeled.py tests/test_corpus_benchmark.py` -> PASS.
+- Corpus validation: `bash validation/corpus_validate.sh` -> PASS.
+- Queue redaction shape check: `github_pat=0`, `ghp=0`, `openai_sk_value=0`, `aws_access_key=0`, `slack=0`.
+- `bash validation/validate_all.sh` -> PASS.
+
+Master gate output excerpt:
+```text
+=== Pytest Result: 2 passed, 0 failed ===
+=== Corpus Benchmark Result: 12 passed, 0 failed ===
+=== Phase 1 Result: 107 passed, 0 failed ===
+=== Policy Engine Result: 14 passed, 0 failed ===
+=== Phase 2 Result: 96 passed, 0 failed ===
+=== Dashboard Browser Result: 6 passed, 0 failed, 0 skipped ===
+=== Phase 2C Result: 127 passed, 0 failed ===
+=== Packaging Result: 40 passed, 0 failed ===
+=== Phase 3 Memory Routes Result: 62 passed, 0 failed ===
+=== Phase 2 Result: 17 passed, 0 failed ===
+=== Phase 3 Result: SKIPPED ===
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  OVERALL RESULT: PASS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+**Notes:**
+- R8 is not complete. The generated queue records are local unlabeled reviewer inputs, not benchmark cases.
+- The harvest produced 196 redacted queue records: 120 predicted clean and 76 with scanner-predicted findings for triage.
+- The queue file is intentionally ignored from Git pending review or explicit publication approval.
+- The token file was not read with `cat`, printed, logged, committed, or copied into the repo.
+- GitHub harvesting still needs repetition and human labeling/promotion to reach the roughly 1,000 labeled-config target.
+
+**Next recommended step:**
+Continue R8 only: manually review `validation/corpus/labeling_queue_20260913.jsonl`, set `expected_finding_ids`, add `reviewed: true` and final `label_notes`, promote reviewed records, repeat harvesting toward roughly 1,000 labeled redacted configs, then enforce the full corpus benchmark before moving to R9.
+
+---
+
 ## Session 078 — 2026-09-10
 
 **User intent:** Continue R8 public MCP config corpus work.

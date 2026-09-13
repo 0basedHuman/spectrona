@@ -12,7 +12,7 @@ bash validation/validate_all.sh
 
 **Script:** `validation/pytest_validate.sh`
 
-**Last run:** 2026-09-10 (Session 078 — R8 harvest token-blocked checkpoint)
+**Last run:** 2026-09-13 (Session 079 — R8 token-backed redacted labeling queue)
 **Result:** PASS
 
 **Checks:**
@@ -30,7 +30,7 @@ bash validation/validate_all.sh
 - [x] MCP, Claude, Cursor, and repo detector IDs are asserted through direct scanner API tests
 - [x] Detector regression tests assert raw fixture secrets and raw risky text are absent from finding evidence
 - [x] R8 seed corpus benchmark contract is asserted from pytest
-- [x] R8 harvester query fan-out, deduplication, and JSON extraction are asserted from pytest
+- [x] R8 harvester query fan-out, URL encoding, fetch-skip behavior, deduplication, and JSON extraction are asserted from pytest
 - [x] R8 labeling queue contract is asserted from pytest
 - [x] R8 labeled corpus promotion contract is asserted from pytest
 
@@ -40,7 +40,7 @@ bash validation/validate_all.sh
 
 **Script:** `validation/corpus_validate.sh`
 
-**Last run:** 2026-09-10 (Session 078 — R8 harvest token-blocked checkpoint)
+**Last run:** 2026-09-13 (Session 079 — R8 token-backed redacted labeling queue)
 **Result:** PASS
 
 **Checks:**
@@ -53,6 +53,7 @@ bash validation/validate_all.sh
 - [x] Benchmark reports per-rule precision and recall
 - [x] Measured rules pass the 95% precision gate on the seed corpus
 - [x] Harvester defaults fan out across common MCP query shapes
+- [x] Token-backed GitHub harvest produced a redacted unlabeled queue for human review
 - [x] Labeling queue helper writes stratified unlabeled records with scanner predictions
 - [x] Promotion helper rejects unlabeled queue records before corpus write
 - [x] Corpus excludes raw reviewed secret samples
@@ -63,7 +64,7 @@ bash validation/validate_all.sh
 
 **Script:** `mcp-inspector/validation/phase1_validate.sh`
 
-**Last run:** 2026-09-10 (Session 078 — R8 harvest token-blocked checkpoint)
+**Last run:** 2026-09-13 (Session 079 — R8 token-backed redacted labeling queue)
 **Result:** PASS — master gate passed.
 
 **Checks:**
@@ -154,7 +155,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `spectrona-gateway/validation/phase2_gateway_validate.sh`
 
-**Last run:** 2026-09-10 (Session 078 — R8 harvest token-blocked checkpoint)
+**Last run:** 2026-09-13 (Session 079 — R8 token-backed redacted labeling queue)
 **Result:** PASS — master gate passed.
 
 **Checks:**
@@ -257,7 +258,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `spectrona-gateway/validation/dashboard_browser_validate.sh`
 
-**Last run:** 2026-09-10 (Session 078 — R8 harvest token-blocked checkpoint)
+**Last run:** 2026-09-13 (Session 079 — R8 token-backed redacted labeling queue)
 **Result:** PASS
 
 **Checks:**
@@ -279,7 +280,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `policy-engine/validation/policy_validate.sh`
 
-**Last run:** 2026-09-10 (Session 078 — R8 harvest token-blocked checkpoint)
+**Last run:** 2026-09-13 (Session 079 — R8 token-backed redacted labeling queue)
 **Result:** PASS — F6 reproduced before fix and absent after; master gate passed.
 
 **Checks:**
@@ -305,7 +306,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `spectrona-cli/validation/phase2_cli_validate.sh`
 
-**Last run:** 2026-09-10 (Session 078 — R8 harvest token-blocked checkpoint)
+**Last run:** 2026-09-13 (Session 079 — R8 token-backed redacted labeling queue)
 **Result:** PASS
 
 **Checks:**
@@ -406,7 +407,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `spectrona-gateway/validation/phase3_memory_routes_validate.sh`
 
-**Last run:** 2026-09-10 (Session 078 — R8 harvest token-blocked checkpoint)
+**Last run:** 2026-09-13 (Session 079 — R8 token-backed redacted labeling queue)
 **Result:** PASS
 
 **Checks:**
@@ -477,7 +478,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `packaging/validate_packaging.sh`
 
-**Last run:** 2026-09-10 (Session 078 — R8 harvest token-blocked checkpoint)
+**Last run:** 2026-09-13 (Session 079 — R8 token-backed redacted labeling queue)
 **Result:** PASS
 
 **Checks:**
@@ -524,7 +525,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `runtime-guard/validation/phase2_validate.sh`
 
-**Last run:** 2026-09-10 (Session 078 — R8 harvest token-blocked checkpoint)
+**Last run:** 2026-09-13 (Session 079 — R8 token-backed redacted labeling queue)
 **Result:** PASS
 
 **Checks:**
@@ -591,7 +592,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 ## Full suite
 
-**Last run:** 2026-09-10 (Session 078 — R8 harvest token-blocked checkpoint)
+**Last run:** 2026-09-13 (Session 079 — R8 token-backed redacted labeling queue)
 **Result:** PASS
 
 **Command:**

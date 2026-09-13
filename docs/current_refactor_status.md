@@ -15,6 +15,7 @@
 - Session 076 initialized Git, added the GitHub remote, and pushed the current workspace to `origin/main`.
 - Session 077 continued R8, refused to reuse the pasted token, and confirmed `GITHUB_TOKEN` is absent from this Codex shell.
 - Session 078 continued R8 and confirmed harvest is still blocked: no `GITHUB_TOKEN` and no `gh` CLI fallback are visible.
+- Session 079 continued R8, sourced the local token file without printing it, hardened GitHub harvesting, and generated a local 196-record redacted labeling queue.
 - `MCP_NO_AUDIT_LOG` is deleted from scanner code, rules, fixtures, validation, packaging checks, and current docs.
 - Package detection skips `${...}` references and aggregates unpinned package evidence by server path.
 - Gateway non-health routes now require a local bearer token, validate Host/Origin, and reject all-interface CLI binding.
@@ -26,8 +27,10 @@
 - Runtime shell risk now uses exact tool/schema signals instead of free-text substring matching; filesystem risk uses path-like argument keys.
 - `validation/corpus_benchmark.py` gates measured MCP scanner rules at 95% precision over redacted labeled corpus entries.
 - `validation/harvest_mcp_corpus.py` can collect redacted GitHub candidates with multi-query fan-out and deduplication.
+- `validation/harvest_mcp_corpus.py` percent-encodes GitHub API URLs and skips unreadable fetches instead of aborting a batch.
 - `validation/corpus_label_queue.py` stratifies redacted candidates and attaches scanner predictions for human review.
 - `validation/corpus_promote_labeled.py` rejects unlabeled queue records and strips prediction metadata before benchmark promotion.
+- Local ignored artifact `validation/corpus/labeling_queue_20260913.jsonl` contains 196 redacted public GitHub candidate records awaiting human labels.
 - Git `origin` points at `https://github.com/0basedHuman/spectrona.git`; `main` tracks `origin/main`.
 - Permanent F1-F7 reproductions live under `tests/regression/`.
 
@@ -85,6 +88,7 @@
 - `validation/corpus_label_queue.py`
 - `validation/corpus_promote_labeled.py`
 - `validation/corpus/`
+- local ignored artifact: `validation/corpus/labeling_queue_20260913.jsonl`
 - `validation/validate_all.sh`
 - `tests/__init__.py`
 - `tests/conftest.py`
@@ -112,9 +116,9 @@
 
 ## Remaining Work
 - R8 remains open for full ~1,000 public GitHub config harvest, labeling queue review, and manual promotion into the benchmark corpus.
-- R8 harvest is blocked until Codex is launched with a fresh `GITHUB_TOKEN` in its environment.
+- R8 harvest is no longer token-blocked in this shell when `~/Documents/github_token.txt` is sourced, but the current queue is unlabeled and too small for completion.
 - R9 through R10 remain open.
 - MCP proxy notification desync remains open; R10 owns transport rewrite.
 
 ## Exact Next Step
-Continue R8 only: launch Codex with a fresh `GITHUB_TOKEN` already exported, run the expanded GitHub harvester, generate the labeling queue, manually label redacted candidates, promote the reviewed corpus, and enforce the benchmark on the full corpus before moving to R9.
+Continue R8 only: manually label `validation/corpus/labeling_queue_20260913.jsonl`, promote reviewed records, repeat token-backed harvesting toward roughly 1,000 labeled redacted configs, and enforce the benchmark on the full corpus before moving to R9.

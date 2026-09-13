@@ -5,6 +5,14 @@ Do NOT store transcripts, code dumps, or logs.
 
 ---
 
+## 2026-09-13 — Session 079: R8 token-backed redacted queue
+Prompt Summary: Use local token file safely and continue R8 public corpus work.
+Decision: Token file was sourced only inside harvest commands; no token value was printed, logged, or committed.
+Decision: Harvester now percent-encodes GitHub API URLs and skips unreadable candidates instead of aborting.
+Files Changed: harvester resilience, harvester tests, queue ignore rule, checkpoint docs; local redacted queue generated for review.
+Validation: R8 blocker reproduced; harvested 196 redacted candidate queue records; focused R8 tests PASS; master gate PASS.
+Next: Human-label queue records, promote reviewed labels, repeat harvest toward roughly 1,000 labeled configs, then enforce full benchmark.
+
 ## 2026-09-10 — Session 078: R8 harvest still token-blocked
 Prompt Summary: Continue R8 public corpus work.
 Decision: Do not reuse pasted credentials; no `GITHUB_TOKEN` or `gh` auth path is visible to this Codex shell.

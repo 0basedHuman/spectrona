@@ -11,10 +11,12 @@ from __future__ import annotations
 
 import argparse
 import base64
+import http.client
 import json
 import os
 import re
 import sys
+import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -53,11 +55,12 @@ def main() -> int:
     out = Path(args.output)
     out.parent.mkdir(parents=True, exist_ok=True)
     written = 0
+    skipped_fetches = 0
     with out.open("w", encoding="utf-8") as handle:
         for item in _search_queries(_queries(args.query), token, args.limit):
-            raw = _fetch_file(item["url"], token)
-            config = _extract_first_mcp_config(raw)
+            config = _fetch_candidate_config(item, token)
             if config is None:
+                skipped_fetches += 1
                 continue
             record = {
                 "case_id": _case_id(item),
@@ -72,7 +75,7 @@ def main() -> int:
             written += 1
             if written >= args.limit:
                 break
-    print(f"wrote {written} redacted candidate records to {out}")
+    print(f"wrote {written} redacted candidate records to {out}; skipped {skipped_fetches} unreadable candidates")
     return 0
 
 
@@ -133,7 +136,17 @@ def _fetch_file(api_url: str, token: str) -> str:
     return str(content)
 
 
+def _fetch_candidate_config(item: dict[str, Any], token: str) -> dict[str, Any] | None:
+    try:
+        raw = _fetch_file(item["url"], token)
+    except (OSError, urllib.error.URLError, http.client.InvalidURL, ValueError, KeyError) as exc:
+        print(f"skipping unreadable candidate {_case_id(item)}: {type(exc).__name__}", file=sys.stderr)
+        return None
+    return _extract_first_mcp_config(raw)
+
+
 def _github_json(url: str, token: str) -> dict[str, Any]:
+    url = _quote_url(url)
     request = urllib.request.Request(
         url,
         headers={
@@ -144,6 +157,17 @@ def _github_json(url: str, token: str) -> dict[str, Any]:
     )
     with urllib.request.urlopen(request, timeout=20) as response:
         return json.loads(response.read().decode("utf-8"))
+
+
+def _quote_url(url: str) -> str:
+    parts = urllib.parse.urlsplit(url)
+    return urllib.parse.urlunsplit((
+        parts.scheme,
+        parts.netloc,
+        urllib.parse.quote(parts.path, safe="/%"),
+        urllib.parse.quote(parts.query, safe="=&%:+"),
+        parts.fragment,
+    ))
 
 
 def _extract_first_mcp_config(text: str) -> dict[str, Any] | None:

@@ -10,6 +10,7 @@ __pycache__/
 !mcp-inspector/examples/unsafe-repos/basic/.env
 
 *.log
+validation/corpus/labeling_queue_*.jsonl
 dist/
 build/
 *.egg-info/
