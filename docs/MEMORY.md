@@ -5,6 +5,14 @@ Do NOT store transcripts, code dumps, or logs.
 
 ---
 
+## 2026-09-13 — Session 082: R8 corpus labeling shard
+Prompt Summary: Continue R8 by labeling more records from the local redacted GitHub queue.
+Decision: Promoted 44 additional unambiguous queue records; benchmark corpus now has 88 labeled cases.
+Decision: Skipped ambiguous broader-policy cases instead of inventing new rules or labels.
+Files Changed: labeled corpus, corpus validation minimum, checkpoint docs.
+Validation: R8 1,000-case blocker reproduced; 88-case benchmark PASS; corpus validation PASS; focused pytest PASS; master gate PASS.
+Next: Continue R8 only by labeling remaining queue records and harvesting more candidates until roughly 1,000 reviewed configs pass the precision gate.
+
 ## 2026-09-13 — Session 081: R8 corpus precision shard
 Prompt Summary: Continue R8 labeling from the local redacted public GitHub queue.
 Decision: Promoted 25 additional manually reviewed queue records; benchmark corpus now has 44 labeled cases.

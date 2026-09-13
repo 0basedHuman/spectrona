@@ -60,16 +60,16 @@ else
   _fail "harvester default query coverage failed"
 fi
 
-if PYTHONPATH="$PYTHONPATH_VALUE" python3 "$ROOT/validation/corpus_benchmark.py" --min-size 44 >/dev/null 2>&1; then
+if PYTHONPATH="$PYTHONPATH_VALUE" python3 "$ROOT/validation/corpus_benchmark.py" --min-size 88 >/dev/null 2>&1; then
   _pass "reviewed corpus precision benchmark passes 95% gate"
 else
   _fail "reviewed corpus precision benchmark failed"
 fi
 
-if PYTHONPATH="$PYTHONPATH_VALUE" python3 "$ROOT/validation/corpus_benchmark.py" --json --min-size 44 | python3 -c "
+if PYTHONPATH="$PYTHONPATH_VALUE" python3 "$ROOT/validation/corpus_benchmark.py" --json --min-size 88 | python3 -c "
 import json, sys
 data=json.load(sys.stdin)
-assert data['corpus_cases'] >= 44
+assert data['corpus_cases'] >= 88
 assert not data['failed_rules']
 for rule in data['rules'].values():
     if rule['precision'] is not None:
