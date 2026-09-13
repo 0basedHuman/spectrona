@@ -5,6 +5,14 @@ Do NOT store transcripts, code dumps, or logs.
 
 ---
 
+## 2026-09-13 — Session 081: R8 corpus precision shard
+Prompt Summary: Continue R8 labeling from the local redacted public GitHub queue.
+Decision: Promoted 25 additional manually reviewed queue records; benchmark corpus now has 44 labeled cases.
+Decision: Corpus exposed and fixed scanner shell substring noise on `@executeautomation/playwright-mcp-server`.
+Files Changed: scanner shell detector, detector pytest, labeled corpus, corpus gate, checkpoint docs.
+Validation: R8 1,000-case blocker reproduced; 44-case benchmark PASS; focused pytest PASS; master gate PASS.
+Next: Continue R8 by labeling more queue records and harvesting more candidates until roughly 1,000 reviewed configs pass the precision gate.
+
 ## 2026-09-13 — Session 080: R8 reviewed corpus shard
 Prompt Summary: Continue R8 after token-backed queue generation.
 Decision: Promote only manually reviewed, unambiguous local queue records; scanner predictions remain triage only.

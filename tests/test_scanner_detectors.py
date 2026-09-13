@@ -35,6 +35,33 @@ def test_mcp_safe_fixture_has_no_high_or_critical_findings():
     assert "MCP_NO_AUDIT_LOG" not in _ids(findings)
 
 
+def test_mcp_shell_detector_uses_tokens_not_substrings(tmp_path):
+    fixture = tmp_path / "mcp.json"
+    fixture.write_text(json.dumps({
+        "mcpServers": {
+            "playwright": {
+                "command": "npx",
+                "args": ["-y", "@executeautomation/playwright-mcp-server"],
+            },
+            "docker-tools": {
+                "command": "docker",
+                "args": ["exec", "-i", "worker", "python", "/app/server.py"],
+            },
+            "code-runner": {
+                "command": "uvx",
+                "args": ["mcp-server-code-execution-mode"],
+            },
+        }
+    }), encoding="utf-8")
+
+    findings = scan_mcp_config(str(fixture), repo_root=str(ROOT))
+    shell_sources = [finding.source for finding in findings if finding.id == "MCP_SHELL_UNRESTRICTED"]
+
+    assert not any("playwright" in source for source in shell_sources)
+    assert any("docker-tools" in source for source in shell_sources)
+    assert any("code-runner" in source for source in shell_sources)
+
+
 def test_claude_unsafe_fixture_reports_expected_detector_ids_without_raw_secrets():
     fixture = MCP_EXAMPLES / "unsafe-claude-configs" / "settings-with-dangerous-permissions.json"
     findings = scan_claude_config(str(fixture), repo_root=str(ROOT))

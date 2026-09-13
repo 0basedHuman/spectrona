@@ -17,6 +17,7 @@
 - Session 078 continued R8 and confirmed harvest is still blocked: no `GITHUB_TOKEN` and no `gh` CLI fallback are visible.
 - Session 079 continued R8, sourced the local token file without printing it, hardened GitHub harvesting, and generated a local 196-record redacted labeling queue.
 - Session 080 continued R8 and promoted 7 manually reviewed public GitHub configs into the measured corpus.
+- Session 081 continued R8, promoted 25 more reviewed public GitHub configs, and fixed corpus-exposed scanner shell substring noise.
 - `MCP_NO_AUDIT_LOG` is deleted from scanner code, rules, fixtures, validation, packaging checks, and current docs.
 - Package detection skips `${...}` references and aggregates unpinned package evidence by server path.
 - Gateway non-health routes now require a local bearer token, validate Host/Origin, and reject all-interface CLI binding.
@@ -27,7 +28,8 @@
 - Shared `spectrona_detection` package now powers scanner secret matching, gateway DLP, runtime redaction, and repo secret prefix findings.
 - Runtime shell risk now uses exact tool/schema signals instead of free-text substring matching; filesystem risk uses path-like argument keys.
 - `validation/corpus_benchmark.py` gates measured MCP scanner rules at 95% precision over redacted labeled corpus entries.
-- `validation/corpus/mcp_configs_seed.jsonl` now contains 19 labeled cases, including 7 reviewed public GitHub configs.
+- `validation/corpus/mcp_configs_seed.jsonl` now contains 44 labeled cases, including 32 reviewed public GitHub configs.
+- Scanner shell detection now matches token-level shell indicators instead of arbitrary substrings, avoiding `executeautomation` package-name noise while retaining direct shell/code-execution signals.
 - `validation/harvest_mcp_corpus.py` can collect redacted GitHub candidates with multi-query fan-out and deduplication.
 - `validation/harvest_mcp_corpus.py` percent-encodes GitHub API URLs and skips unreadable fetches instead of aborting a batch.
 - `validation/corpus_label_queue.py` stratifies redacted candidates and attaches scanner predictions for human review.
@@ -70,6 +72,7 @@
 - `policy-engine/validation/policy_validate.sh`
 - `runtime-guard/src/runtime_guard/mcp_proxy.py`
 - `runtime-guard/src/runtime_guard/redaction.py`
+- `mcp-inspector/src/mcp_inspector/detectors/shell_detector.py`
 - `runtime-guard/validation/mcp_proxy_validate.py`
 - `runtime-guard/validation/mcp_config_wrap_validate.py`
 - `runtime-guard/validation/mcp_apps_protect_validate.py`

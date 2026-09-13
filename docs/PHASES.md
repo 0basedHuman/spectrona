@@ -27,6 +27,7 @@
 - [x] Labeled corpus promotion guard rejects unlabeled records and strips prediction metadata
 - [x] Token-backed GitHub harvest produced a redacted public candidate labeling queue
 - [x] Public GitHub reviewed shard is promoted into the measured corpus
+- [x] Corpus-backed scanner shell precision fix removed package-name substring noise
 - [ ] Full public MCP config corpus reaches roughly 1,000 labeled redacted configs
 - [ ] Unsafe example produces CRITICAL/HIGH findings
 - [ ] Safe example produces LOW/NONE findings

@@ -2,6 +2,72 @@
 
 ---
 
+## Session 081 — 2026-09-13
+
+**User intent:** Continue R8 public corpus labeling and push progress.
+
+**Implementation steps:**
+1. Re-read the required remediation harness context.
+2. Confirmed active work remains R8 only.
+3. Reproduced the remaining R8 completion gap.
+   - `python3 validation/corpus_benchmark.py --min-size 1000` fails with `corpus has 19 cases; need at least 1000`.
+4. Reviewed additional records from the local ignored queue.
+   - Promoted 25 public GitHub records with explicit `expected_finding_ids` and source-backed label notes.
+   - Kept scanner predictions as triage only; stripped prediction fields before benchmark promotion.
+5. The reviewed corpus exposed scanner shell-risk noise.
+   - `@executeautomation/playwright-mcp-server` was being flagged because `exec` appeared as a substring.
+   - Tightened scanner shell matching to token-level shell indicators while preserving direct shell, `docker exec`, and code-execution server detection.
+6. Raised `validation/corpus_validate.sh` benchmark minimum from 19 to 44.
+
+**Files changed:**
+- `mcp-inspector/src/mcp_inspector/detectors/shell_detector.py`
+- `tests/test_scanner_detectors.py`
+- `validation/corpus/mcp_configs_seed.jsonl`
+- `validation/corpus_validate.sh`
+- `docs/MEMORY.md`
+- `docs/SESSION_LOG.md`
+- `docs/current_refactor_status.md`
+- `docs/VALIDATION.md`
+- `docs/PHASES.md`
+
+**Validation results:**
+- R8 completion gap reproduced: `python3 validation/corpus_benchmark.py --min-size 1000` -> `corpus has 19 cases; need at least 1000`.
+- Labeled corpus count after promotion: 44 total records, including 32 reviewed `public_github` records.
+- `python3 validation/corpus_benchmark.py --min-size 44 --json` -> PASS; all measured rules reported 1.000 precision/recall on the 44-case corpus.
+- Focused pytest: `python3 -m pytest -q tests/test_scanner_detectors.py tests/test_corpus_benchmark.py tests/test_corpus_label_queue.py tests/test_corpus_promote_labeled.py` -> PASS.
+- Corpus validation: `bash validation/corpus_validate.sh` -> PASS with the 44-case minimum.
+- Changed-file raw-token shape check: `github_pat=0`, pasted-token prefix marker `=0`, `aws_access_key=0`, `slack=0`; the only raw review-secret marker hit is the existing forbidden-marker grep inside `validation/corpus_validate.sh`.
+- Initial sandboxed `bash validation/validate_all.sh` failed because localhost bind attempts were denied by the sandbox.
+- Escalated `bash validation/validate_all.sh` -> PASS.
+
+Master gate output excerpt:
+```text
+=== Pytest Result: 2 passed, 0 failed ===
+=== Corpus Benchmark Result: 12 passed, 0 failed ===
+=== Phase 1 Result: 107 passed, 0 failed ===
+=== Policy Engine Result: 14 passed, 0 failed ===
+=== Phase 2 Result: 96 passed, 0 failed ===
+=== Dashboard Browser Result: 6 passed, 0 failed, 0 skipped ===
+=== Phase 2C Result: 127 passed, 0 failed ===
+=== Packaging Result: 40 passed, 0 failed ===
+=== Phase 3 Memory Routes Result: 62 passed, 0 failed ===
+=== Phase 2 Result: 17 passed, 0 failed ===
+=== Phase 3 Result: SKIPPED ===
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  OVERALL RESULT: PASS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+**Notes:**
+- R8 remains open. The benchmark now measures 44 labeled records, not the roughly 1,000 required by the queue item.
+- The local ignored queue remains available for more human review and is still not committed.
+- No raw credential value from the token file or harvested candidates was printed, logged, or committed.
+
+**Next recommended step:**
+Continue R8 only: label more records from `validation/corpus/labeling_queue_20260913.jsonl`, promote reviewed labels, harvest more candidates if the queue is exhausted, and enforce the full roughly 1,000-case precision benchmark before moving to R9.
+
+---
+
 ## Session 080 — 2026-09-13
 
 **User intent:** Continue R8 public corpus work from the local redacted labeling queue.

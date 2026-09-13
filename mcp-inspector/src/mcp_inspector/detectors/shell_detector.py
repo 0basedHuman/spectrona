@@ -1,3 +1,4 @@
+import re
 from typing import Optional
 
 from ..models import Finding
@@ -9,6 +10,7 @@ _SHELL_TOKENS = [
     "zsh",
     "terminal",
     "exec",
+    "execution",
     "subprocess",
     "run_command",
 ]
@@ -19,9 +21,12 @@ _SHELL_COMMANDS = frozenset(["bash", "sh", "zsh", "fish", "dash", "pwsh", "power
 
 def _first_shell_token(text: str) -> Optional[str]:
     lower = text.lower()
+    tokens = [token for token in re.split(r"[^a-z0-9_]+", lower) if token]
     for token in _SHELL_TOKENS:
-        if token in lower:
+        if token in tokens:
             return token
+    if lower.endswith("shell") and lower not in {"nutshell", "seashell"}:
+        return "shell"
     return None
 
 
