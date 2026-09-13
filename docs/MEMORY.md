@@ -5,6 +5,14 @@ Do NOT store transcripts, code dumps, or logs.
 
 ---
 
+## 2026-09-13 — Session 080: R8 reviewed corpus shard
+Prompt Summary: Continue R8 after token-backed queue generation.
+Decision: Promote only manually reviewed, unambiguous local queue records; scanner predictions remain triage only.
+Decision: Seven public GitHub configs were added to the labeled benchmark corpus with source URLs and redacted metadata.
+Files Changed: labeled corpus, corpus validation minimum, checkpoint docs.
+Validation: R8 1,000-case blocker reproduced; 19-case benchmark PASS; corpus validation PASS; master gate PASS.
+Next: Continue R8 by labeling more queue records and repeating harvest until roughly 1,000 reviewed configs pass the precision gate.
+
 ## 2026-09-13 — Session 079: R8 token-backed redacted queue
 Prompt Summary: Use local token file safely and continue R8 public corpus work.
 Decision: Token file was sourced only inside harvest commands; no token value was printed, logged, or committed.

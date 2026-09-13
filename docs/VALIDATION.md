@@ -12,7 +12,7 @@ bash validation/validate_all.sh
 
 **Script:** `validation/pytest_validate.sh`
 
-**Last run:** 2026-09-13 (Session 079 — R8 token-backed redacted labeling queue)
+**Last run:** 2026-09-13 (Session 080 — R8 reviewed corpus shard)
 **Result:** PASS
 
 **Checks:**
@@ -40,7 +40,7 @@ bash validation/validate_all.sh
 
 **Script:** `validation/corpus_validate.sh`
 
-**Last run:** 2026-09-13 (Session 079 — R8 token-backed redacted labeling queue)
+**Last run:** 2026-09-13 (Session 080 — R8 reviewed corpus shard)
 **Result:** PASS
 
 **Checks:**
@@ -49,11 +49,12 @@ bash validation/validate_all.sh
 - [x] `validation/corpus_label_queue.py` exists and compiles
 - [x] `validation/corpus_promote_labeled.py` exists and compiles
 - [x] Redacted seed corpus exists under `validation/corpus/`
-- [x] Seed corpus has at least 10 labeled cases
+- [x] Reviewed corpus has at least 19 labeled cases
 - [x] Benchmark reports per-rule precision and recall
-- [x] Measured rules pass the 95% precision gate on the seed corpus
+- [x] Measured rules pass the 95% precision gate on the 19-case reviewed corpus
 - [x] Harvester defaults fan out across common MCP query shapes
 - [x] Token-backed GitHub harvest produced a redacted unlabeled queue for human review
+- [x] Seven public GitHub queue records were manually reviewed and promoted into the benchmark corpus
 - [x] Labeling queue helper writes stratified unlabeled records with scanner predictions
 - [x] Promotion helper rejects unlabeled queue records before corpus write
 - [x] Corpus excludes raw reviewed secret samples
@@ -64,7 +65,7 @@ bash validation/validate_all.sh
 
 **Script:** `mcp-inspector/validation/phase1_validate.sh`
 
-**Last run:** 2026-09-13 (Session 079 — R8 token-backed redacted labeling queue)
+**Last run:** 2026-09-13 (Session 080 — R8 reviewed corpus shard)
 **Result:** PASS — master gate passed.
 
 **Checks:**
@@ -155,7 +156,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `spectrona-gateway/validation/phase2_gateway_validate.sh`
 
-**Last run:** 2026-09-13 (Session 079 — R8 token-backed redacted labeling queue)
+**Last run:** 2026-09-13 (Session 080 — R8 reviewed corpus shard)
 **Result:** PASS — master gate passed.
 
 **Checks:**
@@ -258,7 +259,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `spectrona-gateway/validation/dashboard_browser_validate.sh`
 
-**Last run:** 2026-09-13 (Session 079 — R8 token-backed redacted labeling queue)
+**Last run:** 2026-09-13 (Session 080 — R8 reviewed corpus shard)
 **Result:** PASS
 
 **Checks:**
@@ -280,7 +281,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `policy-engine/validation/policy_validate.sh`
 
-**Last run:** 2026-09-13 (Session 079 — R8 token-backed redacted labeling queue)
+**Last run:** 2026-09-13 (Session 080 — R8 reviewed corpus shard)
 **Result:** PASS — F6 reproduced before fix and absent after; master gate passed.
 
 **Checks:**
@@ -306,7 +307,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `spectrona-cli/validation/phase2_cli_validate.sh`
 
-**Last run:** 2026-09-13 (Session 079 — R8 token-backed redacted labeling queue)
+**Last run:** 2026-09-13 (Session 080 — R8 reviewed corpus shard)
 **Result:** PASS
 
 **Checks:**
@@ -407,7 +408,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `spectrona-gateway/validation/phase3_memory_routes_validate.sh`
 
-**Last run:** 2026-09-13 (Session 079 — R8 token-backed redacted labeling queue)
+**Last run:** 2026-09-13 (Session 080 — R8 reviewed corpus shard)
 **Result:** PASS
 
 **Checks:**
@@ -478,7 +479,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `packaging/validate_packaging.sh`
 
-**Last run:** 2026-09-13 (Session 079 — R8 token-backed redacted labeling queue)
+**Last run:** 2026-09-13 (Session 080 — R8 reviewed corpus shard)
 **Result:** PASS
 
 **Checks:**
@@ -525,7 +526,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `runtime-guard/validation/phase2_validate.sh`
 
-**Last run:** 2026-09-13 (Session 079 — R8 token-backed redacted labeling queue)
+**Last run:** 2026-09-13 (Session 080 — R8 reviewed corpus shard)
 **Result:** PASS
 
 **Checks:**
@@ -592,7 +593,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 ## Full suite
 
-**Last run:** 2026-09-13 (Session 079 — R8 token-backed redacted labeling queue)
+**Last run:** 2026-09-13 (Session 080 — R8 reviewed corpus shard)
 **Result:** PASS
 
 **Command:**
