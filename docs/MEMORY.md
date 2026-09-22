@@ -5,6 +5,14 @@ Do NOT store transcripts, code dumps, or logs.
 
 ---
 
+## 2026-09-21 — Session 083: R8 corpus expansion shard
+Prompt Summary: Continue R8 by labeling another redacted GitHub queue slice.
+Decision: Promoted 47 additional unambiguous queue records; benchmark corpus now has 135 labeled cases.
+Decision: Skipped broader-policy cases such as Deno `--allow-run` until a rule decision exists.
+Files Changed: labeled corpus, corpus validation minimum, checkpoint docs.
+Validation: R8 1,000-case blocker reproduced; 135-case benchmark PASS; corpus validation PASS; focused pytest PASS; master gate PASS.
+Next: Continue R8 only by labeling remaining queue records and harvesting more candidates until roughly 1,000 reviewed configs pass the precision gate.
+
 ## 2026-09-13 — Session 082: R8 corpus labeling shard
 Prompt Summary: Continue R8 by labeling more records from the local redacted GitHub queue.
 Decision: Promoted 44 additional unambiguous queue records; benchmark corpus now has 88 labeled cases.

@@ -2,6 +2,66 @@
 
 ---
 
+## Session 083 — 2026-09-21
+
+**User intent:** Continue R8 public corpus labeling and push progress.
+
+**Implementation steps:**
+1. Re-read the required remediation harness context.
+2. Confirmed active work remains R8 only.
+3. Reproduced the remaining R8 completion gap.
+   - `python3 validation/corpus_benchmark.py --min-size 1000` fails with `corpus has 88 cases; need at least 1000`.
+4. Reviewed another unambiguous slice of `validation/corpus/labeling_queue_20260913.jsonl`.
+   - Promoted 47 additional public GitHub records with explicit `expected_finding_ids` and source-backed label notes.
+   - Skipped broader-policy cases such as Deno `--allow-run` rather than inventing new rule labels during R8.
+5. Raised `validation/corpus_validate.sh` benchmark minimum from 88 to 135.
+
+**Files changed:**
+- `validation/corpus/mcp_configs_seed.jsonl`
+- `validation/corpus_validate.sh`
+- `docs/MEMORY.md`
+- `docs/SESSION_LOG.md`
+- `docs/current_refactor_status.md`
+- `docs/VALIDATION.md`
+- `docs/PHASES.md`
+
+**Validation results:**
+- R8 completion gap reproduced: `python3 validation/corpus_benchmark.py --min-size 1000` -> `corpus has 88 cases; need at least 1000`.
+- Labeled corpus count after promotion: 135 total records, including 123 reviewed `public_github` records.
+- `python3 validation/corpus_benchmark.py --min-size 135 --json` -> PASS; all measured rules reported 1.000 precision/recall on the 135-case corpus.
+- Focused pytest: `python3 -m pytest -q tests/test_corpus_benchmark.py tests/test_corpus_label_queue.py tests/test_corpus_promote_labeled.py` -> PASS.
+- Corpus validation: `bash validation/corpus_validate.sh` -> PASS with the 135-case minimum.
+- Changed-file raw-token shape check: `github_pat=0`, pasted-token prefix marker `=0`; corpus has no `AKIA` or `xoxb-` markers. Historical session-log rule text still mentions those literal prefixes as detector examples.
+- `bash validation/validate_all.sh` -> PASS.
+
+Master gate output excerpt:
+```text
+=== Pytest Result: 2 passed, 0 failed ===
+=== Corpus Benchmark Result: 12 passed, 0 failed ===
+=== Phase 1 Result: 107 passed, 0 failed ===
+=== Policy Engine Result: 14 passed, 0 failed ===
+=== Phase 2 Result: 96 passed, 0 failed ===
+=== Dashboard Browser Result: 6 passed, 0 failed, 0 skipped ===
+=== Phase 2C Result: 127 passed, 0 failed ===
+=== Packaging Result: 40 passed, 0 failed ===
+=== Phase 3 Memory Routes Result: 62 passed, 0 failed ===
+=== Phase 2 Result: 17 passed, 0 failed ===
+=== Phase 3 Result: SKIPPED ===
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  OVERALL RESULT: PASS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+**Notes:**
+- R8 remains open. The benchmark now measures 135 labeled records, not the roughly 1,000 required by the queue item.
+- The local ignored queue remains available for more human review and is still not committed.
+- No raw credential value from the token file or harvested candidates was printed, logged, or committed.
+
+**Next recommended step:**
+Continue R8 only: label the remaining records from `validation/corpus/labeling_queue_20260913.jsonl`, harvest more redacted candidates if needed, and enforce the full roughly 1,000-case precision benchmark before moving to R9.
+
+---
+
 ## Session 082 — 2026-09-13
 
 **User intent:** Continue R8 public corpus labeling and push progress.
