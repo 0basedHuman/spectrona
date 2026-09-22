@@ -2,6 +2,72 @@
 
 ---
 
+## Session 085 — 2026-09-22
+
+**User intent:** Continue R8 public corpus growth and push progress.
+
+**Implementation steps:**
+1. Re-read the required remediation harness context.
+2. Confirmed active work remains R8 only.
+3. Reproduced the remaining R8 completion gap.
+   - `python3 validation/corpus_benchmark.py --min-size 1000` fails with `corpus has 199 cases; need at least 1000`.
+4. Confirmed the original local queue had only 9 unpromoted records left, all previously skipped for ambiguity.
+5. Sourced the local GitHub token file only inside the harvest command and printed no token value.
+   - `validation/harvest_mcp_corpus.py --limit 350` wrote 262 redacted candidate records to `/tmp/spectrona_harvest_085_candidates.jsonl`.
+   - `validation/corpus_label_queue.py` built a 262-record redacted review queue under `/tmp`.
+6. Manually reviewed the new redacted queue and promoted 78 clear records.
+   - Promoted only current-rule labels: unpinned packages, filesystem access outside repo, and clean configs.
+   - Skipped raw-looking credential values, ambiguous shell semantics, and broader-policy cases.
+7. Raised `validation/corpus_validate.sh` benchmark minimum from 199 to 277.
+
+**Files changed:**
+- `validation/corpus/mcp_configs_seed.jsonl`
+- `validation/corpus_validate.sh`
+- `docs/MEMORY.md`
+- `docs/SESSION_LOG.md`
+- `docs/current_refactor_status.md`
+- `docs/VALIDATION.md`
+- `docs/PHASES.md`
+- `docs/TODO.md`
+
+**Validation results:**
+- R8 completion gap reproduced: `python3 validation/corpus_benchmark.py --min-size 1000` -> `corpus has 199 cases; need at least 1000`.
+- Labeled corpus count after promotion: 277 total records, including 265 reviewed `public_github` records.
+- `python3 validation/corpus_benchmark.py --min-size 277 --json` -> PASS; all measured rules kept 1.000 precision.
+- Measured recall gap: `MCP_UNPINNED_PACKAGE` reports 113 true positives, 9 false negatives, and 0 false positives.
+- Focused pytest: `python3 -m pytest -q tests/test_corpus_benchmark.py tests/test_corpus_label_queue.py tests/test_corpus_promote_labeled.py tests/test_harvest_mcp_corpus.py` -> PASS.
+- Corpus validation: `bash validation/corpus_validate.sh` -> PASS with the 277-case minimum.
+- Changed-file raw-token shape check: `github_pat=0`, pasted-token prefix marker `=0`; corpus has no `AKIA` or `xoxb-` markers.
+- `bash validation/validate_all.sh` -> PASS.
+
+Master gate output excerpt:
+```text
+=== Pytest Result: 2 passed, 0 failed ===
+=== Corpus Benchmark Result: 12 passed, 0 failed ===
+=== Phase 1 Result: 107 passed, 0 failed ===
+=== Policy Engine Result: 14 passed, 0 failed ===
+=== Phase 2 Result: 96 passed, 0 failed ===
+=== Dashboard Browser Result: 6 passed, 0 failed, 0 skipped ===
+=== Phase 2C Result: 127 passed, 0 failed ===
+=== Packaging Result: 40 passed, 0 failed ===
+=== Phase 3 Memory Routes Result: 62 passed, 0 failed ===
+=== Phase 2 Result: 17 passed, 0 failed ===
+=== Phase 3 Result: SKIPPED ===
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  OVERALL RESULT: PASS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+**Notes:**
+- R8 remains open. The benchmark now measures 277 labeled records, not the roughly 1,000 required by the queue item.
+- Fresh harvested candidates and review queues stayed under `/tmp` and were not committed.
+- No raw credential value from the token file or harvested candidates was printed, logged, or committed.
+
+**Next recommended step:**
+Continue R8 only: repeat redacted harvest/label/promote toward the roughly 1,000-case benchmark, then address the measured unpinned-package recall misses in a scoped detector follow-up.
+
+---
+
 ## Session 084 — 2026-09-22
 
 **User intent:** Continue R8 public corpus labeling and push progress.

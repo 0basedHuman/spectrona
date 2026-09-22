@@ -5,6 +5,14 @@ Do NOT store transcripts, code dumps, or logs.
 
 ---
 
+## 2026-09-22 — Session 085: R8 fresh harvest shard
+Prompt Summary: Continue R8 by harvesting and labeling a fresh redacted GitHub candidate batch.
+Decision: Fresh token-backed harvest wrote 262 redacted candidates to `/tmp`; promoted 78 reviewed records.
+Decision: Corpus now has 277 labeled cases and keeps the `MCP_UNPINNED_PACKAGE` recall gap visible.
+Files Changed: labeled corpus, corpus validation minimum, TODO, checkpoint docs.
+Validation: R8 1,000-case blocker reproduced; 277-case precision gate PASS with unpinned recall 113 TP/9 FN; corpus validation PASS; focused pytest PASS; master gate PASS.
+Next: Continue R8 only by repeating redacted harvest/label/promote toward roughly 1,000 reviewed configs and address measured detector gaps in a scoped follow-up.
+
 ## 2026-09-22 — Session 084: R8 corpus recall shard
 Prompt Summary: Continue R8 by labeling the remaining clear records from the local redacted queue.
 Decision: Promoted 64 additional reviewed queue records; benchmark corpus now has 199 labeled cases.
