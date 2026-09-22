@@ -22,6 +22,7 @@
 - Session 083 continued R8 and promoted 47 more reviewed public GitHub configs into the measured corpus.
 - Session 084 continued R8, promoted 64 more reviewed public GitHub configs, and preserved measured unpinned-package recall misses in the corpus.
 - Session 085 continued R8, harvested a fresh redacted GitHub candidate batch, and promoted 78 more reviewed public GitHub configs.
+- Session 086 continued R8, harvested another fresh redacted GitHub candidate batch, and promoted 97 more reviewed public GitHub configs.
 - `MCP_NO_AUDIT_LOG` is deleted from scanner code, rules, fixtures, validation, packaging checks, and current docs.
 - Package detection skips `${...}` references and aggregates unpinned package evidence by server path.
 - Gateway non-health routes now require a local bearer token, validate Host/Origin, and reject all-interface CLI binding.
@@ -32,8 +33,8 @@
 - Shared `spectrona_detection` package now powers scanner secret matching, gateway DLP, runtime redaction, and repo secret prefix findings.
 - Runtime shell risk now uses exact tool/schema signals instead of free-text substring matching; filesystem risk uses path-like argument keys.
 - `validation/corpus_benchmark.py` gates measured MCP scanner rules at 95% precision over redacted labeled corpus entries.
-- `validation/corpus/mcp_configs_seed.jsonl` now contains 277 labeled cases, including 265 reviewed public GitHub configs.
-- The 277-case benchmark keeps `MCP_UNPINNED_PACKAGE` precision at 1.0 and now reports a measured recall gap: 113 true positives, 9 false negatives.
+- `validation/corpus/mcp_configs_seed.jsonl` now contains 374 labeled cases, including 362 reviewed public GitHub configs.
+- The 374-case benchmark keeps `MCP_UNPINNED_PACKAGE` precision at 1.0 and now reports a measured recall gap: 138 true positives, 18 false negatives.
 - Scanner shell detection now matches token-level shell indicators instead of arbitrary substrings, avoiding `executeautomation` package-name noise while retaining direct shell/code-execution signals.
 - `validation/harvest_mcp_corpus.py` can collect redacted GitHub candidates with multi-query fan-out and deduplication.
 - `validation/harvest_mcp_corpus.py` percent-encodes GitHub API URLs and skips unreadable fetches instead of aborting a batch.
@@ -131,4 +132,4 @@
 - MCP proxy notification desync remains open; R10 owns transport rewrite.
 
 ## Exact Next Step
-Continue R8 only: manually label more records from `validation/corpus/labeling_queue_20260913.jsonl`, promote reviewed records, repeat token-backed harvesting toward roughly 1,000 labeled redacted configs, and enforce the benchmark on the full corpus before moving to R9.
+Continue R8 only: repeat token-backed redacted harvesting, manually label clear records, promote reviewed records toward roughly 1,000 labeled redacted configs, and enforce the benchmark on the full corpus before moving to R9.
