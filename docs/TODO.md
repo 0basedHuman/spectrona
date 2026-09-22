@@ -23,6 +23,10 @@ Required proof for each feature:
 - It does not leak raw secrets in logs, terminal output, API responses, or UI state.
 - It has a clear rollback or disable path when it changes user config.
 
+## R8 Corpus Follow-Up
+
+- [ ] Investigate the five measured `MCP_UNPINNED_PACKAGE` false negatives exposed by the 199-case corpus; keep any detector change scoped to an existing rule and prove it against the corpus precision gate.
+
 ## P0 - Runtime Guard Foundation
 
 Goal: make Spectrona a real guard layer, not only a scanner/gateway.

@@ -12,7 +12,7 @@ bash validation/validate_all.sh
 
 **Script:** `validation/pytest_validate.sh`
 
-**Last run:** 2026-09-21 (Session 083 — R8 corpus expansion shard)
+**Last run:** 2026-09-22 (Session 084 — R8 corpus recall shard)
 **Result:** PASS
 
 **Checks:**
@@ -40,7 +40,7 @@ bash validation/validate_all.sh
 
 **Script:** `validation/corpus_validate.sh`
 
-**Last run:** 2026-09-21 (Session 083 — R8 corpus expansion shard)
+**Last run:** 2026-09-22 (Session 084 — R8 corpus recall shard)
 **Result:** PASS
 
 **Checks:**
@@ -49,12 +49,13 @@ bash validation/validate_all.sh
 - [x] `validation/corpus_label_queue.py` exists and compiles
 - [x] `validation/corpus_promote_labeled.py` exists and compiles
 - [x] Redacted seed corpus exists under `validation/corpus/`
-- [x] Reviewed corpus has at least 135 labeled cases
+- [x] Reviewed corpus has at least 199 labeled cases
 - [x] Benchmark reports per-rule precision and recall
-- [x] Measured rules pass the 95% precision gate on the 135-case reviewed corpus
+- [x] Measured rules pass the 95% precision gate on the 199-case reviewed corpus
 - [x] Harvester defaults fan out across common MCP query shapes
 - [x] Token-backed GitHub harvest produced a redacted unlabeled queue for human review
-- [x] One hundred twenty-three public GitHub queue records were manually reviewed and promoted into the benchmark corpus
+- [x] One hundred eighty-seven public GitHub queue records were manually reviewed and promoted into the benchmark corpus
+- [x] Benchmark reports a measured `MCP_UNPINNED_PACKAGE` recall gap: 80 true positives, 5 false negatives, 0 false positives
 - [x] Corpus-backed shell detector precision fix excludes package-name substring noise
 - [x] Labeling queue helper writes stratified unlabeled records with scanner predictions
 - [x] Promotion helper rejects unlabeled queue records before corpus write
@@ -66,7 +67,7 @@ bash validation/validate_all.sh
 
 **Script:** `mcp-inspector/validation/phase1_validate.sh`
 
-**Last run:** 2026-09-21 (Session 083 — R8 corpus expansion shard)
+**Last run:** 2026-09-22 (Session 084 — R8 corpus recall shard)
 **Result:** PASS — master gate passed.
 
 **Checks:**
@@ -157,7 +158,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `spectrona-gateway/validation/phase2_gateway_validate.sh`
 
-**Last run:** 2026-09-21 (Session 083 — R8 corpus expansion shard)
+**Last run:** 2026-09-22 (Session 084 — R8 corpus recall shard)
 **Result:** PASS — master gate passed.
 
 **Checks:**
@@ -260,7 +261,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `spectrona-gateway/validation/dashboard_browser_validate.sh`
 
-**Last run:** 2026-09-21 (Session 083 — R8 corpus expansion shard)
+**Last run:** 2026-09-22 (Session 084 — R8 corpus recall shard)
 **Result:** PASS
 
 **Checks:**
@@ -282,7 +283,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `policy-engine/validation/policy_validate.sh`
 
-**Last run:** 2026-09-21 (Session 083 — R8 corpus expansion shard)
+**Last run:** 2026-09-22 (Session 084 — R8 corpus recall shard)
 **Result:** PASS — F6 reproduced before fix and absent after; master gate passed.
 
 **Checks:**
@@ -308,7 +309,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `spectrona-cli/validation/phase2_cli_validate.sh`
 
-**Last run:** 2026-09-21 (Session 083 — R8 corpus expansion shard)
+**Last run:** 2026-09-22 (Session 084 — R8 corpus recall shard)
 **Result:** PASS
 
 **Checks:**
@@ -409,7 +410,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `spectrona-gateway/validation/phase3_memory_routes_validate.sh`
 
-**Last run:** 2026-09-21 (Session 083 — R8 corpus expansion shard)
+**Last run:** 2026-09-22 (Session 084 — R8 corpus recall shard)
 **Result:** PASS
 
 **Checks:**
@@ -480,7 +481,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `packaging/validate_packaging.sh`
 
-**Last run:** 2026-09-21 (Session 083 — R8 corpus expansion shard)
+**Last run:** 2026-09-22 (Session 084 — R8 corpus recall shard)
 **Result:** PASS
 
 **Checks:**
@@ -527,7 +528,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `runtime-guard/validation/phase2_validate.sh`
 
-**Last run:** 2026-09-21 (Session 083 — R8 corpus expansion shard)
+**Last run:** 2026-09-22 (Session 084 — R8 corpus recall shard)
 **Result:** PASS
 
 **Checks:**
@@ -594,7 +595,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 ## Full suite
 
-**Last run:** 2026-09-21 (Session 083 — R8 corpus expansion shard)
+**Last run:** 2026-09-22 (Session 084 — R8 corpus recall shard)
 **Result:** PASS
 
 **Command:**

@@ -20,6 +20,7 @@
 - Session 081 continued R8, promoted 25 more reviewed public GitHub configs, and fixed corpus-exposed scanner shell substring noise.
 - Session 082 continued R8 and promoted 44 more reviewed public GitHub configs into the measured corpus.
 - Session 083 continued R8 and promoted 47 more reviewed public GitHub configs into the measured corpus.
+- Session 084 continued R8, promoted 64 more reviewed public GitHub configs, and preserved measured unpinned-package recall misses in the corpus.
 - `MCP_NO_AUDIT_LOG` is deleted from scanner code, rules, fixtures, validation, packaging checks, and current docs.
 - Package detection skips `${...}` references and aggregates unpinned package evidence by server path.
 - Gateway non-health routes now require a local bearer token, validate Host/Origin, and reject all-interface CLI binding.
@@ -30,7 +31,8 @@
 - Shared `spectrona_detection` package now powers scanner secret matching, gateway DLP, runtime redaction, and repo secret prefix findings.
 - Runtime shell risk now uses exact tool/schema signals instead of free-text substring matching; filesystem risk uses path-like argument keys.
 - `validation/corpus_benchmark.py` gates measured MCP scanner rules at 95% precision over redacted labeled corpus entries.
-- `validation/corpus/mcp_configs_seed.jsonl` now contains 135 labeled cases, including 123 reviewed public GitHub configs.
+- `validation/corpus/mcp_configs_seed.jsonl` now contains 199 labeled cases, including 187 reviewed public GitHub configs.
+- The 199-case benchmark keeps `MCP_UNPINNED_PACKAGE` precision at 1.0 and now reports a measured recall gap: 80 true positives, 5 false negatives.
 - Scanner shell detection now matches token-level shell indicators instead of arbitrary substrings, avoiding `executeautomation` package-name noise while retaining direct shell/code-execution signals.
 - `validation/harvest_mcp_corpus.py` can collect redacted GitHub candidates with multi-query fan-out and deduplication.
 - `validation/harvest_mcp_corpus.py` percent-encodes GitHub API URLs and skips unreadable fetches instead of aborting a batch.
@@ -123,7 +125,7 @@
 
 ## Remaining Work
 - R8 remains open for full ~1,000 public GitHub config harvest, labeling queue review, and manual promotion into the benchmark corpus.
-- R8 harvest is no longer token-blocked in this shell when `~/Documents/github_token.txt` is sourced, but most local queue records remain unlabeled and the measured corpus is still too small for completion.
+- R8 harvest is no longer token-blocked in this shell when `~/Documents/github_token.txt` is sourced, but the measured corpus is still too small for completion.
 - R9 through R10 remain open.
 - MCP proxy notification desync remains open; R10 owns transport rewrite.
 

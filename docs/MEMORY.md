@@ -5,6 +5,14 @@ Do NOT store transcripts, code dumps, or logs.
 
 ---
 
+## 2026-09-22 — Session 084: R8 corpus recall shard
+Prompt Summary: Continue R8 by labeling the remaining clear records from the local redacted queue.
+Decision: Promoted 64 additional reviewed queue records; benchmark corpus now has 199 labeled cases.
+Decision: Kept five real `MCP_UNPINNED_PACKAGE` false negatives in the corpus instead of hiding the recall gap.
+Files Changed: labeled corpus, corpus validation minimum, TODO, checkpoint docs.
+Validation: R8 1,000-case blocker reproduced; 199-case precision gate PASS with unpinned recall 80 TP/5 FN; corpus validation PASS; focused pytest PASS; master gate PASS.
+Next: Continue R8 only by harvesting/labeling more candidates toward roughly 1,000 reviewed configs and address measured detector gaps in a scoped follow-up.
+
 ## 2026-09-21 — Session 083: R8 corpus expansion shard
 Prompt Summary: Continue R8 by labeling another redacted GitHub queue slice.
 Decision: Promoted 47 additional unambiguous queue records; benchmark corpus now has 135 labeled cases.
