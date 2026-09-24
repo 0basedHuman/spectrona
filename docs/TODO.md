@@ -25,7 +25,7 @@ Required proof for each feature:
 
 ## R8 Corpus Follow-Up
 
-- [ ] Investigate the 41 measured `MCP_UNPINNED_PACKAGE` false negatives exposed by the 569-case corpus; keep any detector change scoped to an existing rule and prove it against the corpus precision gate.
+- [ ] Investigate the 44 measured `MCP_UNPINNED_PACKAGE` false negatives exposed by the 697-case corpus; keep any detector change scoped to an existing rule and prove it against the corpus precision gate.
 
 ## P0 - Runtime Guard Foundation
 
