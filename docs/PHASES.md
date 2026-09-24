@@ -28,8 +28,8 @@
 - [x] Token-backed GitHub harvest produced a redacted public candidate labeling queue
 - [x] Public GitHub reviewed shard is promoted into the measured corpus
 - [x] Corpus-backed scanner shell precision fix removed package-name substring noise
-- [x] Reviewed corpus expanded to 697 labeled cases with 95% precision gate passing
-- [ ] Full public MCP config corpus reaches roughly 1,000 labeled redacted configs
+- [x] Reviewed corpus expanded to 1,030 labeled cases with 95% precision gate passing
+- [x] Full public MCP config corpus reaches roughly 1,000 labeled redacted configs
 - [ ] Unsafe example produces CRITICAL/HIGH findings
 - [ ] Safe example produces LOW/NONE findings
 - [ ] JSON output works
