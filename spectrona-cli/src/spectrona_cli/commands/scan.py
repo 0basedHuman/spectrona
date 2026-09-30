@@ -39,6 +39,7 @@ def mcp(
     repo_root: Optional[str],
     output_json: bool,
     output_html: bool = False,
+    output_sarif: bool = False,
     output_path: Optional[str] = None,
 ) -> int:
     _ensure_inspector_importable()
@@ -64,7 +65,7 @@ def mcp(
         print(f"Error: could not scan {config_path}: {exc}", file=sys.stderr)
         return 2
 
-    output_result = _emit_report(findings, str(config_path), output_json, output_html, output_path)
+    output_result = _emit_report(findings, str(config_path), output_json, output_html, output_sarif, output_path)
     if output_result is not None:
         return output_result
 
@@ -76,6 +77,7 @@ def claude(
     repo_root: Optional[str],
     output_json: bool,
     output_html: bool = False,
+    output_sarif: bool = False,
     output_path: Optional[str] = None,
 ) -> int:
     _ensure_inspector_importable()
@@ -109,7 +111,7 @@ def claude(
         print(f"Error: could not scan {scan_target}: {exc}", file=sys.stderr)
         return 2
 
-    output_result = _emit_report(findings, scan_target, output_json, output_html, output_path)
+    output_result = _emit_report(findings, scan_target, output_json, output_html, output_sarif, output_path)
     if output_result is not None:
         return output_result
 
@@ -121,6 +123,7 @@ def cursor(
     repo_root: Optional[str],
     output_json: bool,
     output_html: bool = False,
+    output_sarif: bool = False,
     output_path: Optional[str] = None,
 ) -> int:
     _ensure_inspector_importable()
@@ -154,7 +157,7 @@ def cursor(
         print(f"Error: could not scan {scan_target}: {exc}", file=sys.stderr)
         return 2
 
-    output_result = _emit_report(findings, scan_target, output_json, output_html, output_path)
+    output_result = _emit_report(findings, scan_target, output_json, output_html, output_sarif, output_path)
     if output_result is not None:
         return output_result
 
@@ -166,6 +169,7 @@ def repo(
     repo_root: Optional[str],
     output_json: bool,
     output_html: bool = False,
+    output_sarif: bool = False,
     output_path: Optional[str] = None,
 ) -> int:
     _ensure_inspector_importable()
@@ -185,7 +189,7 @@ def repo(
         print(f"Error: could not scan {scan_target}: {exc}", file=sys.stderr)
         return 2
 
-    output_result = _emit_report(findings, scan_target, output_json, output_html, output_path)
+    output_result = _emit_report(findings, scan_target, output_json, output_html, output_sarif, output_path)
     if output_result is not None:
         return output_result
 
@@ -197,17 +201,23 @@ def _emit_report(
     scan_target: str,
     output_json: bool,
     output_html: bool,
+    output_sarif: bool,
     output_path: Optional[str],
 ) -> Optional[int]:
-    from mcp_inspector.reporters import html_reporter, json_reporter
+    from mcp_inspector.reporters import html_reporter, json_reporter, sarif_reporter
     from mcp_inspector.reporters import terminal as term_reporter
 
-    if output_json and output_html:
-        print("Error: use either --json or --html, not both.", file=sys.stderr)
+    if sum(bool(flag) for flag in (output_json, output_html, output_sarif)) > 1:
+        print("Error: use only one of --json, --html, or --sarif.", file=sys.stderr)
         return 2
 
     report = json_reporter.generate(findings, scan_target)
-    if output_html:
+    if output_sarif:
+        if output_path:
+            sarif_reporter.write_sarif(report, output_path)
+        else:
+            sarif_reporter.print_sarif(report)
+    elif output_html:
         if output_path:
             html_reporter.write_html(report, output_path)
         else:

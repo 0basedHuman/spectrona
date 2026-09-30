@@ -83,25 +83,29 @@ def main() -> None:
     mcp_p.add_argument("--repo-root", help="Project root for filesystem boundary checks")
     mcp_p.add_argument("--json", action="store_true", help="Output JSON report")
     mcp_p.add_argument("--html", action="store_true", help="Output HTML report")
-    mcp_p.add_argument("--output", help="Write JSON or HTML report to file")
+    mcp_p.add_argument("--sarif", action="store_true", help="Output SARIF report")
+    mcp_p.add_argument("--output", help="Write JSON, HTML, or SARIF report to file")
     claude_scan_p = scan_sub.add_parser("claude", help="Scan Claude project/user configs")
     claude_scan_p.add_argument("file", nargs="?", help="Path to CLAUDE.md, Claude settings JSON, or a project directory")
     claude_scan_p.add_argument("--repo-root", help="Project root for default Claude config discovery")
     claude_scan_p.add_argument("--json", action="store_true", help="Output JSON report")
     claude_scan_p.add_argument("--html", action="store_true", help="Output HTML report")
-    claude_scan_p.add_argument("--output", help="Write JSON or HTML report to file")
+    claude_scan_p.add_argument("--sarif", action="store_true", help="Output SARIF report")
+    claude_scan_p.add_argument("--output", help="Write JSON, HTML, or SARIF report to file")
     cursor_scan_p = scan_sub.add_parser("cursor", help="Scan Cursor project/user configs")
     cursor_scan_p.add_argument("file", nargs="?", help="Path to Cursor config file or a project directory")
     cursor_scan_p.add_argument("--repo-root", help="Project root for default Cursor config discovery")
     cursor_scan_p.add_argument("--json", action="store_true", help="Output JSON report")
     cursor_scan_p.add_argument("--html", action="store_true", help="Output HTML report")
-    cursor_scan_p.add_argument("--output", help="Write JSON or HTML report to file")
+    cursor_scan_p.add_argument("--sarif", action="store_true", help="Output SARIF report")
+    cursor_scan_p.add_argument("--output", help="Write JSON, HTML, or SARIF report to file")
     repo_scan_p = scan_sub.add_parser("repo", help="Scan repository files")
     repo_scan_p.add_argument("file", nargs="?", help="Path to a repository directory or file")
     repo_scan_p.add_argument("--repo-root", help="Repository root for git-tracking checks")
     repo_scan_p.add_argument("--json", action="store_true", help="Output JSON report")
     repo_scan_p.add_argument("--html", action="store_true", help="Output HTML report")
-    repo_scan_p.add_argument("--output", help="Write JSON or HTML report to file")
+    repo_scan_p.add_argument("--sarif", action="store_true", help="Output SARIF report")
+    repo_scan_p.add_argument("--output", help="Write JSON, HTML, or SARIF report to file")
 
     gw = sub.add_parser("gateway", help="Manage the local gateway")
     gw_sub = gw.add_subparsers(dest="gw_cmd")
@@ -240,13 +244,13 @@ def main() -> None:
             policy_p.print_help()
     elif args.command == "scan":
         if getattr(args, "scan_cmd", None) == "mcp":
-            sys.exit(scan.mcp(args.file, args.repo_root, args.json, args.html, args.output))
+            sys.exit(scan.mcp(args.file, args.repo_root, args.json, args.html, args.sarif, args.output))
         elif getattr(args, "scan_cmd", None) == "claude":
-            sys.exit(scan.claude(args.file, args.repo_root, args.json, args.html, args.output))
+            sys.exit(scan.claude(args.file, args.repo_root, args.json, args.html, args.sarif, args.output))
         elif getattr(args, "scan_cmd", None) == "cursor":
-            sys.exit(scan.cursor(args.file, args.repo_root, args.json, args.html, args.output))
+            sys.exit(scan.cursor(args.file, args.repo_root, args.json, args.html, args.sarif, args.output))
         elif getattr(args, "scan_cmd", None) == "repo":
-            sys.exit(scan.repo(args.file, args.repo_root, args.json, args.html, args.output))
+            sys.exit(scan.repo(args.file, args.repo_root, args.json, args.html, args.sarif, args.output))
         else:
             scan_p.print_help()
     elif args.command == "gateway":

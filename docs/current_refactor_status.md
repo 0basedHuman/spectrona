@@ -26,6 +26,7 @@
 - Session 087 continued R8, harvested a larger redacted GitHub candidate batch, and promoted 195 more reviewed public GitHub configs.
 - Session 088 continued R8, harvested targeted redacted GitHub candidate batches, and promoted 128 more reviewed public GitHub configs.
 - Session 089 completed R8, harvested final redacted GitHub candidate batches, and promoted 333 more reviewed public GitHub configs.
+- Session 090 completed R9, adding SARIF output, a GitHub code-scanning action/workflow, and a dependency-free `npx spectrona` wrapper.
 - `MCP_NO_AUDIT_LOG` is deleted from scanner code, rules, fixtures, validation, packaging checks, and current docs.
 - Package detection skips `${...}` references and aggregates unpinned package evidence by server path.
 - Gateway non-health routes now require a local bearer token, validate Host/Origin, and reject all-interface CLI binding.
@@ -43,6 +44,9 @@
 - `validation/harvest_mcp_corpus.py` percent-encodes GitHub API URLs and skips unreadable fetches instead of aborting a batch.
 - `validation/corpus_label_queue.py` stratifies redacted candidates and attaches scanner predictions for human review.
 - `validation/corpus_promote_labeled.py` rejects unlabeled queue records and strips prediction metadata before benchmark promotion.
+- `spectrona scan` and `mcp-inspector report` can emit SARIF for GitHub code scanning and SARIF viewers.
+- `.github/actions/spectrona` and `.github/workflows/spectrona.yml` run local Spectrona scans on PRs and upload SARIF.
+- Root `package.json` and `bin/spectrona.js` provide the `npx spectrona` wrapper over the bundled Python CLI.
 - Local ignored artifact `validation/corpus/labeling_queue_20260913.jsonl` contains 196 redacted public GitHub candidate records awaiting human labels.
 - Git `origin` points at `https://github.com/0basedHuman/spectrona.git`; `main` tracks `origin/main`.
 - Permanent F1-F7 reproductions live under `tests/regression/`.
@@ -82,6 +86,7 @@
 - `runtime-guard/src/runtime_guard/mcp_proxy.py`
 - `runtime-guard/src/runtime_guard/redaction.py`
 - `mcp-inspector/src/mcp_inspector/detectors/shell_detector.py`
+- `mcp-inspector/src/mcp_inspector/reporters/sarif_reporter.py`
 - `runtime-guard/validation/mcp_proxy_validate.py`
 - `runtime-guard/validation/mcp_config_wrap_validate.py`
 - `runtime-guard/validation/mcp_apps_protect_validate.py`
@@ -92,6 +97,10 @@
 - `packaging/validate_packaging.sh`
 - `packaging/build_release.py`
 - `packaging/homebrew/spectrona.rb`
+- `.github/actions/spectrona/action.yml`
+- `.github/workflows/spectrona.yml`
+- `package.json`
+- `bin/spectrona.js`
 - `spectrona-detection/`
 - `pytest.ini`
 - `requirements-dev.txt`
@@ -130,8 +139,9 @@
 
 ## Remaining Work
 - R8 is complete: the public corpus exceeds the roughly 1,000-case target and the 95% precision gate passes.
-- R9 through R10 remain open.
+- R9 is complete: SARIF, GitHub Action/workflow, and `npx` wrapper are implemented and validated.
+- R10 remains open.
 - MCP proxy notification desync remains open; R10 owns transport rewrite.
 
 ## Exact Next Step
-Proceed to R9 only: add SARIF output, GitHub Action, and `npx` wrapper while preserving the 1,030-case corpus precision gate.
+Proceed to R10 only: rewrite MCP proxy transport for JSON-RPC notification passthrough and pending-request correlation.

@@ -1,0 +1,28 @@
+name: Spectrona
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  scan:
+    name: Spectrona SARIF Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Spectrona
+        uses: ./.github/actions/spectrona
+        with:
+          scan-target: repo
+          path: .
+          repo-root: .
+          sarif-output: spectrona-results.sarif
+          fail-on-findings: "false"

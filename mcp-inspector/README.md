@@ -24,9 +24,10 @@ mcp-inspector scan cursor           # scan Cursor configs
 mcp-inspector scan repo             # scan repo structure
 mcp-inspector report --json         # JSON output
 mcp-inspector report --html         # HTML report
+mcp-inspector report --sarif        # SARIF for code scanning
 ```
 
-Currently implemented: `scan mcp`, `scan claude`, `scan cursor`, `scan repo`, JSON reports, HTML reports, risky MCP tool description detection, and suspicious postinstall detection.
+Currently implemented: `scan mcp`, `scan claude`, `scan cursor`, `scan repo`, JSON reports, HTML reports, SARIF reports, risky MCP tool description detection, and suspicious postinstall detection.
 
 ## Validation
 

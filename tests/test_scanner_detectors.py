@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 from mcp_inspector.scanner import scan_claude_config, scan_cursor_config, scan_mcp_config, scan_repo
+from mcp_inspector.reporters import json_reporter, sarif_reporter
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -25,6 +26,26 @@ def test_mcp_unsafe_fixture_reports_expected_detector_ids_without_raw_secrets():
     assert "abc123XYZsecretToken" not in evidence
     assert "Ignore previous instructions" not in evidence
     assert "curl -fsSL" not in evidence
+
+
+def test_sarif_reporter_maps_findings_without_raw_secrets():
+    fixture = MCP_EXAMPLES / "unsafe-mcp-configs" / "basic-unrestricted-filesystem.json"
+    findings = scan_mcp_config(str(fixture), repo_root=str(ROOT))
+    report = json_reporter.generate(findings, str(fixture))
+    sarif = sarif_reporter.generate_sarif(report)
+    encoded = json.dumps(sarif)
+
+    assert sarif["version"] == "2.1.0"
+    run = sarif["runs"][0]
+    assert run["tool"]["driver"]["name"] == "Spectrona"
+    assert {rule["id"] for rule in run["tool"]["driver"]["rules"]}.issuperset({
+        "SECRET_KNOWN_PREFIX",
+        "MCP_FS_OUTSIDE_REPO",
+    })
+    assert any(result["ruleId"] == "SECRET_KNOWN_PREFIX" for result in run["results"])
+    assert "abc123XYZsecretToken" not in encoded
+    assert "Ignore previous instructions" not in encoded
+    assert "curl -fsSL" not in encoded
 
 
 def test_mcp_safe_fixture_has_no_high_or_critical_findings():

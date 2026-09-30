@@ -2,6 +2,13 @@
 
 This directory contains local release and Homebrew packaging helpers.
 
+## Distribution Surfaces
+
+- SARIF output: `spectrona scan mcp <config> --sarif --output spectrona.sarif`
+- GitHub Action: `.github/actions/spectrona` uploads SARIF for code scanning
+- PR workflow: `.github/workflows/spectrona.yml`
+- `npx` wrapper: `npx spectrona scan mcp <config> --sarif --output spectrona.sarif`
+
 ## Build A Release Archive
 
 ```bash
@@ -12,6 +19,9 @@ The command writes:
 
 - `dist/spectrona-<version>.tar.gz`
 - `dist/spectrona-<version>.release.json`
+
+The release archive includes the Python components, root `package.json`, `bin/spectrona.js`,
+and the GitHub Action metadata.
 
 Use the manifest `sha256` value to replace `REPLACE_WITH_RELEASE_SHA256` in
 `packaging/homebrew/spectrona.rb` after the archive is published at the formula

@@ -513,6 +513,36 @@ then
 else
   _fail "spectrona scan mcp --json postinstall report invalid"
 fi
+
+SCAN_SARIF_FILE="/tmp/spectrona_cli_scan_mcp_$$.sarif"
+SCAN_SARIF_EXIT=0
+SCAN_SARIF_VALID=0
+SCAN_SARIF_OUT=$(eval "$CLI scan mcp '$UNSAFE_MCP' --repo-root '$ROOT' --sarif --output '$SCAN_SARIF_FILE'" 2>&1) || SCAN_SARIF_EXIT=$?
+SCAN_SARIF_FILE="$SCAN_SARIF_FILE" python3 - <<'PY' >/dev/null 2>&1 && SCAN_SARIF_VALID=1
+import json, os
+data=json.load(open(os.environ["SCAN_SARIF_FILE"], encoding="utf-8"))
+assert data["version"] == "2.1.0"
+run=data["runs"][0]
+ids={result["ruleId"] for result in run["results"]}
+assert "SECRET_KNOWN_PREFIX" in ids
+assert "MCP_FS_OUTSIDE_REPO" in ids
+assert run["tool"]["driver"]["name"] == "Spectrona"
+PY
+if [ "$SCAN_SARIF_EXIT" -eq 1 ] \
+  && [ -s "$SCAN_SARIF_FILE" ] \
+  && [ "$SCAN_SARIF_VALID" -eq 1 ] \
+  && ! grep -q "abc123XYZsecretToken\|Ignore previous system instructions\|evil.example" "$SCAN_SARIF_FILE"; then
+  _pass "spectrona scan mcp --sarif --output writes redacted SARIF report"
+else
+  _fail "spectrona scan mcp --sarif --output failed (exit=$SCAN_SARIF_EXIT, output=$SCAN_SARIF_OUT)"
+fi
+rm -f "$SCAN_SARIF_FILE"
+
+SCAN_MULTI_FORMAT_EXIT=0
+eval "$CLI scan mcp '$UNSAFE_MCP' --repo-root '$ROOT' --json --sarif" >/dev/null 2>&1 || SCAN_MULTI_FORMAT_EXIT=$?
+[ "$SCAN_MULTI_FORMAT_EXIT" -eq 2 ] \
+  && _pass "spectrona scan mcp rejects multiple output formats" \
+  || _fail "spectrona scan mcp did not reject multiple output formats"
 echo ""
 echo "--- spectrona scan claude ---"
 SCAN_CLAUDE_SAFE_EXIT=0

@@ -2,6 +2,81 @@
 
 ---
 
+## Session 090 — 2026-09-29
+
+**User intent:** Continue remediation queue after R8 completion.
+
+**Implementation steps:**
+1. Re-read the required remediation harness context.
+2. Confirmed active work is R9 only.
+3. Noted R9 has no Section 5 defect reproduction command; verified existing distribution state before implementation.
+4. Added SARIF output for `mcp-inspector` and `spectrona scan`.
+   - SARIF is generated from the existing redacted report dictionary.
+   - Multiple output formats now fail with exit 2.
+5. Added distribution surfaces.
+   - `.github/actions/spectrona/action.yml` runs local Spectrona and uploads SARIF.
+   - `.github/workflows/spectrona.yml` runs the action on PRs and `main` pushes in advisory mode.
+   - `package.json` and `bin/spectrona.js` provide a dependency-free `npx spectrona` wrapper over the bundled Python CLI.
+6. Updated release packaging to include the action/workflow/npm wrapper and validate them.
+
+**Files changed:**
+- `mcp-inspector/src/mcp_inspector/reporters/sarif_reporter.py`
+- `mcp-inspector/src/mcp_inspector/cli.py`
+- `mcp-inspector/validation/phase1_validate.sh`
+- `mcp-inspector/README.md`
+- `spectrona-cli/src/spectrona_cli/cli.py`
+- `spectrona-cli/src/spectrona_cli/commands/scan.py`
+- `spectrona-cli/validation/phase2_cli_validate.sh`
+- `.github/actions/spectrona/action.yml`
+- `.github/workflows/spectrona.yml`
+- `package.json`
+- `bin/spectrona.js`
+- `packaging/build_release.py`
+- `packaging/validate_packaging.sh`
+- `packaging/README.md`
+- `tests/test_scanner_detectors.py`
+- `docs/MEMORY.md`
+- `docs/SESSION_LOG.md`
+- `docs/current_refactor_status.md`
+- `docs/VALIDATION.md`
+- `docs/PHASES.md`
+
+**Validation results:**
+- Focused pytest: `python3 -m pytest -q tests/test_scanner_detectors.py` -> PASS.
+- Focused SARIF smoke: `mcp_inspector scan mcp --sarif --output /tmp/spectrona_r9_mcp.sarif` -> exit 1 for unsafe fixture, valid SARIF, no raw fixture secret/risky text.
+- `node bin/spectrona.js --help` -> PASS.
+- `bash mcp-inspector/validation/phase1_validate.sh` -> PASS.
+- `bash spectrona-cli/validation/phase2_cli_validate.sh` -> PASS.
+- `bash packaging/validate_packaging.sh` -> PASS.
+- First sandboxed master-gate attempt failed because localhost bind was not permitted; reran with approved escalation.
+- `bash validation/validate_all.sh` -> PASS.
+
+Master gate output excerpt:
+```text
+=== Pytest Result: 2 passed, 0 failed ===
+=== Corpus Benchmark Result: 12 passed, 0 failed ===
+=== Phase 1 Result: 109 passed, 0 failed ===
+=== Policy Engine Result: 14 passed, 0 failed ===
+=== Phase 2 Result: 96 passed, 0 failed ===
+=== Dashboard Browser Result: 6 passed, 0 failed, 0 skipped ===
+=== Phase 2C Result: 129 passed, 0 failed ===
+=== Packaging Result: 45 passed, 0 failed ===
+=== Phase 3 Memory Routes Result: 62 passed, 0 failed ===
+=== Phase 2 Result: 17 passed, 0 failed ===
+=== Phase 3 Result: SKIPPED ===
+OVERALL RESULT: PASS
+```
+
+**Notes:**
+- R9 is complete.
+- The GitHub workflow runs advisory repo scanning because this repo intentionally contains unsafe fixtures.
+- No raw secret value was added to SARIF, logs, reports, audit records, or committed distribution metadata.
+
+**Next recommended step:**
+Proceed to R10 only: rewrite MCP proxy transport for JSON-RPC notification passthrough, pending-request correlation by id, and upstream stderr logging.
+
+---
+
 ## Session 089 — 2026-09-24
 
 **User intent:** Continue R8 public corpus growth and push progress.

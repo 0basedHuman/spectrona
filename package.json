@@ -1,0 +1,25 @@
+{
+  "name": "spectrona",
+  "version": "0.1.0",
+  "description": "Local-first security scanner and control plane for AI agent configurations",
+  "license": "MIT",
+  "bin": {
+    "spectrona": "bin/spectrona.js"
+  },
+  "files": [
+    "bin",
+    "spectrona-detection",
+    "mcp-inspector",
+    "policy-engine",
+    "runtime-guard",
+    "spectrona-cli",
+    "spectrona-gateway",
+    "docs",
+    "validation",
+    "packaging",
+    ".github/actions/spectrona/action.yml"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}

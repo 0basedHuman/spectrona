@@ -30,6 +30,9 @@
 - [x] Corpus-backed scanner shell precision fix removed package-name substring noise
 - [x] Reviewed corpus expanded to 1,030 labeled cases with 95% precision gate passing
 - [x] Full public MCP config corpus reaches roughly 1,000 labeled redacted configs
+- [x] SARIF output works for code scanning
+- [x] GitHub Action runs Spectrona on pull requests
+- [x] `npx spectrona` wrapper delegates to the bundled local CLI
 - [ ] Unsafe example produces CRITICAL/HIGH findings
 - [ ] Safe example produces LOW/NONE findings
 - [ ] JSON output works

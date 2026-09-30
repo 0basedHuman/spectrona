@@ -7,7 +7,7 @@ from typing import Optional
 from .parsers.claude_parser import discover_claude_files
 from .parsers.cursor_parser import discover_cursor_files
 from .scanner import scan_claude_config, scan_cursor_config, scan_mcp_config, scan_repo
-from .reporters import html_reporter, json_reporter
+from .reporters import html_reporter, json_reporter, sarif_reporter
 from .reporters import terminal as term_reporter
 
 _LOCAL_SEARCH = [".claude/mcp.json", ".mcp.json", "mcp.json"]
@@ -166,13 +166,19 @@ def _run_scan(args) -> int:
 def _emit_report(findings: list, scan_target: str, args) -> Optional[int]:
     use_json = getattr(args, "json", False) or getattr(args, "json_flag", False)
     use_html = getattr(args, "html", False)
-    if use_json and use_html:
-        print("Error: use either --json or --html, not both.", file=sys.stderr)
+    use_sarif = getattr(args, "sarif", False)
+    if sum(bool(flag) for flag in (use_json, use_html, use_sarif)) > 1:
+        print("Error: use only one of --json, --html, or --sarif.", file=sys.stderr)
         return 2
 
     report = json_reporter.generate(findings, scan_target)
     output_path = getattr(args, "output", None)
-    if use_html:
+    if use_sarif:
+        if output_path:
+            sarif_reporter.write_sarif(report, output_path)
+        else:
+            sarif_reporter.print_sarif(report)
+    elif use_html:
         if output_path:
             html_reporter.write_html(report, output_path)
         else:
@@ -192,7 +198,8 @@ def _add_scan_flags(p: argparse.ArgumentParser) -> None:
     p.add_argument("--repo-root", metavar="PATH", help="Project root (default: cwd)")
     p.add_argument("--json", dest="json", action="store_true", help="Output JSON report")
     p.add_argument("--html", action="store_true", help="Output HTML report")
-    p.add_argument("--output", metavar="PATH", help="Write JSON or HTML report to file")
+    p.add_argument("--sarif", action="store_true", help="Output SARIF report")
+    p.add_argument("--output", metavar="PATH", help="Write JSON, HTML, or SARIF report to file")
 
 
 def main() -> None:

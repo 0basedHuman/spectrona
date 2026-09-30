@@ -12,7 +12,7 @@ bash validation/validate_all.sh
 
 **Script:** `validation/pytest_validate.sh`
 
-**Last run:** 2026-09-24 (Session 089 — R8 corpus target complete)
+**Last run:** 2026-09-29 (Session 090 — R9 distribution surfaces)
 **Result:** PASS
 
 **Checks:**
@@ -40,7 +40,7 @@ bash validation/validate_all.sh
 
 **Script:** `validation/corpus_validate.sh`
 
-**Last run:** 2026-09-24 (Session 089 — R8 corpus target complete)
+**Last run:** 2026-09-29 (Session 090 — R9 distribution surfaces)
 **Result:** PASS
 
 **Checks:**
@@ -67,7 +67,7 @@ bash validation/validate_all.sh
 
 **Script:** `mcp-inspector/validation/phase1_validate.sh`
 
-**Last run:** 2026-09-24 (Session 089 — R8 corpus target complete)
+**Last run:** 2026-09-29 (Session 090 — R9 distribution surfaces)
 **Result:** PASS — master gate passed.
 
 **Checks:**
@@ -88,7 +88,8 @@ bash validation/validate_all.sh
 - [x] report --html outputs standalone HTML with findings and redaction
 - [x] report --html --output writes standalone HTML file
 - [x] report --html escapes finding markup
-- [x] report rejects --json and --html together
+- [x] report --sarif --output writes redacted SARIF report
+- [x] report rejects multiple output formats together
 - [x] Unsafe fixture → CRITICAL (SECRET_KNOWN_PREFIX) + HIGH (MCP_FS_OUTSIDE_REPO)
 - [x] Args/nested MCP server credentials → SECRET_KNOWN_PREFIX with redacted JSON-path evidence
 - [x] Unsafe fixture → MCP_SHELL_UNRESTRICTED finding
@@ -158,7 +159,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `spectrona-gateway/validation/phase2_gateway_validate.sh`
 
-**Last run:** 2026-09-24 (Session 089 — R8 corpus target complete)
+**Last run:** 2026-09-29 (Session 090 — R9 distribution surfaces)
 **Result:** PASS — master gate passed.
 
 **Checks:**
@@ -261,7 +262,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `spectrona-gateway/validation/dashboard_browser_validate.sh`
 
-**Last run:** 2026-09-24 (Session 089 — R8 corpus target complete)
+**Last run:** 2026-09-29 (Session 090 — R9 distribution surfaces)
 **Result:** PASS
 
 **Checks:**
@@ -283,7 +284,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `policy-engine/validation/policy_validate.sh`
 
-**Last run:** 2026-09-24 (Session 089 — R8 corpus target complete)
+**Last run:** 2026-09-29 (Session 090 — R9 distribution surfaces)
 **Result:** PASS — F6 reproduced before fix and absent after; master gate passed.
 
 **Checks:**
@@ -309,7 +310,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `spectrona-cli/validation/phase2_cli_validate.sh`
 
-**Last run:** 2026-09-24 (Session 089 — R8 corpus target complete)
+**Last run:** 2026-09-29 (Session 090 — R9 distribution surfaces)
 **Result:** PASS
 
 **Checks:**
@@ -349,6 +350,8 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 - [x] `spectrona scan mcp --json` outputs valid JSON
 - [x] `spectrona scan mcp --json` reports MCP tool prompt-injection risk without raw tool text
 - [x] `spectrona scan mcp --json` reports suspicious postinstall risk without raw script text
+- [x] `spectrona scan mcp --sarif --output` writes a redacted SARIF report
+- [x] `spectrona scan mcp` rejects multiple output formats
 - [x] `spectrona scan claude <safe fixture>` exits 0 and reports clean
 - [x] `spectrona scan claude <unsafe fixture>` exits 1 and reports findings
 - [x] `spectrona scan claude --json` outputs valid JSON without raw fixture secrets
@@ -410,7 +413,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `spectrona-gateway/validation/phase3_memory_routes_validate.sh`
 
-**Last run:** 2026-09-24 (Session 089 — R8 corpus target complete)
+**Last run:** 2026-09-29 (Session 090 — R9 distribution surfaces)
 **Result:** PASS
 
 **Checks:**
@@ -481,7 +484,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `packaging/validate_packaging.sh`
 
-**Last run:** 2026-09-24 (Session 089 — R8 corpus target complete)
+**Last run:** 2026-09-29 (Session 090 — R9 distribution surfaces)
 **Result:** PASS
 
 **Checks:**
@@ -521,6 +524,11 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 - [x] Packaged `spectrona scan cursor` works with side-by-side components
 - [x] Packaged `spectrona scan repo` works with side-by-side components and redacts raw fixture secrets
 - [x] Packaged `spectrona scan repo --html --output` writes a redacted HTML report
+- [x] Composite GitHub Action runs Spectrona SARIF scan and upload
+- [x] GitHub workflow runs Spectrona action on pull requests
+- [x] Root `package.json` exposes `npx spectrona`
+- [x] `npx` wrapper delegates to the bundled Python CLI
+- [x] Release archive includes GitHub Action metadata and npm wrapper files
 
 ---
 
@@ -528,7 +536,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 **Script:** `runtime-guard/validation/phase2_validate.sh`
 
-**Last run:** 2026-09-24 (Session 089 — R8 corpus target complete)
+**Last run:** 2026-09-29 (Session 090 — R9 distribution surfaces)
 **Result:** PASS
 
 **Checks:**
@@ -595,7 +603,7 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 
 ## Full suite
 
-**Last run:** 2026-09-24 (Session 089 — R8 corpus target complete)
+**Last run:** 2026-09-29 (Session 090 — R9 distribution surfaces)
 **Result:** PASS
 
 **Command:**

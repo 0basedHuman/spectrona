@@ -1,0 +1,73 @@
+name: Spectrona Scan
+description: Run Spectrona locally and upload SARIF findings to GitHub code scanning.
+
+inputs:
+  scan-target:
+    description: Scan target: mcp, claude, cursor, or repo.
+    required: false
+    default: mcp
+  path:
+    description: Optional config file or directory to scan.
+    required: false
+    default: ""
+  repo-root:
+    description: Repository root used for boundary checks.
+    required: false
+    default: "."
+  sarif-output:
+    description: SARIF output path.
+    required: false
+    default: spectrona-results.sarif
+  extra-args:
+    description: Additional arguments passed to spectrona scan.
+    required: false
+    default: ""
+  upload-sarif:
+    description: Upload SARIF with github/codeql-action/upload-sarif.
+    required: false
+    default: "true"
+  fail-on-findings:
+    description: Fail the workflow when Spectrona reports high or critical findings.
+    required: false
+    default: "true"
+
+runs:
+  using: composite
+  steps:
+    - name: Run Spectrona
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      run: |
+        set +e
+        export PYTHONPATH="$GITHUB_WORKSPACE/spectrona-cli/src:$GITHUB_WORKSPACE/spectrona-detection/src:$GITHUB_WORKSPACE/spectrona-gateway/src:$GITHUB_WORKSPACE/policy-engine/src:$GITHUB_WORKSPACE/mcp-inspector/src:$GITHUB_WORKSPACE/runtime-guard/src${PYTHONPATH:+:$PYTHONPATH}"
+        args=(scan "${{ inputs.scan-target }}")
+        if [ -n "${{ inputs.path }}" ]; then
+          args+=("${{ inputs.path }}")
+        fi
+        args+=(--repo-root "${{ inputs.repo-root }}" --sarif --output "${{ inputs.sarif-output }}")
+        if [ -n "${{ inputs.extra-args }}" ]; then
+          # shellcheck disable=SC2206
+          extra=( ${{ inputs.extra-args }} )
+          args+=("${extra[@]}")
+        fi
+        python3 -m spectrona_cli "${args[@]}"
+        status=$?
+        echo "SPECTRONA_EXIT=$status" >> "$GITHUB_ENV"
+        exit 0
+
+    - name: Upload SARIF
+      if: ${{ inputs.upload-sarif == 'true' }}
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: ${{ inputs.sarif-output }}
+
+    - name: Enforce Spectrona result
+      shell: bash
+      run: |
+        if [ "${SPECTRONA_EXIT:-0}" -eq 0 ]; then
+          exit 0
+        fi
+        if [ "${{ inputs.fail-on-findings }}" = "false" ] && [ "${SPECTRONA_EXIT:-0}" -eq 1 ]; then
+          exit 0
+        fi
+        exit "${SPECTRONA_EXIT:-1}"

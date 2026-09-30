@@ -17,6 +17,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 COMPONENTS = (
+    ".github",
+    "bin",
     "spectrona-detection",
     "mcp-inspector",
     "policy-engine",
@@ -26,6 +28,7 @@ COMPONENTS = (
     "docs",
     "validation",
     "packaging",
+    "package.json",
 )
 EXCLUDED_DIRS = {
     ".git",

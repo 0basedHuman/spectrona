@@ -161,6 +161,30 @@ check_report_html_output_file() {
   fi
 }
 
+check_report_sarif_output_file() {
+  local desc="$1" out exit_code=0 report_file="$REPO_TMP/unsafe-report.sarif" sarif_valid=0
+  mkdir -p "$REPO_TMP"
+  out=$(eval "$SCAN report --sarif --file '$UNSAFE' --output '$report_file'" 2>&1) || exit_code=$?
+  SARIF_FILE="$report_file" python3 - <<'PY' >/dev/null 2>&1 && sarif_valid=1
+import json, os
+data=json.load(open(os.environ["SARIF_FILE"], encoding="utf-8"))
+assert data["version"] == "2.1.0"
+run=data["runs"][0]
+ids={result["ruleId"] for result in run["results"]}
+assert "SECRET_KNOWN_PREFIX" in ids
+assert "MCP_FS_OUTSIDE_REPO" in ids
+assert run["tool"]["driver"]["name"] == "Spectrona"
+PY
+  if [ "$exit_code" -eq 1 ] \
+    && [ -s "$report_file" ] \
+    && [ "$sarif_valid" -eq 1 ] \
+    && ! grep -q "abc123XYZsecret" "$report_file"; then
+    _pass "$desc"
+  else
+    _fail "$desc (exit=$exit_code, output=$out)"
+  fi
+}
+
 check_report_html_escapes_markup() {
   local desc="$1" out exit_code=0 fixture="$REPO_TMP/html-escape-mcp.json"
   mkdir -p "$REPO_TMP"
@@ -187,7 +211,7 @@ EOF
 
 check_report_rejects_multiple_formats() {
   local desc="$1" exit_code=0
-  eval "$SCAN report --json --html --file '$UNSAFE'" >/dev/null 2>&1 || exit_code=$?
+  eval "$SCAN report --json --html --sarif --file '$UNSAFE'" >/dev/null 2>&1 || exit_code=$?
   [ "$exit_code" -eq 2 ] && _pass "$desc" \
     || _fail "$desc — expected exit 2, got $exit_code"
 }
@@ -694,6 +718,7 @@ check "detectors/prompt_injection_detector.py" "$INSPECTOR/src/mcp_inspector/det
 check "reporters/terminal.py"                  "$INSPECTOR/src/mcp_inspector/reporters/terminal.py"
 check "reporters/json_reporter.py"             "$INSPECTOR/src/mcp_inspector/reporters/json_reporter.py"
 check "reporters/html_reporter.py"             "$INSPECTOR/src/mcp_inspector/reporters/html_reporter.py"
+check "reporters/sarif_reporter.py"            "$INSPECTOR/src/mcp_inspector/reporters/sarif_reporter.py"
 check "bin/mcp-inspector shim"                 "$INSPECTOR/bin/mcp-inspector"
 
 echo ""
@@ -884,7 +909,11 @@ echo "--- HTML output ---"
 check_report_html_stdout           "report --html outputs standalone HTML with findings and redaction"
 check_report_html_output_file      "report --html --output writes standalone HTML file"
 check_report_html_escapes_markup   "report --html escapes finding markup"
-check_report_rejects_multiple_formats "report rejects --json and --html together"
+
+echo ""
+echo "--- SARIF output ---"
+check_report_sarif_output_file     "report --sarif --output writes redacted SARIF report"
+check_report_rejects_multiple_formats "report rejects multiple output formats together"
 
 echo ""
 echo "--- Scanner behavior: Claude configs ---"

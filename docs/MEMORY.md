@@ -5,6 +5,14 @@ Do NOT store transcripts, code dumps, or logs.
 
 ---
 
+## 2026-09-29 — Session 090: R9 distribution surfaces
+Prompt Summary: Continue queue with R9: SARIF output, GitHub Action, and `npx` wrapper.
+Decision: SARIF is generated from the existing redacted report dictionary, preserving current no-secret-leakage paths.
+Decision: GitHub workflow runs advisory repo scanning because this repository intentionally contains unsafe fixtures.
+Files Changed: SARIF reporter/CLI flags, GitHub action/workflow, npm wrapper, packaging/release validation, docs.
+Validation: SARIF focused checks PASS; Phase 1 PASS; Phase 2C CLI PASS; packaging PASS; master gate PASS.
+Next: R9 is complete; proceed to R10 only: MCP proxy transport rewrite for notification passthrough and request correlation.
+
 ## 2026-09-24 — Session 089: R8 corpus target complete
 Prompt Summary: Continue R8 by harvesting final redacted GitHub batches and completing the public corpus target.
 Decision: Token-backed harvests wrote 214, 204, 112, and 156 redacted candidates to `/tmp`; promoted 333 reviewed records.

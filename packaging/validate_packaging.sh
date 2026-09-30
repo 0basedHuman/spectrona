@@ -72,6 +72,32 @@ grep -q 'ui/\*.html' "$ROOT/spectrona-gateway/pyproject.toml" \
   || _fail "Gateway package data missing UI assets"
 
 echo ""
+echo "--- GitHub Action and npx wrapper ---"
+[ -f "$ROOT/.github/actions/spectrona/action.yml" ] \
+  && grep -q "github/codeql-action/upload-sarif" "$ROOT/.github/actions/spectrona/action.yml" \
+  && grep -q -- "--sarif" "$ROOT/.github/actions/spectrona/action.yml" \
+  && _pass "Composite GitHub Action runs Spectrona SARIF scan and upload" \
+  || _fail "Composite GitHub Action missing SARIF scan/upload wiring"
+
+[ -f "$ROOT/.github/workflows/spectrona.yml" ] \
+  && grep -q "pull_request" "$ROOT/.github/workflows/spectrona.yml" \
+  && grep -q "./.github/actions/spectrona" "$ROOT/.github/workflows/spectrona.yml" \
+  && _pass "GitHub workflow runs Spectrona action on pull requests" \
+  || _fail "GitHub workflow missing pull-request Spectrona action"
+
+[ -f "$ROOT/package.json" ] \
+  && grep -q '"name": "spectrona"' "$ROOT/package.json" \
+  && grep -q '"spectrona": "bin/spectrona.js"' "$ROOT/package.json" \
+  && _pass "Root package.json exposes npx spectrona wrapper" \
+  || _fail "Root package.json missing npx wrapper metadata"
+
+[ -x "$ROOT/bin/spectrona.js" ] \
+  && grep -q "spectrona_cli" "$ROOT/bin/spectrona.js" \
+  && grep -q "PYTHONPATH" "$ROOT/bin/spectrona.js" \
+  && _pass "npx wrapper delegates to bundled Python CLI" \
+  || _fail "npx wrapper missing executable Python CLI delegation"
+
+echo ""
 echo "--- Release artifact builder ---"
 [ -f "$ROOT/packaging/build_release.py" ] \
   && _pass "Release builder exists" \
@@ -108,6 +134,10 @@ assert json.loads(manifest_file.read_text())["sha256"] == manifest["sha256"]
 with tarfile.open(archive, "r:gz") as tar:
     names = tar.getnames()
 required = {
+    f"spectrona-{version}/.github/actions/spectrona/action.yml",
+    f"spectrona-{version}/.github/workflows/spectrona.yml",
+    f"spectrona-{version}/bin/spectrona.js",
+    f"spectrona-{version}/package.json",
     f"spectrona-{version}/spectrona-detection/pyproject.toml",
     f"spectrona-{version}/mcp-inspector/pyproject.toml",
     f"spectrona-{version}/policy-engine/pyproject.toml",
@@ -249,6 +279,15 @@ fi
 [ -f "$LIBEXEC/spectrona-gateway/src/spectrona_gateway/ui/index.html" ] \
   && _pass "Packaged layout includes dashboard UI asset" \
   || _fail "Packaged layout missing dashboard UI asset"
+
+cp "$ROOT/package.json" "$LIBEXEC/package.json"
+mkdir -p "$LIBEXEC/bin"
+cp "$ROOT/bin/spectrona.js" "$LIBEXEC/bin/spectrona.js"
+chmod +x "$LIBEXEC/bin/spectrona.js"
+NPM_HELP_OUT=$(cd "$LIBEXEC" && SPECTRONA_PYTHON=python3 node "$LIBEXEC/bin/spectrona.js" --help 2>&1)
+echo "$NPM_HELP_OUT" | grep -q "Spectrona" \
+  && _pass "npx wrapper runs Spectrona help from packaged source layout" \
+  || _fail "npx wrapper failed Spectrona help"
 
 grep -q '../spectrona-gateway/src' "$LIBEXEC/spectrona-cli/bin/spectrona" \
   && grep -q '../spectrona-detection/src' "$LIBEXEC/spectrona-cli/bin/spectrona" \
