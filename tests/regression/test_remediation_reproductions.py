@@ -118,8 +118,6 @@ def test_f3_gateway_auth_reproduction_in_process(tmp_path, monkeypatch):
     ).status_code == 403
 
 
-@pytest.mark.known_open
-@pytest.mark.xfail(strict=True, reason="R10 owns JSON-RPC notification passthrough and pending-request transport")
 def test_f4_notification_desync_reproduction_expected_fixed_behavior(tmp_path):
     server = tmp_path / "server.py"
     server.write_text(
@@ -132,6 +130,7 @@ def test_f4_notification_desync_reproduction_expected_fixed_behavior(tmp_path):
         "        print(json.dumps({'jsonrpc':'2.0','method':'notifications/message','params':{'level':'info','data':'listing'}}), flush=True)\n"
         "        print(json.dumps({'jsonrpc':'2.0','id':m['id'],'result':{'tools':[{'name':'read_file'}]}}), flush=True)\n"
     )
+    forwarded = []
     upstream = subprocess.Popen(
         [sys.executable, str(server)],
         stdin=subprocess.PIPE,
@@ -140,7 +139,11 @@ def test_f4_notification_desync_reproduction_expected_fixed_behavior(tmp_path):
         text=True,
     )
     try:
-        response = _forward_to_upstream(upstream, {"jsonrpc": "2.0", "id": 7, "method": "tools/list"})
+        response = _forward_to_upstream(
+            upstream,
+            {"jsonrpc": "2.0", "id": 7, "method": "tools/list"},
+            notification_sink=forwarded.append,
+        )
     finally:
         upstream.terminate()
         try:
@@ -149,6 +152,9 @@ def test_f4_notification_desync_reproduction_expected_fixed_behavior(tmp_path):
             upstream.kill()
 
     assert response == {"jsonrpc": "2.0", "id": 7, "result": {"tools": [{"name": "read_file"}]}}
+    assert forwarded == [
+        {"jsonrpc": "2.0", "method": "notifications/message", "params": {"level": "info", "data": "listing"}}
+    ]
 
 
 def test_f5_gateway_dlp_credential_formats_expected_fixed_behavior():

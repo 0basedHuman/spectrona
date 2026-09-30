@@ -1,9 +1,11 @@
 import argparse
 import json
 import os
+import queue
 import re
 import subprocess
 import sys
+import threading
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -240,15 +242,22 @@ def serve_stdio(config: ProxyConfig, upstream_command: Optional[list] = None) ->
     _print_mode_notice(config)
     upstream = None
     upstream_handler = None
+    transport = None
+    stdout_lock = threading.Lock()
     if upstream_command:
         upstream = subprocess.Popen(
             upstream_command,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
+            stderr=subprocess.PIPE,
             text=True,
         )
-        upstream_handler = lambda message: _forward_to_upstream(upstream, message)
+        transport = _UpstreamTransport(
+            upstream,
+            notification_sink=lambda message: _write_json_line(message, sys.stdout, stdout_lock),
+            stderr_log=lambda line: _log_upstream_stderr(config, line),
+        )
+        upstream_handler = transport.request
 
     try:
         for line in sys.stdin:
@@ -260,7 +269,7 @@ def serve_stdio(config: ProxyConfig, upstream_command: Optional[list] = None) ->
             except Exception as exc:
                 response = _jsonrpc_error(None, -32603, f"Spectrona MCP proxy error: {exc}")
             if response is not None:
-                print(json.dumps(response, separators=(",", ":")), flush=True)
+                _write_json_line(response, sys.stdout, stdout_lock)
         return 0
     finally:
         if upstream:
@@ -399,17 +408,117 @@ def _jsonrpc_error(request_id: Any, code: int, message: str, data: Optional[dict
     return {"jsonrpc": "2.0", "id": request_id, "error": error}
 
 
-def _forward_to_upstream(upstream: subprocess.Popen, message: dict) -> Optional[dict]:
-    if upstream.stdin is None or upstream.stdout is None:
-        raise RuntimeError("upstream MCP process is not connected")
-    upstream.stdin.write(json.dumps(message, separators=(",", ":")) + "\n")
-    upstream.stdin.flush()
-    if message.get("id") is None:
-        return None
-    line = upstream.stdout.readline()
-    if not line:
-        raise RuntimeError("upstream MCP process closed stdout")
-    return json.loads(line)
+class _UpstreamTransport:
+    def __init__(
+        self,
+        upstream: subprocess.Popen,
+        notification_sink: Optional[Callable[[dict], None]] = None,
+        stderr_log: Optional[Callable[[str], None]] = None,
+    ) -> None:
+        if upstream.stdin is None or upstream.stdout is None:
+            raise RuntimeError("upstream MCP process is not connected")
+        self._upstream = upstream
+        self._notification_sink = notification_sink
+        self._stderr_log = stderr_log
+        self._pending: dict[Any, queue.Queue] = {}
+        self._pending_lock = threading.Lock()
+        self._stdin_lock = threading.Lock()
+        self._stdout_thread = threading.Thread(target=self._pump_stdout, daemon=True)
+        self._stdout_thread.start()
+        self._stderr_thread = None
+        if upstream.stderr is not None:
+            self._stderr_thread = threading.Thread(target=self._pump_stderr, daemon=True)
+            self._stderr_thread.start()
+
+    def request(self, message: dict) -> Optional[dict]:
+        request_id = message.get("id")
+        response_queue = None
+        if request_id is not None:
+            response_queue = queue.Queue(maxsize=1)
+            with self._pending_lock:
+                self._pending[request_id] = response_queue
+
+        try:
+            self._send(message)
+            if response_queue is None:
+                return None
+            response = response_queue.get()
+            if isinstance(response, BaseException):
+                raise response
+            return response
+        finally:
+            if request_id is not None:
+                with self._pending_lock:
+                    if self._pending.get(request_id) is response_queue:
+                        del self._pending[request_id]
+
+    def _send(self, message: dict) -> None:
+        line = json.dumps(message, separators=(",", ":")) + "\n"
+        with self._stdin_lock:
+            if self._upstream.stdin is None:
+                raise RuntimeError("upstream MCP process is not connected")
+            self._upstream.stdin.write(line)
+            self._upstream.stdin.flush()
+
+    def _pump_stdout(self) -> None:
+        assert self._upstream.stdout is not None
+        try:
+            for line in self._upstream.stdout:
+                if not line.strip():
+                    continue
+                try:
+                    message = json.loads(line)
+                except json.JSONDecodeError as exc:
+                    self._fail_pending(RuntimeError(f"upstream MCP process emitted invalid JSON: {exc}"))
+                    continue
+                request_id = message.get("id") if isinstance(message, dict) else None
+                pending = None
+                if request_id is not None:
+                    with self._pending_lock:
+                        pending = self._pending.get(request_id)
+                if pending is not None:
+                    pending.put(message)
+                    continue
+                self._forward_notification(message)
+        finally:
+            self._fail_pending(RuntimeError("upstream MCP process closed stdout"))
+
+    def _pump_stderr(self) -> None:
+        assert self._upstream.stderr is not None
+        for line in self._upstream.stderr:
+            if self._stderr_log:
+                self._stderr_log(line.rstrip("\n"))
+
+    def _forward_notification(self, message: dict) -> None:
+        if self._notification_sink:
+            self._notification_sink(message)
+
+    def _fail_pending(self, error: RuntimeError) -> None:
+        with self._pending_lock:
+            pending = list(self._pending.values())
+            self._pending.clear()
+        for response_queue in pending:
+            response_queue.put(error)
+
+
+def _forward_to_upstream(
+    upstream: subprocess.Popen,
+    message: dict,
+    notification_sink: Optional[Callable[[dict], None]] = None,
+    stderr_log: Optional[Callable[[str], None]] = None,
+) -> Optional[dict]:
+    sink = notification_sink if notification_sink is not None else lambda item: _write_json_line(item)
+    transport = _UpstreamTransport(upstream, notification_sink=sink, stderr_log=stderr_log)
+    return transport.request(message)
+
+
+def _write_json_line(message: dict, stream: Any = sys.stdout, lock: Optional[threading.Lock] = None) -> None:
+    line = json.dumps(message, separators=(",", ":"))
+    if lock is None:
+        print(line, file=stream, flush=True)
+        return
+    with lock:
+        print(line, file=stream, flush=True)
 
 
 def _log_tool_event(config: ProxyConfig, decision: ToolCallDecision) -> None:
@@ -447,6 +556,23 @@ def _log_tool_response_event(config: ProxyConfig, decision: ToolResponseDecision
         "dlp_findings_count": decision.dlp_findings_count,
         "shell_risk": False,
         "filesystem_risk": False,
+    }
+    with open(config.audit_log, "a") as handle:
+        handle.write(json.dumps(event) + "\n")
+
+
+def _log_upstream_stderr(config: ProxyConfig, line: str) -> None:
+    if not line:
+        return
+    config.audit_log.parent.mkdir(parents=True, exist_ok=True)
+    event = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "route": "mcp/upstream/stderr",
+        "provider_type": "mcp",
+        "client": redact_text(config.client),
+        "action": "upstream_stderr",
+        "message": redact_text(line),
+        "dlp_findings_count": findings_count(line),
     }
     with open(config.audit_log, "a") as handle:
         handle.write(json.dumps(event) + "\n")

@@ -5,6 +5,14 @@ Do NOT store transcripts, code dumps, or logs.
 
 ---
 
+## 2026-09-30 — Session 091: R10 proxy transport rewrite
+Prompt Summary: Continue queue with R10: fix F4 JSON-RPC notification/request desync.
+Decision: Replace one-line upstream forwarding with a transport pump keyed by JSON-RPC request id.
+Decision: Upstream notifications are forwarded separately; upstream stderr is recorded as redacted log metadata.
+Files Changed: MCP proxy transport, runtime proxy validation, F4 regression, checkpoint docs.
+Validation: F4 reproduced before fix and absent after; focused pytest PASS; runtime-guard Phase 2 PASS; full pytest PASS; master gate PASS.
+Next: After master gate, R10 completes Block E; next work requires maintainer direction on deferred R11/scope-freeze handling.
+
 ## 2026-09-29 — Session 090: R9 distribution surfaces
 Prompt Summary: Continue queue with R9: SARIF output, GitHub Action, and `npx` wrapper.
 Decision: SARIF is generated from the existing redacted report dictionary, preserving current no-secret-leakage paths.

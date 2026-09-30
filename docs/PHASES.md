@@ -50,6 +50,7 @@
 - [x] Local policy YAML integration for MCP tool calls
 - [x] Strict policy load-time schema validation with fail-closed runtime behavior
 - [x] MCP stdio proxy MVP
+- [x] MCP stdio proxy correlates JSON-RPC responses by id and passes upstream notifications through
 - [x] MCP config wrap/undo CLI
 - [x] MCP app discovery/status CLI
 - [x] MCP app protect/unprotect CLI

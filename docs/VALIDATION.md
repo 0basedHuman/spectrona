@@ -12,7 +12,7 @@ bash validation/validate_all.sh
 
 **Script:** `validation/pytest_validate.sh`
 
-**Last run:** 2026-09-29 (Session 090 — R9 distribution surfaces)
+**Last run:** 2026-09-30 (Session 091 — R10 proxy transport rewrite)
 **Result:** PASS
 
 **Checks:**
@@ -22,7 +22,7 @@ bash validation/validate_all.sh
 - [x] F2 R5/R7 regression passes for advisory dry-run default and ordinary-English non-risk behavior
 - [x] F2 direct shell-risk detector reproduction passes; genuine shell tools and schema-declared command fields still detect
 - [x] F3 gateway auth reproduction passes without opening a listening socket
-- [x] F4 proxy notification desync reproduction is present as strict xfail until R10
+- [x] F4 proxy notification desync reproduction passes with notification passthrough and id-correlated response handling
 - [x] F5 DLP credential-format reproduction passes for all reviewed formats
 - [x] F5 benign corpus has zero findings for UUIDs, git SHAs, lockfile hashes, base64 image data, and normal prose
 - [x] F6 policy schema validation reproduction passes
@@ -40,7 +40,7 @@ bash validation/validate_all.sh
 
 **Script:** `validation/corpus_validate.sh`
 
-**Last run:** 2026-09-29 (Session 090 — R9 distribution surfaces)
+**Last run:** 2026-09-30 (Session 091 — R10 proxy transport rewrite)
 **Result:** PASS
 
 **Checks:**
@@ -547,6 +547,8 @@ bash mcp-inspector/bin/mcp-inspector scan mcp --file <path>
 - [x] Safe MCP `tools/call` requests pass through to an upstream handler
 - [x] Filesystem paths inside repo are allowed
 - [x] MCP proxy defaults to dry-run and forwards shell-risk false positives while auditing would-block metadata
+- [x] MCP proxy correlates upstream JSON-RPC responses by id and forwards notifications separately
+- [x] MCP proxy logs upstream stderr with known secret-shaped values redacted
 - [x] Explicit MCP proxy enforcement denies shell-risk calls
 - [x] Explicit MCP proxy enforcement denies filesystem paths outside repo
 - [x] Explicit MCP proxy enforcement can return approval-required for shell risk

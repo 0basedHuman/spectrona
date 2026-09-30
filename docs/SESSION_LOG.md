@@ -2,6 +2,66 @@
 
 ---
 
+## Session 091 — 2026-09-30
+
+**User intent:** Continue remediation queue after R9 completion.
+
+**Implementation steps:**
+1. Re-read the required remediation harness context.
+2. Confirmed active work is R10 only.
+3. Reproduced F4 before editing.
+   - `_forward_to_upstream` returned the upstream `notifications/message` frame instead of the response with `id: 7`.
+4. Rewrote MCP upstream forwarding.
+   - Added an upstream transport with a stdout pump, pending request map keyed by JSON-RPC `id`, and locked client writes.
+   - Upstream notifications and unexpected server messages are forwarded separately instead of satisfying request futures.
+   - Upstream stderr is piped and recorded as redacted Spectrona log metadata.
+5. Converted the F4 regression from strict xfail to a passing test and expanded runtime proxy validation for notification passthrough and stderr redaction.
+
+**Files changed:**
+- `runtime-guard/src/runtime_guard/mcp_proxy.py`
+- `runtime-guard/validation/mcp_proxy_validate.py`
+- `tests/regression/test_remediation_reproductions.py`
+- `docs/MEMORY.md`
+- `docs/SESSION_LOG.md`
+- `docs/current_refactor_status.md`
+- `docs/VALIDATION.md`
+- `docs/PHASES.md`
+
+**Validation results:**
+- F4 reproduction before fix: returned `{"jsonrpc":"2.0","method":"notifications/message",...}` with no `id`.
+- F4 reproduction after fix: emitted notification separately, then returned `{"jsonrpc":"2.0","id":7,"result":{"tools":[{"name":"read_file"}]}}`.
+- Focused pytest: `python3 -m pytest -q tests/regression/test_remediation_reproductions.py -q` -> PASS.
+- Runtime proxy validation: `python3 runtime-guard/validation/mcp_proxy_validate.py` -> PASS.
+- Runtime guard phase gate: `bash runtime-guard/validation/phase2_validate.sh` -> PASS.
+- Full pytest: `python3 -m pytest -q` -> PASS.
+- `bash validation/validate_all.sh` -> PASS.
+
+Master gate output excerpt:
+```text
+=== Pytest Result: 2 passed, 0 failed ===
+=== Corpus Benchmark Result: 12 passed, 0 failed ===
+=== Phase 1 Result: 109 passed, 0 failed ===
+=== Policy Engine Result: 14 passed, 0 failed ===
+=== Phase 2 Result: 96 passed, 0 failed ===
+=== Dashboard Browser Result: 6 passed, 0 failed, 0 skipped ===
+=== Phase 2C Result: 129 passed, 0 failed ===
+=== Packaging Result: 45 passed, 0 failed ===
+=== Phase 3 Memory Routes Result: 62 passed, 0 failed ===
+=== Phase 2 Result: 17 passed, 0 failed ===
+=== Phase 3 Result: SKIPPED ===
+OVERALL RESULT: PASS
+```
+
+**Notes:**
+- R10 is complete.
+- Upstream stderr log entries redact known secret-shaped values before writing to the audit/log file.
+- No raw secret value was added to outputs, reports, audit records, or committed metadata.
+
+**Next recommended step:**
+Stop after R10. If work continues, handle deferred R11 only by proposing the required scope-freeze decision and waiting for maintainer sign-off.
+
+---
+
 ## Session 090 — 2026-09-29
 
 **User intent:** Continue remediation queue after R8 completion.

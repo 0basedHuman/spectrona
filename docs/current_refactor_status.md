@@ -27,13 +27,15 @@
 - Session 088 continued R8, harvested targeted redacted GitHub candidate batches, and promoted 128 more reviewed public GitHub configs.
 - Session 089 completed R8, harvested final redacted GitHub candidate batches, and promoted 333 more reviewed public GitHub configs.
 - Session 090 completed R9, adding SARIF output, a GitHub code-scanning action/workflow, and a dependency-free `npx spectrona` wrapper.
+- Session 091 completed R10, rewriting the MCP proxy transport to correlate responses by JSON-RPC id, pass notifications through, and log redacted upstream stderr.
 - `MCP_NO_AUDIT_LOG` is deleted from scanner code, rules, fixtures, validation, packaging checks, and current docs.
 - Package detection skips `${...}` references and aggregates unpinned package evidence by server path.
 - Gateway non-health routes now require a local bearer token, validate Host/Origin, and reject all-interface CLI binding.
 - `spectrona init` generates a gateway token in `config.yaml`, writes `0600`, and `status` does not echo it.
 - Policy loading rejects empty/missing matches, unknown match keys, unknown fields, and bad value types before evaluation.
 - MCP proxy defaults to advisory dry-run; enforcement requires `--enforce` or `SPECTRONA_MCP_ENFORCE=true`.
-- Pytest is wired into the master gate and covers fixed regressions plus the strict xfail reproduction for open F4.
+- MCP proxy transport now keeps upstream notifications separate from correlated request responses.
+- Pytest is wired into the master gate and covers fixed regressions including F4.
 - Shared `spectrona_detection` package now powers scanner secret matching, gateway DLP, runtime redaction, and repo secret prefix findings.
 - Runtime shell risk now uses exact tool/schema signals instead of free-text substring matching; filesystem risk uses path-like argument keys.
 - `validation/corpus_benchmark.py` gates measured MCP scanner rules at 95% precision over redacted labeled corpus entries.
@@ -140,8 +142,8 @@
 ## Remaining Work
 - R8 is complete: the public corpus exceeds the roughly 1,000-case target and the 95% precision gate passes.
 - R9 is complete: SARIF, GitHub Action/workflow, and `npx` wrapper are implemented and validated.
-- R10 remains open.
-- MCP proxy notification desync remains open; R10 owns transport rewrite.
+- R10 is complete: MCP proxy notification desync is fixed and covered by regression/validation tests.
+- Deferred R11 remains intentionally unstarted.
 
 ## Exact Next Step
-Proceed to R10 only: rewrite MCP proxy transport for JSON-RPC notification passthrough and pending-request correlation.
+Stop after R10. If work continues, address deferred R11 only by proposing the required scope-freeze decision and waiting for maintainer sign-off.

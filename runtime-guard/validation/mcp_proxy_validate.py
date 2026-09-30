@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
 import json
+import subprocess
+import sys
 import tempfile
+import time
 from pathlib import Path
 
-from runtime_guard.mcp_proxy import ProxyConfig, handle_message
+from runtime_guard.mcp_proxy import ProxyConfig, _forward_to_upstream, _log_upstream_stderr, handle_message
 
 
 RAW_SECRET = "sk-proj-abc123XYZsecrettoken9999"
 RAW_OUTPUT_SECRET = "sk-proj-abc123XYZoutputtoken9999"
+RAW_STDERR_SECRET = "sk-proj-abc123XYZstderrtoken9999"
 
 
 def _config(tmp: Path, policy_text: str = None, dry_run: bool = True) -> ProxyConfig:
@@ -182,6 +186,53 @@ rules:
             for event in audit_events
         )
         assert all("params" not in event and "arguments" not in event for event in audit_events)
+
+        notification_server = tmp / "notification_server.py"
+        notification_server.write_text(
+            "import sys, json\n"
+            "for line in sys.stdin:\n"
+            "    if not line.strip():\n"
+            "        continue\n"
+            "    m = json.loads(line)\n"
+            "    if m.get('method') == 'tools/list':\n"
+            f"        print('upstream stderr token {RAW_STDERR_SECRET}', file=sys.stderr, flush=True)\n"
+            "        print(json.dumps({'jsonrpc':'2.0','method':'notifications/message','params':{'level':'info','data':'listing'}}), flush=True)\n"
+            "        print(json.dumps({'jsonrpc':'2.0','id':m['id'],'result':{'tools':[{'name':'read_file'}]}}), flush=True)\n"
+        )
+        forwarded_notifications = []
+        upstream = subprocess.Popen(
+            [sys.executable, str(notification_server)],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        try:
+            response = _forward_to_upstream(
+                upstream,
+                {"jsonrpc": "2.0", "id": 7, "method": "tools/list"},
+                notification_sink=forwarded_notifications.append,
+                stderr_log=lambda line: _log_upstream_stderr(cfg, line),
+            )
+        finally:
+            upstream.terminate()
+            try:
+                upstream.wait(timeout=3)
+            except subprocess.TimeoutExpired:
+                upstream.kill()
+
+        assert response == {"jsonrpc": "2.0", "id": 7, "result": {"tools": [{"name": "read_file"}]}}
+        assert forwarded_notifications == [
+            {"jsonrpc": "2.0", "method": "notifications/message", "params": {"level": "info", "data": "listing"}}
+        ]
+        for _ in range(20):
+            audit_text = (tmp / "logs" / "mcp_audit.jsonl").read_text()
+            if "upstream_stderr" in audit_text:
+                break
+            time.sleep(0.05)
+        assert RAW_STDERR_SECRET not in audit_text
+        assert "sk-proj-[REDACTED_SECRET]" in audit_text
+        assert "upstream_stderr" in audit_text
 
     print("mcp proxy validation passed")
     return 0
