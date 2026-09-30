@@ -2,6 +2,50 @@
 
 ---
 
+## Session 092 — 2026-09-30
+
+**User intent:** Continue after R10 completion.
+
+**Implementation steps:**
+1. Re-read the required remediation harness context.
+2. Confirmed R1-R10 are complete and the only remaining prompt item is deferred R11.
+3. Added D009 as a proposed scope-freeze decision for Phase 3 and integration surfaces.
+4. Updated checkpoint docs to stop on maintainer sign-off before any deferred deletion, branching, or resumption.
+
+**Files changed:**
+- `docs/DECISIONS.md`
+- `docs/MEMORY.md`
+- `docs/SESSION_LOG.md`
+- `docs/current_refactor_status.md`
+
+**Validation results:**
+- `bash validation/validate_all.sh` -> PASS.
+
+Master gate output excerpt:
+```text
+=== Pytest Result: 2 passed, 0 failed ===
+=== Corpus Benchmark Result: 12 passed, 0 failed ===
+=== Phase 1 Result: 109 passed, 0 failed ===
+=== Policy Engine Result: 14 passed, 0 failed ===
+=== Phase 2 Result: 96 passed, 0 failed ===
+=== Dashboard Browser Result: 6 passed, 0 failed, 0 skipped ===
+=== Phase 2C Result: 129 passed, 0 failed ===
+=== Packaging Result: 45 passed, 0 failed ===
+=== Phase 3 Memory Routes Result: 62 passed, 0 failed ===
+=== Phase 2 Result: 17 passed, 0 failed ===
+=== Phase 3 Result: SKIPPED ===
+OVERALL RESULT: PASS
+```
+
+**Notes:**
+- No Phase 3, memory, replay, compaction, context-package, VS Code terminal-routing, local-LLM fallback, or LaunchAgent code was changed.
+- D009 is proposed only; it does not authorize deletion.
+
+**Next recommended step:**
+Wait for maintainer direction on D009 before touching deferred R11 surfaces.
+
+---
+
 ## Session 091 — 2026-09-30
 
 **User intent:** Continue remediation queue after R9 completion.

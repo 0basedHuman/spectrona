@@ -5,6 +5,14 @@ Do NOT store transcripts, code dumps, or logs.
 
 ---
 
+## 2026-09-30 — Session 092: D009 scope-freeze proposal
+Prompt Summary: Continue after R10 completion; handle only the deferred R11 boundary.
+Decision: D009 proposed a scope freeze for Phase 3 and integration surfaces pending maintainer sign-off.
+Decision: No deferred code was deleted, branched, or expanded in this session.
+Files Changed: Decision log and checkpoint docs only.
+Validation: Master gate PASS.
+Next: Stop and wait for maintainer decision on D009 before any R11 deletion/branching/resumption.
+
 ## 2026-09-30 — Session 091: R10 proxy transport rewrite
 Prompt Summary: Continue queue with R10: fix F4 JSON-RPC notification/request desync.
 Decision: Replace one-line upstream forwarding with a transport pump keyed by JSON-RPC request id.
