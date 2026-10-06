@@ -2,6 +2,50 @@
 
 ---
 
+## Session 093 — 2026-10-05
+
+**User intent:** Approve D009 scope freeze.
+
+**Implementation steps:**
+1. Re-read the required remediation harness context.
+2. Confirmed R1-R10 are complete and D009 was previously proposed.
+3. Updated D009 from proposed to approved.
+4. Updated checkpoint docs to make the next session a scoped R11 freeze implementation, not open-ended Phase 3 work.
+
+**Files changed:**
+- `docs/DECISIONS.md`
+- `docs/MEMORY.md`
+- `docs/SESSION_LOG.md`
+- `docs/current_refactor_status.md`
+
+**Validation results:**
+- `bash validation/validate_all.sh` -> PASS.
+
+Master gate output excerpt:
+```text
+=== Pytest Result: 2 passed, 0 failed ===
+=== Corpus Benchmark Result: 12 passed, 0 failed ===
+=== Phase 1 Result: 109 passed, 0 failed ===
+=== Policy Engine Result: 14 passed, 0 failed ===
+=== Phase 2 Result: 96 passed, 0 failed ===
+=== Dashboard Browser Result: 6 passed, 0 failed, 0 skipped ===
+=== Phase 2C Result: 129 passed, 0 failed ===
+=== Packaging Result: 45 passed, 0 failed ===
+=== Phase 3 Memory Routes Result: 62 passed, 0 failed ===
+=== Phase 2 Result: 17 passed, 0 failed ===
+=== Phase 3 Result: SKIPPED ===
+OVERALL RESULT: PASS
+```
+
+**Notes:**
+- No Phase 3, memory, replay, compaction, context-package, VS Code terminal-routing, local-LLM fallback, or LaunchAgent code was changed.
+- D009 approval authorizes a future freeze implementation session; it does not by itself delete code in this session.
+
+**Next recommended step:**
+Execute R11 freeze implementation only: preserve/branch if needed, remove deferred surfaces from the publishable path, validate, checkpoint, and stop.
+
+---
+
 ## Session 092 — 2026-09-30
 
 **User intent:** Continue after R10 completion.

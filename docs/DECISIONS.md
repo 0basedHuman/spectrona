@@ -128,20 +128,20 @@
 
 ---
 
-## D009 — Proposed scope freeze for Phase 3 and integration surfaces
+## D009 — Scope freeze for Phase 3 and integration surfaces
 
-**Decision:** Proposed only: branch out or otherwise freeze memory replay, compaction, timeline, staleness, context packages, session extraction, VS Code terminal routing, local-LLM fallback, and LaunchAgent plist work until the maintainer explicitly accepts or rejects the scope-freeze plan.
+**Decision:** Approved: branch out or otherwise freeze memory replay, compaction, timeline, staleness, context packages, session extraction, VS Code terminal routing, local-LLM fallback, and LaunchAgent plist work from the publishable remediation path.
 
 **Why:** The remediation review identified strategic drift: roughly 1,500+ lines of Phase 3 and integration-surface work landed while Phase 1 was still unshipped. Continuing to expand those surfaces would repeat the same drift the queue was created to stop.
 
 **Alternatives rejected:**
-- Delete the work immediately — the remediation prompt requires maintainer sign-off before deletion.
+- Delete the work before approval — the remediation prompt required maintainer sign-off before deletion.
 - Keep building Phase 3 and integration surfaces — violates the queue boundary and increases unshipped scope.
 - Leave the decision unrecorded — hides the remaining strategic conflict after R1-R10 completion.
 
-**Impact:** No code is deleted or changed by this proposal. Future sessions must wait for maintainer direction before removing, branching out, or resuming the deferred surfaces listed above.
+**Impact:** A future R11 freeze implementation may remove these deferred surfaces from the mainline publishable path or preserve them on a separate branch before removal. No raw data or secrets may be introduced while doing so, and the master validation gate remains required.
 
-**Revisit:** When the maintainer explicitly chooses whether to accept the scope freeze and how to handle the deferred work.
+**Revisit:** After Spectrona ships the validated scanner/runtime foundation; reconsider Phase 3 and integration surfaces only with a fresh phase plan and validation contract.
 
 ---
 

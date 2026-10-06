@@ -29,6 +29,7 @@
 - Session 090 completed R9, adding SARIF output, a GitHub code-scanning action/workflow, and a dependency-free `npx spectrona` wrapper.
 - Session 091 completed R10, rewriting the MCP proxy transport to correlate responses by JSON-RPC id, pass notifications through, and log redacted upstream stderr.
 - Session 092 proposed D009 for the deferred R11 scope freeze and made no deferred code changes.
+- Session 093 recorded maintainer approval of D009 and made no deferred code changes.
 - `MCP_NO_AUDIT_LOG` is deleted from scanner code, rules, fixtures, validation, packaging checks, and current docs.
 - Package detection skips `${...}` references and aggregates unpinned package evidence by server path.
 - Gateway non-health routes now require a local bearer token, validate Host/Origin, and reject all-interface CLI binding.
@@ -144,7 +145,7 @@
 - R8 is complete: the public corpus exceeds the roughly 1,000-case target and the 95% precision gate passes.
 - R9 is complete: SARIF, GitHub Action/workflow, and `npx` wrapper are implemented and validated.
 - R10 is complete: MCP proxy notification desync is fixed and covered by regression/validation tests.
-- D009 is proposed and awaiting maintainer sign-off before any deferred R11 deletion, branching, or resumption.
+- D009 is approved. Deferred R11 freeze implementation may proceed in a future one-item session.
 
 ## Exact Next Step
-Stop and wait for maintainer direction on D009 before touching deferred R11 surfaces.
+Execute R11 freeze implementation only: preserve/branch if needed, remove deferred surfaces from the publishable path, validate, checkpoint, and stop.

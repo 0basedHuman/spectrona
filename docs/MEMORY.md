@@ -5,6 +5,14 @@ Do NOT store transcripts, code dumps, or logs.
 
 ---
 
+## 2026-10-05 — Session 093: D009 approved
+Prompt Summary: Maintainer approved the D009 scope freeze.
+Decision: D009 is now approved, not merely proposed.
+Decision: This session records approval only; no deferred code was deleted, branched, or expanded.
+Files Changed: Decision log and checkpoint docs only.
+Validation: Master gate PASS.
+Next: Execute a future R11 freeze implementation session: preserve/branch if needed, remove deferred surfaces from the publishable path, validate, and stop.
+
 ## 2026-09-30 — Session 092: D009 scope-freeze proposal
 Prompt Summary: Continue after R10 completion; handle only the deferred R11 boundary.
 Decision: D009 proposed a scope freeze for Phase 3 and integration surfaces pending maintainer sign-off.
